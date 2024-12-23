@@ -2,7 +2,7 @@
 
 # Container and workflow module repository
 
-## Modules and Last Commit Dates
+## Modules Status
 
-| Branch Name | Last Commit Date |
-|-------------|-------------------|
+| Branch Name | Build Status | Last Commit Date |
+|-------------|--------------|-------------------|
