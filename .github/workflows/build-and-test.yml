@@ -65,5 +65,5 @@ jobs:
 
       - name: Load image
         run: |
-          cat /tmp/${{ env.BRANCH_NAME }}.tar | docker import - ghcr.io/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}:${{ env.BRANCH_NAME }}-latest
+          cat /tmp/${{ env.BRANCH_NAME }}.tar | docker import - ghcr.io/${{ env.REPO_OWNER }}/${{ env.BRANCH_NAME }}-latest
           docker image ls -a
