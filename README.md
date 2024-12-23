@@ -1,4 +1,4 @@
-[![Build and Push Docker Image](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg?query=branch%3Amodkit)](https://github.com/bwbioinfo/modkit/actions/workflows/build-and-push.yml?query=branch%3Amodkit)
+[![Build and Push Docker Image](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg?query=branch%3Amodkit)](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml?query=branch%3Amodkit)
 
 # modkit-docker-cwl
 
