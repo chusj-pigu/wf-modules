@@ -4,8 +4,6 @@ on:
   workflow_run:
     workflows: [Build and Test Docker Image]
     types: [completed]
-    branches:
-      - "*"
   workflow_dispatch:
 
 jobs:
@@ -20,7 +18,7 @@ jobs:
       - name: Get repository and branch details
         run: |
           echo "REPO_NAME=$(basename ${{ github.repository }})" >> $GITHUB_ENV
-          echo "BRANCH_NAME=${{ github.event.workflow_run.head_branch }}" >> $GITHUB_ENV
+          echo "BRANCH_NAME=${{ github.event.workflow_run.head_branch || github.ref_name }}" >> $GITHUB_ENV
           echo "REPO_OWNER=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Print details
