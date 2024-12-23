@@ -25,7 +25,7 @@ jobs:
           for branch in $(git branch -r | grep -v '\->' | sed 's/origin\///'); do
             if [ "$branch" != "main" ]; then
               last_commit_date=$(git log -1 --format="%cd" --date=iso origin/$branch)
-              badge="[![Build Status](https://github.com/<owner>/<repo>/actions/workflows/<workflow-file>.yml/badge.svg?branch=$branch)](https://github.com/<owner>/<repo>/actions/workflows/<workflow-file>.yml?query=branch%3A$branch)"
+              badge="[![Build Status](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg?branch=$branch)](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml?query=branch%3A$branch)"
               echo "| $branch | $badge | $last_commit_date |" >> branch_table.md
             fi
           done
