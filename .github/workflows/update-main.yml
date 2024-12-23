@@ -1,0 +1,40 @@
+name: Update README with Branch Info
+
+on:
+  schedule:
+    - cron: "0 12 * * *" # Runs daily at 12:00 UTC
+  workflow_dispatch: # Allows manual trigger
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Fetch all branches to get their commit data
+      - name: Get Branches and Commit Info
+        run: |
+          echo "## Modules and Last Commit Dates" > branch_table.md
+          echo "" >> branch_table.md
+          echo "| Branch Name | Last Commit Date |" >> branch_table.md
+          echo "|-------------|-------------------|" >> branch_table.md
+          # Loop through all branches and get their last commit date
+          for branch in $(git branch -r | grep -v '\->' | sed 's/origin\///'); do
+            if [ "$branch" != "main" ]; then
+              last_commit_date=$(git log -1 --format="%cd" --date=iso origin/$branch)
+              echo "| $branch | $last_commit_date |" >> branch_table.md
+            fi
+          done
+      - name: Update README.md
+        run: |
+          # Replace the README section with the updated table
+          sed -i '/## Branches and Last Commit Dates/,$d' README.md
+          cat branch_table.md >> README.md
+
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add README.md
+          git commit -m "Update modules list"
+          git push
