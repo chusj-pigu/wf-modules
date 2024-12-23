@@ -1,3 +1,3 @@
-[![Build and Push Docker Image](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg)](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml)
+[![Build and Push Docker Image](https://github.com/bwbioinfo/modules/actions/workflows/update-main.yml/badge.svg)](https://github.com/bwbioinfo/modules/actions/workflows/update-main.yml)
 
 # Container and workflow module repository
