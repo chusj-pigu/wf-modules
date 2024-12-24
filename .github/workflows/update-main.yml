@@ -27,9 +27,9 @@ jobs:
               last_commit_date=$(git log -1 --format="%cd" --date=iso origin/$branch)
               if [ -n "$last_commit_date" ]; then
                 badge="[![Build Status](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg?branch=$branch)](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml?query=branch%3A$branch)"
-                echo "| $branch | $badge | $last_commit_date |" >> branch_table.md
+                echo "| [$branch](https://github.com/bwbioinfo/modules/tree/$branch) | $badge | $last_commit_date |" >> branch_table.md
               else
-                echo "| $branch | No Data | No Data |" >> branch_table.md
+                echo "| [$branch](https://github.com/bwbioinfo/modules/tree/$branch) | No Data | No Data |" >> branch_table.md
               fi
             fi
           done
