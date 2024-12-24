@@ -25,8 +25,12 @@ jobs:
           for branch in $(git branch -r | grep -v '\->' | sed 's/origin\///'); do
             if [ "$branch" != "main" ]; then
               last_commit_date=$(git log -1 --format="%cd" --date=iso origin/$branch)
-              badge="[![Build Status](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg?branch=$branch)](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml?query=branch%3A$branch)"
-              echo "| $branch | $badge | $last_commit_date |" >> branch_table.md
+              if [ -n "$last_commit_date" ]; then
+                badge="[![Build Status](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg?branch=$branch)](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml?query=branch%3A$branch)"
+                echo "| $branch | $badge | $last_commit_date |" >> branch_table.md
+              else
+                echo "| $branch | No Data | No Data |" >> branch_table.md
+              fi
             fi
           done
 
@@ -35,11 +39,15 @@ jobs:
           # Replace the README section with the updated table
           sed -i '/## Modules Status/,$d' README.md
           cat branch_table.md >> README.md
+          rm branch_table.md
 
       - name: Commit and Push Changes
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add README.md
-          git commit -m "Update modules list with badges"
-          git push
+          if ! git diff --quiet; then
+            git add README.md
+            git commit -m "Update modules list with badges"
+            git push
+          else
+            echo "No changes detected, skipping commit."
