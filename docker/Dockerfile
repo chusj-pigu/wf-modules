@@ -13,4 +13,4 @@ WORKDIR /opt/minimap2
 RUN make
 
 # Add minimap2 to PATH
-ENV PATH="/minimap2:${PATH}"
+ENV PATH="/opt/minimap2:${PATH}"
