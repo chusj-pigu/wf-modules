@@ -11,7 +11,7 @@ process MODKIT_PILEUP {
     publishDir "output", mode: 'copy'
 
     input:
-    tuple val(meta), path(in_bam)
+    tuple val(meta), path(in_bam), path(bam_index)
 
     output:
     tuple val(meta), path("*.bed"), emit: samfile
@@ -37,4 +37,4 @@ process MODKIT_PILEUP {
         modkit: \$( modkit --version )
     END_VERSIONS
     """
-} 
+}
