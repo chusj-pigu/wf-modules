@@ -25,6 +25,7 @@ RUN dnf install -y \
     ncurses-devel \
     libcurl-devel \
     wget \ 
+    procps \
     zsh
 
 
