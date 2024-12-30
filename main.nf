@@ -14,14 +14,14 @@ process MODKIT_PILEUP {
     tuple val(meta), path(in_bam), path(bam_index)
 
     output:
-    tuple val(meta), path("*.bed"), emit: samfile
+    tuple val(meta), path("*.bed"), emit: bedmethyl
     path "versions.yml"           , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
+    def args = task.ext.args ?: '--with-header'
     def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
     """
