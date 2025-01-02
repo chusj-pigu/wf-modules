@@ -1,13 +1,13 @@
-[![Build and Push Docker Image](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg?query=branch%3Atemplate)](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml?query=branch%3Atemplate)
+[![Build and Push Docker Image](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg?query=branch%3Apychopper)](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml?query=branch%3Apychopper)
 
-# module/template
+# module/pychopper
 
 This repository provides:
-1. A [Common Workflow Language (CWL)](https://www.commonwl.org/) tool definition for running the [tool](https://link-to-tool) program. 
-2. The tool Docker container definition.
-3. A nextflow file with processes for the tools funcions.
+1. A [Common Workflow Language (CWL)](https://www.commonwl.org/) pychopper definition for running the [pychopper](https://github.com/epi2me-labs/pychopper) program. 
+2. The pychopper Docker container definition.
+3. A nextflow file with processes for the pychoppers funcions.
 
-Additional workflow languages will be supported ( e.g. WDL, Snakemake, etc) in the future. The aim is to provide a consistent tool definition for running bioinformatics tools across different workflow languages.
+Additional workflow languages will be supported ( e.g. WDL, Snakemake, etc) in the future. The aim is to provide a consistent pychopper definition for running bioinformatics pychoppers across different workflow languages.
 
 ## Prerequisites
 
@@ -18,10 +18,10 @@ To use this tool, you must have the following software installed on your system:
 
 ## Installation
 
-In CWL or NextFlow, you can add the tool as a submodule to your project.
+In CWL or NextFlow, you can add the pychopper as a submodule to your project.
 
 ```
-git submodule add -b <tool-branch-name> https://github.com/bwbioinfo/modules modules/local/<local-tool-name>
+git submodule add -b pychopper https://github.com/chusj-pugu/wf-modules modules/local/pychopper
 ```
 
 ## License
