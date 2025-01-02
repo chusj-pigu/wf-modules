@@ -1,4 +1,4 @@
-[![Build and Push Docker Image](https://github.com/chusj-pigu/modules/actions/workflows/build-and-push.yml/badge.svg)](https://github.com/chusj-pigu/modules/actions/workflows/build-and-push.yml)
+[![Build and Push Docker Image](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml)
 
 # Container and workflow module repository
 ## Modules Status
