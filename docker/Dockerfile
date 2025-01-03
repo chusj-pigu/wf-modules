@@ -1,14 +1,13 @@
-FROM alpine:latest
+FROM python:latest
 
-# Install dependencies
-RUN apk add --no-cache \
-    bash \
-    curl \
-    git 
+RUN apt-get update && apt-get install -y \
+    procps \
+    && rm -rf /var/lib/apt/lists/*
 
-# TODO: Install procps for NextFlow
+RUN pip install --upgrade pip
+RUN pip install tk
+RUN pip install figeno 
 
-# TODO: Make an alias to get version
+RUN figeno --version > /opt/version.txt
 
-# RUN $()
-# ENV version = 
+CMD ["figeno"]

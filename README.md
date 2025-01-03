@@ -1,33 +1,47 @@
 [![Build and Push Docker Image](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg?query=branch%3Atemplate)](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml?query=branch%3Atemplate)
 
-# module/template
+# Figeno
 
 This repository provides:
-1. A [Common Workflow Language (CWL)](https://www.commonwl.org/) tool definition for running the [tool](https://link-to-tool) program. 
-2. The tool Docker container definition.
-3. A nextflow file with processes for the tools funcions.
 
-Additional workflow languages will be supported ( e.g. WDL, Snakemake, etc) in the future. The aim is to provide a consistent tool definition for running bioinformatics tools across different workflow languages.
+1\. The Figeno Docker container definition.
+
+------------------------------------------------------------------------
 
 ## Prerequisites
 
 To use this tool, you must have the following software installed on your system:
 
--   [CWL tool](https://github.com/common-workflow-language/cwltool) or [Nextflow](https://www.nextflow.io/)
 -   [Docker](https://www.docker.com/) OR [Singularity](https://sylabs.io/singularity/) OR [Apptainer](https://apptainer.org/)
+
+------------------------------------------------------------------------
 
 ## Installation
 
-In CWL or NextFlow, you can add the tool as a submodule to your project.
+``` bash
+docker build -t figeno:latest .
+```
 
+To run the Figeno GUI from the Docker container:
+
+Port forwared to 5900:
+
+``` bash
+docker run -p 5900:5000 figeno-test:latest figeno gui -s --host 0.0.0.0 --port 5000 --debug 
 ```
-git submodule add -b <tool-branch-name> https://github.com/bwbioinfo/modules modules/local/<local-tool-name>
-```
+
+Then accessible at `localhost:5900` .
+
+You will need to bind additional directories to access your files.
+
+------------------------------------------------------------------------
 
 ## License
 
-This project is licensed under the [MIT License](https://github.com/bwbioinfo/modkit-docker-cwl/blob/main/LICENSE).
+This project is licensed under the [GNU GENERAL PUBLIC LICENSE](https://github.com/CompEpigen/figeno/blob/main/LICENSE).
+
+------------------------------------------------------------------------
 
 ## Contact
 
-If you have any questions or feedback, please contact the author via GitHub.
+If you have any questions or feedback, please contact the maintainers via the [Figeno GitHub Repository](https://github.com/CompEpigen/figeno).
