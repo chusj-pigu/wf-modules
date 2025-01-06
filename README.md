@@ -21,7 +21,7 @@ To use this tool, you must have the following software installed on your system:
 In CWL or NextFlow, you can add the tool as a submodule to your project.
 
 ```
-git submodule add -b <tool-branch-name> https://github.com/bwbioinfo/modules modules/local/<local-tool-name>
+git submodule add -b <tool-branch-name> https://github.com/chusj-pigu/wf-modules modules/local/<local-tool-name>
 ```
 
 ## License
