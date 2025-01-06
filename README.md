@@ -3,7 +3,7 @@
 # module/template
 
 This repository provides:
-1. A [Common Workflow Language (CWL)](https://www.commonwl.org/) tool definition for running the [tool](https://link-to-tool) program. 
+1. A [Common Workflow Language (CWL)](https://www.commonwl.org/) tool definition for running the [oarfish](https://github.com/COMBINE-lab/oarfish) program. 
 2. The tool Docker container definition.
 3. A nextflow file with processes for the tools funcions.
 
@@ -21,7 +21,7 @@ To use this tool, you must have the following software installed on your system:
 In CWL or NextFlow, you can add the tool as a submodule to your project.
 
 ```
-git submodule add -b <tool-branch-name> https://github.com/bwbioinfo/modules modules/local/<local-tool-name>
+git submodule add -b oarfish https://github.com/chusj-pigu/wf-modules wf-modules/local/oarfish
 ```
 
 ## License

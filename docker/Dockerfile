@@ -1,14 +1,14 @@
-FROM alpine:latest
+FROM rust:latest
 
-# Install dependencies
-RUN apk add --no-cache \
-    bash \
-    curl \
-    git 
+## Install Dependencies
+RUN apt-get update && apt-get install -y \
+    libssl-dev \
+    procps \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
 
-# TODO: Install procps for NextFlow
+WORKDIR /opt
 
-# TODO: Make an alias to get version
+RUN cargo install oarfish
 
-# RUN $()
-# ENV version = 
+RUN oarfish -h
