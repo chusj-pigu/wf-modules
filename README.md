@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Container and workflow module repository
 
 ## CI/CD
