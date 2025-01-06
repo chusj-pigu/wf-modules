@@ -45,7 +45,10 @@ jobs:
         run: |
           # Replace the README section with the updated table
           sed -i '/## CI\/CD/,$d' README.md
+          echo "## CI/CD" >> README.md
+          echo "" >> README.md
           echo "[![Status](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/actions/workflows/update-main.yml/badge.svg)](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/actions/workflows/update-main.yml)" >> README.md
+          echo "" >> README.md
           cat branch_table.md >> README.md
           rm branch_table.md
 
