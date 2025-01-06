@@ -3,7 +3,7 @@
 # module/oarfish
 
 This repository provides:
-1. A [Common Workflow Language (CWL)](https://www.commonwl.org/) oarfish definition for running the [tool](https://github.com/COMBINE-lab/oarfish) program. 
+1. A [Common Workflow Language (CWL)](https://www.commonwl.org/) oarfish definition for running the [oarfish](https://github.com/COMBINE-lab/oarfish) program. 
 2. The tool Docker container definition.
 3. A nextflow file with processes for the tools funcions.
 
