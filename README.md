@@ -1,6 +1,6 @@
 [![Build and Push Docker Image](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg?query=branch%3Atemplate)](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml?query=branch%3Atemplate)
 
-# module/template
+# module/oarfish
 
 This repository provides:
 1. A [Common Workflow Language (CWL)](https://www.commonwl.org/) tool definition for running the [oarfish](https://github.com/COMBINE-lab/oarfish) program. 
