@@ -1,10 +1,8 @@
-[![Build and Push Docker Image](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg?query=branch%3Atemplate)](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml?query=branch%3Atemplate)
-
-# Figeno
+# HTSLIB
 
 This repository provides:
 
-1\. The Figeno Docker container definition.
+1. The HTSLIB Docker container definition.
 
 ------------------------------------------------------------------------
 
@@ -19,29 +17,21 @@ To use this tool, you must have the following software installed on your system:
 ## Installation
 
 ``` bash
-docker build -t figeno:latest .
+docker build -t htslib:latest .
 ```
-
-To run the Figeno GUI from the Docker container:
-
-Port forwared to 5900:
-
-``` bash
-docker run -p 5900:5000 figeno-test:latest figeno gui -s --host 0.0.0.0 --port 5000 --debug 
-```
-
-Then accessible at `localhost:5900` .
-
-You will need to bind additional directories to access your files.
 
 ------------------------------------------------------------------------
 
 ## License
 
-This project is licensed under the [GNU GENERAL PUBLIC LICENSE](https://github.com/CompEpigen/figeno/blob/main/LICENSE).
+This project is licensed under the [The MIT/Expat License](https://github.com/samtools/htslib/blob/develop/LICENSE).
 
 ------------------------------------------------------------------------
 
 ## Contact
 
-If you have any questions or feedback, please contact the maintainers via the [Figeno GitHub Repository](https://github.com/CompEpigen/figeno).
+If you have any questions or feedback, please contact the maintainers via the [HTSLIB GitHub Repository](https://github.com/samtools/htslib).
+
+# CI/CD
+
+[![Build and Push Docker Image](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg?query=htslib%3Atemplate)](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml?query=htslib%3Atemplate)

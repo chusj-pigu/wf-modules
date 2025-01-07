@@ -1,13 +1,26 @@
-FROM python:latest
+FROM ubuntu:24.04
 
 RUN apt-get update && apt-get install -y \
     procps \
-    && rm -rf /var/lib/apt/lists/*
+    git \
+    wget \
+    gcc \
+    zlib1g-dev \
+    make \
+    libbz2-dev \
+    liblzma-dev \
+    autoconf
 
-RUN pip install --upgrade pip
-RUN pip install tk
-RUN pip install figeno 
+WORKDIR /opt/
 
-RUN figeno --version > /opt/version.txt
+RUN git clone https://github.com/samtools/htslib.git
 
-CMD ["figeno"]
+WORKDIR /opt/htslib
+RUN git submodule update --init --recursive
+
+RUN autoreconf -i  # Build the configure script and install files it uses
+RUN ./configure    # Optional but recommended, for choosing extra functionality
+RUN make
+RUN make install
+
+RUN rm -rf /var/lib/apt/lists/*
