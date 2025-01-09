@@ -10,8 +10,7 @@ process OARFISH_QUANTIFY {
     publishDir "${params.out_dir}", mode: 'copy'
 
     input:
-    tuple val(meta), path(reads)
-    path ref
+    tuple val(meta), path(reads), path(ref)
 
     output:
     tuple val(meta), path("*")
