@@ -1,4 +1,4 @@
-FROM ubuntu:24.04
+FROM rust:latest
 
 RUN apt-get update && apt-get install -y \
     procps \
@@ -20,7 +20,12 @@ RUN git submodule update --init --recursive
 
 RUN autoreconf -i  # Build the configure script and install files it uses
 RUN ./configure    # Optional but recommended, for choosing extra functionality
-RUN make
 RUN make install
+
+RUN apt-get install -y \
+    libgsl-dev \
+    clang
+
+RUN cargo install varlociraptor
 
 RUN rm -rf /var/lib/apt/lists/*
