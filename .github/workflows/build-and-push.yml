@@ -44,3 +44,24 @@ jobs:
         run: |
           docker push ghcr.io/${{ env.REPO_OWNER }}/${{ env.BRANCH_NAME }}:${{ github.sha }} &&
           docker push ghcr.io/${{ env.REPO_OWNER }}/${{ env.BRANCH_NAME }}:latest
+
+      - name: Update README.md
+        run: |
+          # Replace the README section with the updated table
+          sed -i '/## CI\/CD/,$d' README.md
+          echo "## CI/CD" >> README.md
+          echo "" >> README.md
+          echo "[![Build Status](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/actions/workflows/build-and-push.yml/badge.svg?branch=$branch)](https://github.com/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}/actions/workflows/build-and-push.yml?query=branch%3A$branch)" >> README.md
+          echo "" >> README.md
+  
+      - name: Commit and Push Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet; then
+            git add -f README.md
+            git commit -m "Update modules list with badges"
+            git push
+          else
+            echo "No changes detected, skipping commit."
+          fi
