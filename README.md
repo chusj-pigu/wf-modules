@@ -1,5 +1,5 @@
 
-# module/template
+# IchorCNA
 
 Test within container :
 
