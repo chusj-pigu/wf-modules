@@ -1,33 +1,24 @@
-[![Build and Push Docker Image](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg?query=branch%3Atemplate)](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml?query=branch%3Atemplate)
 
 # module/template
 
-This repository provides:
-1. A [Common Workflow Language (CWL)](https://www.commonwl.org/) tool definition for running the [tool](https://link-to-tool) program. 
-2. The tool Docker container definition.
-3. A nextflow file with processes for the tools funcions.
-
-Additional workflow languages will be supported ( e.g. WDL, Snakemake, etc) in the future. The aim is to provide a consistent tool definition for running bioinformatics tools across different workflow languages.
-
-## Prerequisites
-
-To use this tool, you must have the following software installed on your system:
-
--   [CWL tool](https://github.com/common-workflow-language/cwltool) or [Nextflow](https://www.nextflow.io/)
--   [Docker](https://www.docker.com/) OR [Singularity](https://sylabs.io/singularity/) OR [Apptainer](https://apptainer.org/)
-
-## Installation
-
-In CWL or NextFlow, you can add the tool as a submodule to your project.
+Test within container :
 
 ```
-git submodule add -b <tool-branch-name> https://github.com/bwbioinfo/modules modules/local/<local-tool-name>
+Rscript /opt/ichorCNA/scripts/runIchorCNA.R --id tumor_sample \
+  --WIG /opt/ichorCNA/inst/extdata/gc_hg38_1000kb.wig --ploidy "c(2,3)" --normal "c(0.5,0.6,0.7,0.8,0.9)" --maxCN 5 \
+  --gcWig /opt/ichorCNA/inst/extdata/gc_hg38_1000kb.wig \
+  --mapWig /opt/ichorCNA/inst/extdata/map_hg38_1000kb.wig \
+  --centromere /opt/ichorCNA/inst/extdata/GRCh38.GCA_000001405.2_centromere_acen.txt \
+  --normalPanel /opt/ichorCNA/inst/extdata/HD_ULP_PoN_hg38_1Mb_median_normAutosome_median.rds \
+  --includeHOMD False --chrs "c(1:22, \"X\")" --chrTrain "c(1:22)" \
+  --estimateNormal True --estimatePloidy True --estimateScPrevalence True \
+  --scStates "c(1,3)" --txnE 0.9999 --txnStrength 10000 --outDir ./
 ```
 
-## License
+**This will work best with singularity**
 
-This project is licensed under the [MIT License](https://github.com/bwbioinfo/modkit-docker-cwl/blob/main/LICENSE).
+# Notes: HMMCopy is also available in the container
 
-## Contact
+# CI/CD
 
-If you have any questions or feedback, please contact the author via GitHub.
+[![Build and Push Docker Image](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg?query=branch%3Atemplate)](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml?query=branch%3Atemplate)
