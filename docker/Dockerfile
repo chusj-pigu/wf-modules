@@ -2,30 +2,40 @@ FROM rust:latest
 
 RUN apt-get update && apt-get install -y \
     procps \
-    git \
-    wget \
-    gcc \
-    zlib1g-dev \
-    make \
-    libbz2-dev \
-    liblzma-dev \
-    autoconf
+    fd-find
 
-WORKDIR /opt/
+RUN cargo install eza
+RUN cargo install zoxide
+RUN cargo install sd
+RUN cargo install du-dust
+RUN cargo install ripgrep
+RUN cargo install bandwhich
+RUN cargo install nu
 
-RUN git clone https://github.com/samtools/htslib.git
 
-WORKDIR /opt/htslib
-RUN git submodule update --init --recursive
+# Add aliases to Bash
+RUN echo "alias nickls='eza -l --sort=time --reverse --time-style=long-iso --tree --all --level=2 -g'" >> /root/.bashrc && \
+    echo "alias nicklss='eza -l --sort=time --reverse --time-style=long-iso --tree --level=2 -g'" >> /root/.bashrc && \
+    echo "alias nicklsd='eza -l --sort=time --reverse --time-style=long-iso --tree --all --level=3 -g'" >> /root/.bashrc && \
+    echo "alias nicklsdd='eza -l --sort=time --reverse --time-style=long-iso --tree --all --level=4 -g'" >> /root/.bashrc
 
-RUN autoreconf -i  # Build the configure script and install files it uses
-RUN ./configure    # Optional but recommended, for choosing extra functionality
-RUN make install
+# Prepare Nushell user configuration
+RUN mkdir -p /root/.config/nushell && \
+    touch /root/.config/nushell/config.nu
 
-RUN apt-get install -y \
-    libgsl-dev \
-    clang
+# Add aliases to Nushell user config
+RUN echo "alias nickls = eza -l --sort=time --reverse --time-style=long-iso --tree --all --level=2 -g" >> /root/.config/nushell/config.nu && \
+    echo "alias nicklss = eza -l --sort=time --reverse --time-style=long-iso --tree --level=2 -g" >> /root/.config/nushell/config.nu && \
+    echo "alias nicklsd = eza -l --sort=time --reverse --time-style=long-iso --tree --all --level=3 -g" >> /root/.config/nushell/config.nu && \
+    echo "alias nicklsdd = eza -l --sort=time --reverse --time-style=long-iso --tree --all --level=4 -g" >> /root/.config/nushell/config.nu
 
-RUN cargo install varlociraptor
+SHELL ["/usr/local/cargo/bin/nu", "-c"]
 
-RUN rm -rf /var/lib/apt/lists/*
+RUN [ nu_plugin_inc \
+nu_plugin_polars \
+nu_plugin_gstat \
+nu_plugin_formats \
+nu_plugin_query \
+] | each { cargo install $in --locked } | ignore
+
+RUN  ls --full-paths  /usr/local/cargo/bin/nu_plugin_* | get name | each { |$it| plugin add $it } 
