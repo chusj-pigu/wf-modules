@@ -2,7 +2,7 @@
 
 ## CI/CD
 
-[![Status](https://github.com/bwbioinfo/modules/actions/workflows/update-main.yml/badge.svg)](https://github.com/bwbioinfo/modules/actions/workflows/update-main.yml)
+[![Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/update-main.yml/badge.svg)](https://github.com/chusj-pigu/wf-modules/actions/workflows/update-main.yml)
 
 ## Modules Status
 
