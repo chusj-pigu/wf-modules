@@ -19,9 +19,7 @@ Rscript /opt/ichorCNA/scripts/runIchorCNA.R --id tumor_sample \
 
 # Notes: HMMCopy is also available in the container
 
-# CI/CD
-
-[![Build and Push Docker Image](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg?query=branch%3Atemplate)](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml?query=branch%3Atemplate)## CI/CD
+## CI/CD
 
 [![Build Status](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg?branch=)](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml?query=branch%3A)
 
