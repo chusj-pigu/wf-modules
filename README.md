@@ -1,33 +1,22 @@
-[![Build and Push Docker Image](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg?query=branch%3Atemplate)](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml?query=branch%3Atemplate)
+# Container and workflow module repository
 
-# module/template
+## CI/CD
 
-This repository provides:
-1. A [Common Workflow Language (CWL)](https://www.commonwl.org/) tool definition for running the [tool](https://link-to-tool) program. 
-2. The tool Docker container definition.
-3. A nextflow file with processes for the tools funcions.
+[![Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/update-main.yml/badge.svg)](https://github.com/chusj-pigu/wf-modules/actions/workflows/update-main.yml)
 
-Additional workflow languages will be supported ( e.g. WDL, Snakemake, etc) in the future. The aim is to provide a consistent tool definition for running bioinformatics tools across different workflow languages.
+## Modules Status
 
-## Prerequisites
-
-To use this tool, you must have the following software installed on your system:
-
--   [CWL tool](https://github.com/common-workflow-language/cwltool) or [Nextflow](https://www.nextflow.io/)
--   [Docker](https://www.docker.com/) OR [Singularity](https://sylabs.io/singularity/) OR [Apptainer](https://apptainer.org/)
-
-## Installation
-
-In CWL or NextFlow, you can add the tool as a submodule to your project.
-
-```
-git submodule add -b <tool-branch-name> https://github.com/bwbioinfo/modules modules/local/<local-tool-name>
-```
-
-## License
-
-This project is licensed under the [MIT License](https://github.com/bwbioinfo/modkit-docker-cwl/blob/main/LICENSE).
-
-## Contact
-
-If you have any questions or feedback, please contact the author via GitHub.
+| Branch Name | Build Status | Last Commit Date |
+|-------------|--------------|-------------------|
+| [figeno](https://github.com/chusj-pigu/wf-modules/tree/figeno) | [![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=figeno)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3Afigeno) | 2025-01-03 13:15:54 -0500 |
+| [htslib](https://github.com/chusj-pigu/wf-modules/tree/htslib) | [![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=htslib)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3Ahtslib) | 2025-01-07 14:33:58 -0500 |
+| [ichorcna](https://github.com/chusj-pigu/wf-modules/tree/ichorcna) | [![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=ichorcna)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3Aichorcna) | 2025-01-14 22:26:36 +0000 |
+| [minimap2](https://github.com/chusj-pigu/wf-modules/tree/minimap2) | [![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=minimap2)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3Aminimap2) | 2024-12-24 11:50:46 -0500 |
+| [modkit](https://github.com/chusj-pigu/wf-modules/tree/modkit) | [![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=modkit)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3Amodkit) | 2024-12-30 17:01:08 -0500 |
+| [oarfish](https://github.com/chusj-pigu/wf-modules/tree/oarfish) | [![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=oarfish)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3Aoarfish) | 2025-01-09 19:22:35 +0000 |
+| [quarto](https://github.com/chusj-pigu/wf-modules/tree/quarto) | [![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=quarto)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3Aquarto) | 2025-01-14 10:00:54 -0500 |
+| [rs-chromplotter](https://github.com/chusj-pigu/wf-modules/tree/rs-chromplotter) | [![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=rs-chromplotter)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3Ars-chromplotter) | 2024-12-30 17:01:43 -0500 |
+| [samtools](https://github.com/chusj-pigu/wf-modules/tree/samtools) | [![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=samtools)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3Asamtools) | 2024-12-24 20:02:53 -0500 |
+| [template](https://github.com/chusj-pigu/wf-modules/tree/template) | [![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=template)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3Atemplate) | 2025-01-14 17:21:58 -0500 |
+| [tools](https://github.com/chusj-pigu/wf-modules/tree/tools) | [![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=tools)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3Atools) | 2025-01-14 23:10:29 +0000 |
+| [varlociraptor](https://github.com/chusj-pigu/wf-modules/tree/varlociraptor) | [![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=varlociraptor)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3Avarlociraptor) | 2025-01-13 15:53:34 -0500 |
