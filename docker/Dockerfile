@@ -1,14 +1,50 @@
-FROM alpine:latest
+FROM ubuntu:22.04
 
-# Install dependencies
-RUN apk add --no-cache \
-    bash \
-    curl \
-    git 
+# Set noninteractive frontend to avoid tzdata prompts
+ENV DEBIAN_FRONTEND=noninteractive
+RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && \
+    echo "America/New_York" > /etc/timezone && \
+    apt update && apt install -y tzdata
 
-# TODO: Install procps for NextFlow
+# Install base R and necessary system libraries
+RUN apt update && apt install -y \
+    r-base-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libxml2-dev \
+    libbz2-dev \
+    liblzma-dev \
+    libz-dev \
+    libpcre2-dev \
+    libicu-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libtiff-dev \
+    libglib2.0-dev \
+    libxt-dev \
+    libfontconfig1-dev \
+    build-essential \
+    cmake \
+    wget \
+    git \
+    && apt clean
 
-# TODO: Make an alias to get version
+# Set R library path
+ENV R_LIBS_USER=/usr/local/lib/R/site-library
+RUN mkdir -p ${R_LIBS_USER}
 
-# RUN $()
-# ENV version = 
+# Install CRAN packages
+RUN R -e "install.packages('BiocManager', repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages(c('tidyverse', 'ggplot2', 'plotly', 'NMF', 'heatmaply', 'ggrepel', 'threejs'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
+
+# Install Bioconductor dependencies
+RUN R -e "BiocManager::install(c('SummarizedExperiment', 'GenomicRanges', 'AnnotationDbi', 'GenomicAlignments', 'rtracklayer'), ask=FALSE)"
+
+# Install target Bioconductor packages
+RUN R -e "BiocManager::install(c('DEXSeq', 'stageR', 'GOstats', 'pcaExplorer', 'GenomicFeatures'), ask=FALSE)"
+
+# Verify installation
+RUN R -e "BiocManager::valid()"
+
+# Set default command
+CMD ["R"]

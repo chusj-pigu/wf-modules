@@ -1,9 +1,9 @@
 [![Build and Push Docker Image](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml/badge.svg?query=branch%3Atemplate)](https://github.com/bwbioinfo/modules/actions/workflows/build-and-push.yml?query=branch%3Atemplate)
 
-# module/template
+# module/dexseq
 
 This repository provides:
-1. A [Common Workflow Language (CWL)](https://www.commonwl.org/) tool definition for running the [tool](https://link-to-tool) program. 
+1. A [Common Workflow Language (CWL)](https://www.commonwl.org/) tool definition for running DGE analysis in R with [DEXseq](https://bioconductor.org/packages/release/bioc/html/DEXSeq.html) and [stageR](https://bioconductor.org/packages/release/bioc/html/stageR.html). 
 2. The tool Docker container definition.
 3. A nextflow file with processes for the tools funcions.
 
@@ -21,7 +21,7 @@ To use this tool, you must have the following software installed on your system:
 In CWL or NextFlow, you can add the tool as a submodule to your project.
 
 ```
-git submodule add -b <tool-branch-name> https://github.com/bwbioinfo/modules modules/local/<local-tool-name>
+git submodule add -b dexseq https://github.com/chusj-pigu/wf-modules modules/local/dexseq
 ```
 
 ## License
