@@ -7,9 +7,7 @@ process MINIMAP2_ALIGNDRNA {
     label 'process_memory_high'
     label 'process_time_high'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
-
-    publishDir "output", mode: 'copy'
-
+    
     input:
     tuple val(meta), path(reads)
     path(reference)
@@ -22,7 +20,7 @@ process MINIMAP2_ALIGNDRNA {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: '-ax splice -uf -k14'
+    def args = task.ext.args ?: '-ax splice -uf -y -k14'
     def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
     """
