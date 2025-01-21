@@ -90,8 +90,10 @@ process MODKIT_DMR_PAIR {
     input:
     tuple val(meta),
         path(ctl_pileup),
-        val(exp_index),
-        path(exp_pileup)
+        path(ctl_index),
+        val(exp_id),
+        path(exp_pileup),
+        path(exp_index)
     path(ref)
 
     output:
@@ -105,21 +107,19 @@ process MODKIT_DMR_PAIR {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
-
     """
-    if [[ ! -f ${ref} ]]; then
-        pigz -d ${ref}.gz
-    fi
+    
+    pigz -d ${ref}
 
     modkit dmr pair \
         -a ${ctl_pileup} \
         -b ${exp_pileup} \
         ${args} \
         -o ${prefix}_dmr_results.txt \
-        --ref ${ref} \
+        --ref ${ref.baseName} \
         --base A \
         --threads ${threads} \
-        --log-filepath dmr.log
+        --log-filepath ${prefix}-dmr.log
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
