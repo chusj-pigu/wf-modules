@@ -1,6 +1,6 @@
 process MODKIT_PILEUP {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/bwbioinfo/modkit:latest'
+    container 'ghcr.io/chusj-pigu/modkit:latest'
 
     tag "$meta.id"
     label 'process_cpu_med'
@@ -39,7 +39,7 @@ process MODKIT_PILEUP {
 
 process MODKIT_SUMMARY {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/bwbioinfo/modkit:latest'
+    container 'ghcr.io/chusj-pigu/modkit:latest'
 
     tag "$meta.id"
     label 'process_cpu_med'
