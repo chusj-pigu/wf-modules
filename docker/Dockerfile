@@ -1,14 +1,8 @@
-FROM alpine:latest
+FROM python:latest
 
 # Install dependencies
-RUN apk add --no-cache \
-    bash \
-    curl \
-    git 
+RUN apt update && apt install -y \
+    procps \
+    && apt-get clean 
 
-# TODO: Install procps for NextFlow
-
-# TODO: Make an alias to get version
-
-# RUN $()
-# ENV version = 
+RUN pip install NanoPlot
