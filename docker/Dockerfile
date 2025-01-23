@@ -1,14 +1,7 @@
-FROM alpine:latest
+FROM ubuntu:latest
 
 # Install dependencies
-RUN apk add --no-cache \
-    bash \
-    curl \
-    git 
+RUN apt-get update && apt-get install -y bedtools \
+    procps 
 
-# TODO: Install procps for NextFlow
-
-# TODO: Make an alias to get version
-
-# RUN $()
-# ENV version = 
+RUN apt-get clean
