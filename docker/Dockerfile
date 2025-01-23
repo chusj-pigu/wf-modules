@@ -26,6 +26,7 @@ RUN dnf install -y \
     libcurl-devel \
     wget \ 
     procps \
+    pigz \
     zsh
 
 
