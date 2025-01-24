@@ -1,14 +1,8 @@
-FROM alpine:latest
+FROM rust:latest
 
 # Install dependencies
-RUN apk add --no-cache \
-    bash \
-    curl \
-    git 
+RUN apt update && apt install -y \
+    procps \
+    && rm -rf /var/lib/apt/lists/*
 
-# TODO: Install procps for NextFlow
-
-# TODO: Make an alias to get version
-
-# RUN $()
-# ENV version = 
+RUN cargo install gxf2bed
