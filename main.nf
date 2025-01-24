@@ -1,4 +1,3 @@
-
 process GTF_TO_BED {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/gxf2bed:latest'
