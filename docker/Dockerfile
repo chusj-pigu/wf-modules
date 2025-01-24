@@ -2,6 +2,7 @@ FROM rust:latest
 
 RUN apt-get update && apt-get install -y \
     procps \
+    gnuplot \
     fd-find
 
 RUN cargo install eza
@@ -12,6 +13,10 @@ RUN cargo install ripgrep
 RUN cargo install bandwhich
 RUN cargo install nu
 
+WORKDIR /opt/
+COPY scripts scripts
+RUN chmod +x /opt/scripts/*
+ENV PATH="/opt/scripts:${PATH}"
 
 # Add aliases to Bash
 RUN echo "alias nickls='eza -l --sort=time --reverse --time-style=long-iso --tree --all --level=2 -g'" >> /root/.bashrc && \
