@@ -18,9 +18,14 @@ COPY scripts scripts
 RUN chmod +x /opt/scripts/*
 ENV PATH="/opt/scripts:${PATH}"
 
+
+# Prepare Nushell user configuration
+RUN mkdir -p /root/.config/nushell && \
+    touch /root/.config/nushell/config.nu
+
 SHELL ["/usr/local/cargo/bin/nu", "-c"]
 
-ENV $env.NU_PLUGIN_DIRS = '/opt/nu-plugins'
+ENV NU_PLUGIN_DIRS='/opt/nu-plugins'
 
 RUN [ nu_plugin_inc \
 nu_plugin_polars \
@@ -30,9 +35,3 @@ nu_plugin_query \
 ] | each { cargo install $in --locked } | ignore
 
 RUN  ls --full-paths  /usr/local/cargo/bin/nu_plugin_* | get name | each { |$it| plugin add $it } 
-
-RUN  plugin use polars
-RUN  plugin use gstat
-RUN  plugin use formats
-RUN  plugin use query
-
