@@ -3,9 +3,7 @@ process MINIMAP2_ALIGNDRNA {
     container 'ghcr.io/bwbioinfo/minimap2:latest'
 
     tag "$meta.id"
-    label 'process_cpu_high'
-    label 'process_memory_high'
-    label 'process_time_high'
+    label 'process_high'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
     
     input:
