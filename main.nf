@@ -3,17 +3,19 @@ process MPGI_SUMMARIZE_MODS {
     container 'ghcr.io/chusj-pigu/tools:latest'
 
     tag "$meta.id"
-    label 'process_cpu_med'
-    label 'process_memory_med'
-    label 'process_time_med'
+    label 'process_medium'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
     
     input:
-    tuple val(meta), path(in_bam), path(bam_index)
+    tuple val(meta), path(mods), path(mapped)
 
     output:
-    tuple val(meta), path("*.csv"), emit: modifications_summary
-    path "versions.yml"           , emit: versions
+    tuple val(meta),
+        path("*.csv"),
+        optional: true,
+        emit: modifications_summary
+    path "versions.yml", 
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -22,9 +24,9 @@ process MPGI_SUMMARIZE_MODS {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     summarize_modifications.nu \\
-        --mods ${in_bam} \\
-        --mapped ${bam_index} \\
-        --output ${prefix}.csv
+        ${mods} \\
+        ${mapped} \\
+        ${prefix}.csv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -38,9 +40,7 @@ process MPGI_COUNTFEATURES {
     container 'ghcr.io/chusj-pigu/tools:latest'
 
     tag "$meta.id"
-    label 'process_cpu_med'
-    label 'process_memory_med'
-    label 'process_time_med'
+    label 'process_medium'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
     
     input:
