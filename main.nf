@@ -7,7 +7,9 @@ process MPGI_SUMMARIZE_MODS {
     errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
     
     input:
-    tuple val(meta), path(mods), path(mapped)
+    tuple val(meta), 
+        path(mods), 
+        path(mapped)
 
     output:
     tuple val(meta),
@@ -44,11 +46,15 @@ process MPGI_COUNTFEATURES {
     errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
     
     input:
-    tuple val(meta), path(input)
+    tuple val(meta), 
+        path(input)
 
     output:
-    tuple val(meta), path("*.csv"), emit: features_summary
-    path "versions.yml"           , emit: versions
+    tuple val(meta), 
+        path("*.csv"), 
+        emit: features_summary
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
