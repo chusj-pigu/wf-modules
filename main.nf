@@ -1,18 +1,16 @@
 
-process BEDTOOLS_INTERSECT_BAM {
+process BEDTOOLS_INTERSECT {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/bedtools:latest'
 
     tag "$meta.id"
-    label 'process_cpu_med'
-    label 'process_memory_med'
-    label 'process_time_med'
+    label 'process_medium'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
     
     input:
     tuple val(meta),
-        path(bam)
-    path(ref_features)
+        path(file1)
+    path(file2)
 
     output:
     tuple val(meta), path("*.txt"), emit: mapped_features
@@ -26,8 +24,8 @@ process BEDTOOLS_INTERSECT_BAM {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     bedtools intersect \
-        -a ${ref_features} \
-        -b ${bam} \
+        -a ${file2} \
+        -b ${file1} \
         -wa \
         -wb \
         ${args} > ${prefix}-mapped_features.txt
