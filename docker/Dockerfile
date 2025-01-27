@@ -24,10 +24,6 @@ RUN echo "alias nickls='eza -l --sort=time --reverse --time-style=long-iso --tre
     echo "alias nicklsd='eza -l --sort=time --reverse --time-style=long-iso --tree --all --level=3 -g'" >> /root/.bashrc && \
     echo "alias nicklsdd='eza -l --sort=time --reverse --time-style=long-iso --tree --all --level=4 -g'" >> /root/.bashrc
 
-# Prepare Nushell user configuration
-RUN mkdir -p /root/.config/nushell && \
-    touch /root/.config/nushell/config.nu
-
 # Add aliases to Nushell user config
 RUN echo "alias nickls = eza -l --sort=time --reverse --time-style=long-iso --tree --all --level=2 -g" >> /root/.config/nushell/config.nu && \
     echo "alias nicklss = eza -l --sort=time --reverse --time-style=long-iso --tree --level=2 -g" >> /root/.config/nushell/config.nu && \
