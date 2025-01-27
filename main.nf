@@ -3,9 +3,7 @@ process MODKIT_PILEUP {
     container 'ghcr.io/chusj-pigu/modkit:latest'
 
     tag "$meta.id"
-    label 'process_cpu_med'
-    label 'process_memory_med'
-    label 'process_time_med'
+    label 'process_high'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
     
     input:
@@ -42,9 +40,7 @@ process MODKIT_SUMMARY {
     container 'ghcr.io/chusj-pigu/modkit:latest'
 
     tag "$meta.id"
-    label 'process_cpu_med'
-    label 'process_memory_med'
-    label 'process_time_med'
+    label 'process_high'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
     
     input:
@@ -82,9 +78,7 @@ process MODKIT_DMR_PAIR {
     container 'ghcr.io/chusj-pigu/modkit:latest'
 
     tag "$meta.id"
-    label 'process_cpu_med'
-    label 'process_memory_med'
-    label 'process_time_med'
+    label 'process_high'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
     
     input:
@@ -137,14 +131,13 @@ process MODKIT_EXTRACT_FULL {
     container 'ghcr.io/chusj-pigu/modkit:latest'
 
     tag "$meta.id"
-    label 'process_cpu_med'
-    label 'process_memory_med'
-    label 'process_time_med'
+    label 'process_high'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
     
     input:
     tuple val(meta),
-        path(bam)
+        path(bam),
+        path(bam_index)
 
     output:
     tuple val(meta), path("*.txt"), emit: modkit_read_mods
