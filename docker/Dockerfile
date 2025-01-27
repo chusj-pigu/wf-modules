@@ -34,7 +34,11 @@ RUN echo "alias nickls = eza -l --sort=time --reverse --time-style=long-iso --tr
     echo "alias nicklsd = eza -l --sort=time --reverse --time-style=long-iso --tree --all --level=3 -g" >> /root/.config/nushell/config.nu && \
     echo "alias nicklsdd = eza -l --sort=time --reverse --time-style=long-iso --tree --all --level=4 -g" >> /root/.config/nushell/config.nu
 
+USER nushell
+
 SHELL ["/usr/local/cargo/bin/nu", "-c"]
+
+ENV $env.NU_PLUGIN_DIRS = '/opt/nu-plugins'
 
 RUN [ nu_plugin_inc \
 nu_plugin_polars \
@@ -50,4 +54,3 @@ RUN  plugin use gstat
 RUN  plugin use formats
 RUN  plugin use query
 
-ENV export NU_PLUGIN_DIRS=/usr/local/cargo/bin
