@@ -24,17 +24,27 @@ process MPGI_SUMMARIZE_MODS {
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    """
-    summarize_modifications.nu \\
-        ${mods} \\
-        ${mapped} \\
-        ${prefix}.csv
+    '''
+    #!/usr/local/cargo/bin/nu
+    plugin add /usr/local/cargo/bin/nu_plugin_polars
+    plugin use polars
+    (
+    summarize_modifications.nu 
+        !{mods} 
+        !{mapped}
+        !{prefix}.csv
+    )
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        nushell: \$( nu --version )
-    END_VERSIONS
-    """
+    let task_process = "example_process"
+    let nu_version = $(nu --version)
+
+    (
+    open versions.yml --raw | append --raw "
+    \"!{task.process}\":
+    nushell:  $nu_version
+    " | save versions.yml
+    )
+    '''
 }
 
 process MPGI_COUNTFEATURES {
@@ -62,7 +72,12 @@ process MPGI_COUNTFEATURES {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    countfeatures.nu \\
+    #!/usr/local/cargo/bin/nu
+    plugin add /usr/local/cargo/bin/nu_plugin_polars
+    plugin use polars
+    (
+    )
+    nu countfeatures.nu \\
         ${input} \\
         ${prefix}-features-summary.csv
 
