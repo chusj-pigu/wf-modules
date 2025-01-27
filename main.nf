@@ -3,9 +3,7 @@ process MPGI_SUMMARIZE_MODS {
     container 'ghcr.io/chusj-pigu/tools:latest'
 
     tag "$meta.id"
-    label 'process_cpu_med'
-    label 'process_memory_med'
-    label 'process_time_med'
+    label 'process_medium'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
     
     input:
@@ -42,9 +40,7 @@ process MPGI_COUNTFEATURES {
     container 'ghcr.io/chusj-pigu/tools:latest'
 
     tag "$meta.id"
-    label 'process_cpu_med'
-    label 'process_memory_med'
-    label 'process_time_med'
+    label 'process_medium'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
     
     input:
