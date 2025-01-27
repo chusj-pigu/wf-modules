@@ -49,3 +49,5 @@ RUN  plugin use polars
 RUN  plugin use gstat
 RUN  plugin use formats
 RUN  plugin use query
+
+ENV export NU_PLUGIN_DIRS=/usr/local/cargo/bin
