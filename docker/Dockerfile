@@ -44,3 +44,8 @@ nu_plugin_query \
 ] | each { cargo install $in --locked } | ignore
 
 RUN  ls --full-paths  /usr/local/cargo/bin/nu_plugin_* | get name | each { |$it| plugin add $it } 
+
+RUN  plugin use polars
+RUN  plugin use gstat
+RUN  plugin use formats
+RUN  plugin use query
