@@ -18,20 +18,6 @@ COPY scripts scripts
 RUN chmod +x /opt/scripts/*
 ENV PATH="/opt/scripts:${PATH}"
 
-# Add aliases to Bash
-RUN echo "alias nickls='eza -l --sort=time --reverse --time-style=long-iso --tree --all --level=2 -g'" >> /root/.bashrc && \
-    echo "alias nicklss='eza -l --sort=time --reverse --time-style=long-iso --tree --level=2 -g'" >> /root/.bashrc && \
-    echo "alias nicklsd='eza -l --sort=time --reverse --time-style=long-iso --tree --all --level=3 -g'" >> /root/.bashrc && \
-    echo "alias nicklsdd='eza -l --sort=time --reverse --time-style=long-iso --tree --all --level=4 -g'" >> /root/.bashrc
-
-# Add aliases to Nushell user config
-RUN echo "alias nickls = eza -l --sort=time --reverse --time-style=long-iso --tree --all --level=2 -g" >> /root/.config/nushell/config.nu && \
-    echo "alias nicklss = eza -l --sort=time --reverse --time-style=long-iso --tree --level=2 -g" >> /root/.config/nushell/config.nu && \
-    echo "alias nicklsd = eza -l --sort=time --reverse --time-style=long-iso --tree --all --level=3 -g" >> /root/.config/nushell/config.nu && \
-    echo "alias nicklsdd = eza -l --sort=time --reverse --time-style=long-iso --tree --all --level=4 -g" >> /root/.config/nushell/config.nu
-
-USER nushell
-
 SHELL ["/usr/local/cargo/bin/nu", "-c"]
 
 ENV $env.NU_PLUGIN_DIRS = '/opt/nu-plugins'
