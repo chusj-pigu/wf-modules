@@ -1,6 +1,7 @@
 process MPGI_SUMMARIZE_MODS {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/tools:latest'
+    containerOptions '--no-home --writable-tmpfs'
 
     tag "$meta.id"
     label 'process_medium'
@@ -18,33 +19,25 @@ process MPGI_SUMMARIZE_MODS {
         emit: modifications_summary
     path "versions.yml", 
         emit: versions
-
+        
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    '''
-    #!/usr/local/cargo/bin/nu
-    plugin add /usr/local/cargo/bin/nu_plugin_polars
-    plugin use polars
-    (
-    summarize_modifications.nu 
-        !{mods} 
-        !{mapped}
-        !{prefix}.csv
-    )
+    """
+    nu --plugins \
+        '[/usr/local/cargo/bin/nu_plugin_polars]' \
+        /opt/scripts/summarize_modifications.nu \
+        ${mods} \
+        ${mapped} \
+        ${prefix}.csv
 
-    let task_process = "example_process"
-    let nu_version = $(nu --version)
-
-    (
-    open versions.yml --raw | append --raw "
-    \"!{task.process}\":
-    nushell:  $nu_version
-    " | save versions.yml
-    )
-    '''
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        nushell: \$( nu --version )
+    END_VERSIONS
+    """
 }
 
 process MPGI_COUNTFEATURES {
@@ -72,14 +65,12 @@ process MPGI_COUNTFEATURES {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    #!/usr/local/cargo/bin/nu
-    plugin add /usr/local/cargo/bin/nu_plugin_polars
-    plugin use polars
-    (
-    )
-    nu countfeatures.nu \\
-        ${input} \\
+        nu --plugins \
+        '[/usr/local/cargo/bin/nu_plugin_polars]' \
+        /opt/scripts/countfeatures.nu \
+        ${input} \
         ${prefix}-features-summary.csv
+
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
