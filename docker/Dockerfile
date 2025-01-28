@@ -22,7 +22,7 @@ RUN R -e 'BiocManager::install("HMMcopy")'
 RUN R -e 'BiocManager::install("GenomicRanges")'
 
 
-RUN git clone https://github.com/broadinstitute/ichorCNA.git
+COPY ichorCNA /opt/ichorCNA
 RUN R -e 'install.packages("ichorCNA", repos=NULL, type="source")'
 
 ENV PATH="/opt/ichorCNA/scripts:${PATH}"
