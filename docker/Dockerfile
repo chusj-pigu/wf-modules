@@ -44,6 +44,7 @@ USER nushell
 SHELL ["/usr/local/cargo/bin/nu", "-c"]
 
 ENV NU_PLUGIN_DIRS='/opt/nu-plugins'
+ENV PATH="/opt/scripts:${PATH}"
 
 RUN [ nu_plugin_inc \
 nu_plugin_polars \
@@ -53,6 +54,3 @@ nu_plugin_query \
 ] | each { cargo install $in --locked } | ignore
 
 RUN  ls --full-paths  /usr/local/cargo/bin/nu_plugin_* | get name | each { |$it| plugin add $it } 
-
-# docker save -o tools-test.tar tools-test:latest
-# singularity build tools-test.sif docker-archive://tools-test.tar
