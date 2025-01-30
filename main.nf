@@ -9,12 +9,16 @@ process BEDTOOLS_INTERSECT {
     
     input:
     tuple val(meta),
-        path(file1)
+        path(file1),
+        path (file1_index)
     path(file2)
 
     output:
-    tuple val(meta), path("*.txt"), emit: mapped_features
-    path "versions.yml"           , emit: versions
+    tuple val(meta), 
+        path("*.txt"),
+        emit: mapped_features
+    path "versions.yml", 
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
