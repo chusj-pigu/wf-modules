@@ -7,11 +7,16 @@ process MODKIT_PILEUP {
     errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
     
     input:
-    tuple val(meta), path(in_bam), path(bam_index)
+    tuple val(meta), 
+        path(in_bam),
+        path(bam_index)
 
     output:
-    tuple val(meta), path("*.bed"), emit: bedmethyl
-    path "versions.yml"           , emit: versions
+    tuple val(meta),
+        path("*.bed"),
+        emit: bedmethyl
+    path "versions.yml", 
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
