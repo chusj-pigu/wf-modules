@@ -35,13 +35,13 @@ RUN mkdir -p ${R_LIBS_USER}
 
 # Install CRAN packages
 RUN R -e "install.packages('BiocManager', repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages(c('tidyverse', 'ggplot2', 'plotly', 'NMF', 'heatmaply', 'ggrepel', 'threejs', 'RColorBrewer','paletteer','pheatmap','writexl'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages(c('tidyverse', 'ggplot2', 'ggrepel', 'RColorBrewer','paletteer','pheatmap','writexl'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
 # Install Bioconductor dependencies
-RUN R -e "BiocManager::install(c('SummarizedExperiment', 'GenomicRanges', 'AnnotationDbi', 'GenomicAlignments', 'rtracklayer'), ask=FALSE)"
+RUN R -e "BiocManager::install(c('GenomicRanges', 'AnnotationDbi', 'GenomicAlignments', 'rtracklayer'), ask=FALSE)"
 
 # Install target Bioconductor packages
-RUN R -e "BiocManager::install(c('DEXSeq', 'DESeq2', 'stageR', 'GOstats', 'pcaExplorer', 'GenomicFeatures'), ask=FALSE)"
+RUN R -e "BiocManager::install(c('DESeq2', 'pcaExplorer', 'GenomicFeatures'), ask=FALSE)"
 
 # Verify installation
 RUN R -e "BiocManager::valid()"
