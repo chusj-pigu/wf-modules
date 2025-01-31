@@ -8,7 +8,7 @@
 
 | Branch Name | Build Status | Last Commit Date |
 |-------------|--------------|-------------------|
-| [bedtools](https://github.com/chusj-pigu/wf-modules/tree/bedtools) | [![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=bedtools)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3Abedtools) | 2025-01-27 22:25:37 -0500 |
+| [bedtools](https://github.com/chusj-pigu/wf-modules/tree/bedtools) | [![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=bedtools)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3Abedtools) | 2025-01-30 11:54:08 -0500 |
 | [dexseq](https://github.com/chusj-pigu/wf-modules/tree/dexseq) | [![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=dexseq)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3Adexseq) | 2025-01-17 23:39:38 +0000 |
 | [figeno](https://github.com/chusj-pigu/wf-modules/tree/figeno) | [![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=figeno)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3Afigeno) | 2025-01-03 13:15:54 -0500 |
 | [gxf2bed](https://github.com/chusj-pigu/wf-modules/tree/gxf2bed) | [![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=gxf2bed)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3Agxf2bed) | 2025-01-27 22:28:45 -0500 |
