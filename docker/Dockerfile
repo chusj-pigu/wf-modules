@@ -1,14 +1,15 @@
-FROM alpine:latest
+FROM ubuntu:23.10
+FROM continuumio/miniconda3
 
-# Install dependencies
-RUN apk add --no-cache \
-    bash \
-    curl \
-    git 
+RUN apt-get update && apt-get install -y \
+    python3 \
+    git
 
-# TODO: Install procps for NextFlow
+RUN conda config --add channels defaults
+RUN conda config --add channels bioconda
+RUN conda config --add channels conda-forge
+RUN conda config --set channel_priority strict
 
-# TODO: Make an alias to get version
+RUN conda install -c bioconda chopper
 
-# RUN $()
-# ENV version = 
+
