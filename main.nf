@@ -7,6 +7,8 @@ process CHOPPER_LENGTH {
 
     input:
     tuple val(meta), path(reads)
+    val max_len
+    val qual
 
     output:
     tuple val(meta), path("*.fastq.gz"), emit: reads
@@ -20,8 +22,8 @@ process CHOPPER_LENGTH {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     chopper \\
-        -q 10 \\
-        --maxlength 700 \\
+        -q ${qual} \\
+        --maxlength ${max_len} \\
         -i ${reads} \\
         ${args} > ${prefix}.fastq.gz
 
