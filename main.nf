@@ -24,6 +24,7 @@ process CHOPPER_LENGTH {
     def pigz = reads.extension == '.gz' ? "-i ${reads}" : "-i ${reads} | pigz"
     """
     chopper \\
+        --threads ${task.cpus} \\
         -q ${qual} \\
         --maxlength ${max_len} \\
         ${args} \\
