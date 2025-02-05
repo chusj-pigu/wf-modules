@@ -2,7 +2,6 @@ process CHOPPER_LENGTH {
     tag "$meta.id"
     label 'process_low'
 
-    conda (params.enable_conda ? "bioconda::chopper=0.9.0" : null)
     container "ghcr.io/chusj-pigu/chopper:latest" // TO DO: SET CONTAINER TO FIXED VERSION
 
     input:
