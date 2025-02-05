@@ -25,11 +25,6 @@ input:
         type: file
         description: |
           List of input FASTA or FASTQ files
-  - - meta2:
-        type: map
-        description: |
-          Groovy Map containing reference information
-          e.g. [ id:'test_ref']
     - reference:
         type: file
         description: |
