@@ -6,8 +6,7 @@ process MINIMAP2_ALIGN {
     container "ghcr.io/chusj-pigu/minimap2:latest" // TO DO: SET CONTAINER TO FIXED VERSION
 
     input:
-    tuple val(meta), path(reads)
-    tuple val(meta2), path(ref)
+    tuple val(meta), path(reads), path(ref)
 
     output:
     tuple val(meta), path("*.sam"), emit: sam
