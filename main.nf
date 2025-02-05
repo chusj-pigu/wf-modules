@@ -20,7 +20,7 @@ process CHOPPER_LENGTH {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def output_ext = reads.baseName.endsWith('fastq') ? "fastq.gz" : "fq.gz"
-    def pigz = reads.extension == '.gz' ? "-i ${reads}" : "-i ${reads} | pigz"
+    def pigz = reads.name.endsWith('.gz') ? "-i ${reads}" : "-i ${reads} | pigz"
     """
     chopper \\
         --threads ${task.cpus} \\
