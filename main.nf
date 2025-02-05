@@ -1,37 +1,37 @@
-process MINIMAP2_ALIGNDRNA {
-    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/bwbioinfo/minimap2:latest'
-
+process MINIMAP2_ALIGN {
     tag "$meta.id"
     label 'process_high'
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
-    
+
+    conda (params.enable_conda ? "bioconda::minimap2=2.28" : null)
+    container "ghcr.io/chusj-pigu/minimap2:latest" // TO DO: SET CONTAINER TO FIXED VERSION
+
     input:
     tuple val(meta), path(reads)
-    path(reference)
+    tuple val(meta2), path(ref)
 
     output:
-    tuple val(meta), path("*.sam"), emit: samfile
-    path "versions.yml"           , emit: versions
+    tuple val(meta), path("*.sam"), emit: sam
+    path "versions.yml"                , emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: '-ax splice -uf -y -k14'
+    def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def threads = task.cpus
     """
     minimap2 \\
-        -t ${threads} \\
+        -y \\
+        -ax \\
+        map-ont \\
         ${args} \\
-        ${reference} \\
-        ${reads} \\
-        -o '${prefix}.sam'
+        -t ${task.cpus} \\
+        ${ref} \\
+        ${reads} > ${prefix}.${ref.simpleName}.sam
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        minimap2: \$( minimap2 --version )
+        minima2: \$(minimap2 -V | cut -d ' ' -f2 | sed 's/v//')
     END_VERSIONS
     """
-} 
+}

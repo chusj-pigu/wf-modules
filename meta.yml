@@ -1,0 +1,52 @@
+name: minimap2_align
+description: A versatile pairwise aligner for genomic nucleotide sequences obtained by Nanopore sequencing
+keywords:
+  - align
+  - fasta
+  - fastq
+  - genome
+  - sam
+  - reference
+tools:
+  - minimap2:
+      description: |
+        A versatile pairwise aligner for genomic and spliced nucleotide sequences.
+      homepage: https://github.com/lh3/minimap2
+      documentation: https://github.com/lh3/minimap2#uguide
+      licence: ["MIT"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test' ]
+    - reads:
+        type: file
+        description: |
+          List of input FASTA or FASTQ files
+  - - meta2:
+        type: map
+        description: |
+          Groovy Map containing reference information
+          e.g. [ id:'test_ref']
+    - reference:
+        type: file
+        description: |
+          Reference database in FASTA format.
+output:
+  - reads:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test']
+      - "*.sam":
+          type: file
+          description: Alignment in sam format
+          pattern: "*.sam"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
