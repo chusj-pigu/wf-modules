@@ -1,0 +1,50 @@
+name: chopper_length
+description: a module for a rust tool for filtering reads by length and quality
+keywords:
+  - filtering
+  - fasta
+  - fastq
+tools:
+  - chopper:
+      description: |
+        Rust implementation of NanoFilt+NanoLyse, both originally written in Python
+      homepage: https://github.com/wdecoster/chopper
+      documentation: https://github.com/wdecoster/chopper
+      licence: ["MIT"]
+      identifier: ""
+input:
+  - - meta:
+        type: map
+        description: |
+          Groovy Map containing sample information
+          e.g. [ id:'test' ]
+    - reads:
+        type: file
+        description: |
+          List of input FASTA or FASTQ files
+  - - max_len:
+        type: integer
+        description: |
+          Maximum length of reads to keep
+          e.g. [ 700 ]
+  - - qual:
+        type: integer
+        description: |
+          Minimum phred quality score to filter reads with
+          e.g. [ 10 ]
+output:
+  - reads:
+      - meta:
+          type: map
+          description: |
+            Groovy Map containing sample information
+            e.g. [ id:'test']
+      - "*.fastq.gz":
+          type: file
+          description: Filtered fastq file
+          pattern: "*.fastq.gz"
+  - versions:
+      - versions.yml:
+          type: file
+          description: File containing software versions
+          pattern: "versions.yml"
