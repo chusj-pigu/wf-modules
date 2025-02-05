@@ -39,10 +39,10 @@ output:
           description: |
             Groovy Map containing sample information
             e.g. [ id:'test']
-      - "*.fastq.gz":
+      - "*.{fastq.gz,fq.gz}":
           type: file
           description: Filtered fastq file
-          pattern: "*.fastq.gz"
+          pattern: "*.{fastq.gz,fq.gz}"
   - versions:
       - versions.yml:
           type: file

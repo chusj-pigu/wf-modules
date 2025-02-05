@@ -11,7 +11,7 @@ process CHOPPER_LENGTH {
     val qual
 
     output:
-    tuple val(meta), path("*.fastq.gz"), emit: reads
+    tuple val(meta), path("*.{fastq.gz,fq.gz}"), emit: reads
     path "versions.yml"                , emit: versions
 
     when:
@@ -20,12 +20,14 @@ process CHOPPER_LENGTH {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def output_ext = reads.baseName.endsWith('fastq') ? "fastq.gz" : "fq.gz"
+    def pigz = reads.extension == '.gz' ? "-i ${reads}" : "-i ${reads} | pigz"
     """
     chopper \\
         -q ${qual} \\
         --maxlength ${max_len} \\
-        -i ${reads} \\
-        ${args} > ${prefix}.fastq.gz
+        ${args} \\
+        ${pigz} > ${prefix}.${output_ext}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
