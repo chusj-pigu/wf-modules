@@ -2,7 +2,6 @@ process MINIMAP2_ALIGN {
     tag "$meta.id"
     label 'process_high'
 
-    conda (params.enable_conda ? "bioconda::minimap2=2.28" : null)
     container "ghcr.io/chusj-pigu/minimap2:latest" // TO DO: SET CONTAINER TO FIXED VERSION
 
     input:
