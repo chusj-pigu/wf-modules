@@ -130,22 +130,22 @@ process ICHORCNA {
     def normal_prop = (1 - purity).round(2)
     def purity_low = (normal_prop - (normal_prop / 2)).round(2)
     def purity_high = (normal_prop + (normal_prop / 2)).round(2)
-    def ploidy = params.custom_ploidy ?: "c(2,3)"
-    def maxCN = params.custom_maxCN ?: "5"
-    def gcWig = params.custom_gcWig ?: "/opt/ichorCNA/inst/extdata/gc_${ref}_1000kb.wig"
-    def mapWig = params.custom_mapWig ?: "/opt/ichorCNA/inst/extdata/map_${ref}_1000kb.wig"
-    def centromere = params.custom_centromere ?: "/opt/ichorCNA/inst/extdata/GRCh38.GCA_000001405.2_centromere_acen.txt"
-    def panel = params.normal_panel ?: "/opt/ichorCNA/inst/extdata/HD_ULP_PoN_hg38_1Mb_median_normAutosome_median.rds"
-    def homd = params.homd ?: "False"
-    def chrs = params.chrs ?: "c(1:22, \\\"X\\\")"
-    def chrtrain = params.chr_train ?: "c(1:22)"
-    def genome_build = params.genome_build ?: "hg38"
-    def genome_style = params.genome_style ?: "UCSC"
-    def estimate_normal = params.estimate_normal ?: True
-    def estimate_ploidy = params.estimate_ploidy ?: True
-    def estimate_sc_prevalence = params.estimate_sc_prevalence ?: False
-    def txne = params.txnE ?: 0.9999
-    def txn_strength = params.txn_strength ?: 10000
+    def ploidy = params.custom_ploidy
+    def maxCN = params.custom_maxCN
+    def gcWig = params.custom_gcWig
+    def mapWig = params.custom_mapWig
+    def centromere = params.custom_centromere
+    def panel = params.normal_panel
+    def homd = params.homd
+    def chrs = params.chrs
+    def chrtrain = params.chr_train
+    def genome_build = params.genome_build
+    def genome_style = params.genome_style
+    def estimate_normal = params.estimate_normal
+    def estimate_ploidy = params.estimate_ploidy
+    def estimate_sc_prevalence = params.estimate_sc_prevalence
+    def txne = params.txnE
+    def txn_strength = params.txn_strength
 
     """
     Rscript /opt/ichorCNA/scripts/runIchorCNA.R \\
