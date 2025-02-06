@@ -43,7 +43,7 @@ process ICHORCNA_DOWNLOAD {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(wig), val(purity), path(seq_info)
+    tuple val(meta), path(wig), val(purity)
 
     output:
     tuple val(meta), path(wig), val(purity), path("seqinfo.RData"), emit: seq_info
@@ -118,7 +118,7 @@ process ICHORCNA {
     tuple val(meta), path(wig), val(purity), path(seq_info)
 
     output:
-    tuple val(meta), path("${meta}"), emit: ichor_dir
+    tuple val(meta), path("*"), emit: ichor_dir
     path "versions.yml"           , emit: versions
 
     when:
