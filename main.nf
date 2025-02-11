@@ -1,14 +1,9 @@
 process SAMTOOLS_TOBAM {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/bwbioinfo/samtools:latest'
+    container 'ghcr.io/chusj-pigu/samtools:latest'
+    label "process_medium"
 
     tag "$meta.id"
-    label 'process_cpu_med'
-    label 'process_memory_med'
-    label 'process_time_med'
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
-
-    publishDir "output", mode: 'copy'
 
     input:
     tuple val(meta), path(in_sam)
@@ -39,15 +34,11 @@ process SAMTOOLS_TOBAM {
 
 process SAMTOOLS_SORT {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/bwbioinfo/samtools:latest'
+    container 'ghcr.io/chusj-pigu/samtools:latest'
 
     tag "$meta.id"
-    label 'process_cpu_med'
-    label 'process_memory_med'
-    label 'process_time_med'
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
+    label "process_medium"
 
-    publishDir "output", mode: 'copy'
 
     input:
     tuple val(meta), path(in_bam)
@@ -80,15 +71,10 @@ process SAMTOOLS_SORT {
 
 process SAMTOOLS_INDEX {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/bwbioinfo/samtools:latest'
+    container 'ghcr.io/chusj-pigu/samtools:latest'
 
+    label "process_low"
     tag "$meta.id"
-    label 'process_cpu_med'
-    label 'process_memory_med'
-    label 'process_time_med'
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
-
-    publishDir "output", mode: 'copy'
 
     input:
     tuple val(meta), path(in_bam)
@@ -109,7 +95,7 @@ process SAMTOOLS_INDEX {
         index \\
         -@ ${threads} \\
         ${args} \\
-        ${in_bam} 
+        ${in_bam}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
