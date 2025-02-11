@@ -65,14 +65,14 @@ process ICHORCNA_DOWNLOAD {
     def mapWig = params.custom_mapWig
     def centromere = params.custom_centromere
     def panel = params.normal_panel
-    def homd = params.homd
+    def homd = params.homd ? 'True' : 'False'
     def chrs = params.chrs
     def chrtrain = params.chr_train
     def genome_build = params.genome_build
     def genome_style = params.genome_style
-    def estimate_normal = params.estimate_normal
-    def estimate_ploidy = params.estimate_ploidy
-    def estimate_sc_prevalence = params.estimate_sc_prevalence
+    def estimate_normal = params.estimate_normal ? 'True' : 'False'
+    def estimate_ploidy = params.estimate_ploidy ? 'True' : 'False'
+    def estimate_sc_prevalence = params.estimate_sc_prevalence ? 'True' : 'False'
     def txne = params.txnE
     def txn_strength = params.txn_strength
 
@@ -138,14 +138,14 @@ process ICHORCNA {
     def mapWig = params.custom_mapWig
     def centromere = params.custom_centromere
     def panel = params.normal_panel
-    def homd = params.homd
+    def homd = params.homd ? 'True' : 'False'
     def chrs = params.chrs
     def chrtrain = params.chr_train
     def genome_build = params.genome_build
     def genome_style = params.genome_style
-    def estimate_normal = params.estimate_normal
-    def estimate_ploidy = params.estimate_ploidy
-    def estimate_sc_prevalence = params.estimate_sc_prevalence
+    def estimate_normal = params.estimate_normal ? 'True' : 'False'
+    def estimate_ploidy = params.estimate_ploidy ? 'True' : 'False'
+    def estimate_sc_prevalence = params.estimate_sc_prevalence ? 'True' : 'False'
     def txne = params.txnE
     def txn_strength = params.txn_strength
 
