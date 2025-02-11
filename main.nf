@@ -153,7 +153,7 @@ process ICHORCNA {
     Rscript /opt/ichorCNA/scripts/runIchorCNA.R \\
         --id ${prefix} \\
         --WIG ${wig} \\
-        --ploidy ${ploidy} \\
+        --ploidy "${ploidy}" \\
         --normal "c($purity_low,$normal_prop,$purity_high)" \\
         --maxCN ${maxCN} \\
         --gcWig ${gcWig} \\
@@ -161,10 +161,10 @@ process ICHORCNA {
         --centromere ${centromere} \\
         --normalPanel ${panel} \\
         --includeHOMD ${homd} \\
-        --chrs ${chrs} \\
-        --chrTrain ${chrtrain} \\
-        --genomeBuild ${genome_build} \\
-        --genomeStyle ${genome_style} \\
+        --chrs "${chrs}" \\
+        --chrTrain "${chrtrain}" \\
+        --genomeBuild "${genome_build}" \\
+        --genomeStyle "${genome_style}" \\
         --estimateNormal ${estimate_normal} \\
         --estimatePloidy ${estimate_ploidy} \\
         --estimateScPrevalence ${estimate_sc_prevalence} \\
