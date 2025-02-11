@@ -9,7 +9,7 @@ process HMMCOPY_WIG {
     tuple val(meta), path(bam), path(bai)
 
     output:
-    tuple val(meta), path("${meta}.wig"), emit: wig
+    tuple val(meta), path("*.wig"), emit: wig
     path "versions.yml"           , emit: versions
 
     when:
