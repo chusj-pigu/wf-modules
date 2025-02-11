@@ -59,17 +59,17 @@ process ICHORCNA_DOWNLOAD {
     def normal_prop = (1 - purity).round(2)
     def purity_low = (normal_prop - (normal_prop / 2)).round(2)
     def purity_high = (normal_prop + (normal_prop / 2)).round(2)
-    def ploidy = "$params.custom_ploidy"
+    def ploidy = params.custom_ploidy
     def maxCN = params.custom_maxCN
     def gcWig = params.custom_gcWig
     def mapWig = params.custom_mapWig
     def centromere = params.custom_centromere
     def panel = params.normal_panel
     def homd = params.homd
-    def chrs = "$params.chrs"
-    def chrtrain = "$params.chr_train"
-    def genome_build = "$params.genome_build"
-    def genome_style = "$params.genome_style"
+    def chrs = params.chrs
+    def chrtrain = params.chr_train
+    def genome_build = params.genome_build
+    def genome_style = params.genome_style
     def estimate_normal = params.estimate_normal
     def estimate_ploidy = params.estimate_ploidy
     def estimate_sc_prevalence = params.estimate_sc_prevalence
@@ -80,7 +80,7 @@ process ICHORCNA_DOWNLOAD {
     Rscript /opt/ichorCNA/scripts/runIchorCNA.R \\
         --id ${prefix} \\
         --WIG ${wig} \\
-        --ploidy ${ploidy} \\
+        --ploidy "${ploidy}" \\
         --normal "c($purity_low,$normal_prop,$purity_high)" \\
         --maxCN ${maxCN} \\
         --gcWig ${gcWig} \\
@@ -88,10 +88,10 @@ process ICHORCNA_DOWNLOAD {
         --centromere ${centromere} \\
         --normalPanel ${panel} \\
         --includeHOMD ${homd} \\
-        --chrs ${chrs} \\
-        --chrTrain ${chrtrain} \\
-        --genomeBuild ${genome_build} \\
-        --genomeStyle ${genome_style} \\
+        --chrs "${chrs}" \\
+        --chrTrain "${chrtrain}" \\
+        --genomeBuild "${genome_build}" \\
+        --genomeStyle "${genome_style}" \\
         --estimateNormal ${estimate_normal} \\
         --estimatePloidy ${estimate_ploidy} \\
         --estimateScPrevalence ${estimate_sc_prevalence} \\
