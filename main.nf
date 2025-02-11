@@ -31,7 +31,8 @@ process HMMCOPY_WIG {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        HMMcopy: "0.99.0"    END_VERSIONS
+        HMMcopy: "0.99.0"
+    END_VERSIONS
     """
 }
 
@@ -102,7 +103,8 @@ process ICHORCNA_DOWNLOAD {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        ichorCNA: "0.2.0"    END_VERSIONS
+        ichorCNA: "0.2.0"
+    END_VERSIONS
     """
 }
 
@@ -174,6 +176,7 @@ process ICHORCNA {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        ichorCNA: "0.2.0"    END_VERSIONS
+        ichorCNA: "0.2.0"
+    END_VERSIONS
     """
 }
