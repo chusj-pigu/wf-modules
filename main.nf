@@ -19,7 +19,7 @@ process HMMCOPY_WIG {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def args = task.ext.args ?: ''
     def chr_list = params.chr_wig
-    def window = params.window_wig
+    def window = params.bin_size
     def min_mapq = params.minmapq_wig
     """
     /opt/hmmcopy_utils/bin/readCounter \\
