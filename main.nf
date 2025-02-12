@@ -86,7 +86,7 @@ process ICHORCNA_DOWNLOAD {
         --gcWig ${gcWig} \\
         --mapWig ${mapWig} \\
         --centromere ${centromere} \\
-        --normalPanel ${panel} \\
+        ${panel} \\
         --includeHOMD ${homd} \\
         --chrs "${chrs}" \\
         --chrTrain "${chrtrain}" \\
