@@ -64,7 +64,7 @@ process ICHORCNA_DOWNLOAD {
     def gcWig = params.custom_gcWig
     def mapWig = params.custom_mapWig
     def centromere = params.custom_centromere
-    def panel = params.normal_panel
+    def panel = params.normal_panel ?: "--normalPanel ${params.normal_panel}"
     def homd = params.homd ? 'True' : 'False'
     def chrs = params.chrs
     def chrtrain = params.chr_train
@@ -86,7 +86,7 @@ process ICHORCNA_DOWNLOAD {
         --gcWig ${gcWig} \\
         --mapWig ${mapWig} \\
         --centromere ${centromere} \\
-        --normalPanel ${panel} \\
+        ${panel} \\
         --includeHOMD ${homd} \\
         --chrs "${chrs}" \\
         --chrTrain "${chrtrain}" \\
@@ -137,7 +137,7 @@ process ICHORCNA {
     def gcWig = params.custom_gcWig
     def mapWig = params.custom_mapWig
     def centromere = params.custom_centromere
-    def panel = params.normal_panel
+    def panel = params.normal_panel ?: "--normalPanel ${params.normal_panel}"
     def homd = params.homd ? 'True' : 'False'
     def chrs = params.chrs
     def chrtrain = params.chr_train
@@ -159,7 +159,7 @@ process ICHORCNA {
         --gcWig ${gcWig} \\
         --mapWig ${mapWig} \\
         --centromere ${centromere} \\
-        --normalPanel ${panel} \\
+        ${panel} \\
         --includeHOMD ${homd} \\
         --chrs "${chrs}" \\
         --chrTrain "${chrtrain}" \\
