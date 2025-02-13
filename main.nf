@@ -1,0 +1,73 @@
+process DORADO_BASECALL {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/dorado:latest'
+    label "process_high"
+    label "gpu_high"
+
+    tag "$meta.id"
+
+    input:
+    tuple val(meta), path(pod5), path(ubam), val(model)
+
+    output:
+    tuple val(meta), path("*.bam"), emit: ubam
+    path "versions.yml"           , emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: ''
+    def device = params.device != null ? "-x $params.device" : ""
+    def mod = params.no_mod ? "" : (params.m_bases_path ? "--modified-bases-models ${params.m_bases_path}" : "--modified-bases ${params.m_bases}")
+    def multi = params.demux != null ? "--no-trim" : ""
+    def resume = ubam.name != 'NO_UBAM' ? "--resume-from $ubam > ${sample_id}_unaligned_final.bam" : "> ${sample_id}_unaligned.bam"
+    """
+    dorado basecaller \\
+        $device \\
+        $model \\
+        $pod5 \\
+        $mod \\
+        $multi \\
+        $resume
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        dorado: \$(echo \$(dorado --version 2>&1) | sed 's/^.*dorado //; s/Using.*\$//')    END_VERSIONS
+    """
+}
+
+process DORADO_DEMULTIPLEX {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/dorado:latest'
+    label "process_single"
+    label "mid_low_all"
+
+    tag "$meta.id"
+
+    input:
+    tuple val(meta), path(bam)
+
+    output:
+    tuple val(meta), path("${meta}/*.bam"), emit: demux_ubam
+    path "versions.yml"           , emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def kit = "--kit-name $params.demux"
+    """
+    dorado \\
+        demux \\
+        $kit \\
+        --output-dir $sample_id \\
+        $bam
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        dorado: \$(echo \$(dorado --version 2>&1) | sed 's/^.*dorado //; s/Using.*\$//')    END_VERSIONS
+    """
+}
