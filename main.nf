@@ -2,6 +2,7 @@ process SAMTOOLS_TOBAM {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/samtools:latest'
     label "process_medium"
+    label "samtools_med"
 
     tag "$meta.id"
 
@@ -38,6 +39,7 @@ process SAMTOOLS_SORT {
 
     tag "$meta.id"
     label "process_medium"
+    label "samtools_big"
 
 
     input:
@@ -74,6 +76,7 @@ process SAMTOOLS_INDEX {
     container 'ghcr.io/chusj-pigu/samtools:latest'
 
     label "process_low"
+    label "samtools_small"
     tag "$meta.id"
 
     input:
