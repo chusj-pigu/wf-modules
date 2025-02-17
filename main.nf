@@ -18,12 +18,14 @@ process DORADO_BASECALL {
 
     script:
     def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def device = params.device != null ? "-x $params.device" : ""
     def mod = params.no_mod ? "" : (params.m_bases_path ? "--modified-bases-models ${params.m_bases_path}" : "--modified-bases ${params.m_bases}")
     def multi = params.demux != null ? "--no-trim" : ""
-    def resume = ubam.name != 'NO_UBAM' ? "--resume-from $ubam > ${sample_id}_unaligned_final.bam" : "> ${sample_id}_unaligned.bam"
+    def resume = ubam.name != 'NO_UBAM' ? "--resume-from $ubam > ${prefix}_unaligned_final.bam" : "> ${prefix}_unaligned.bam"
     """
     dorado basecaller \\
+        $args \\
         $device \\
         $model \\
         $pod5 \\
@@ -62,8 +64,9 @@ process DORADO_DEMULTIPLEX {
     """
     dorado \\
         demux \\
+        $args \\
         $kit \\
-        --output-dir $sample_id \\
+        --output-dir $prefix \\
         $bam
 
     cat <<-END_VERSIONS > versions.yml
