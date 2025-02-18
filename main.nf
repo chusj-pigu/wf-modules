@@ -20,14 +20,14 @@ process CHOPPER_LENGTH {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def output_ext = reads.baseName.endsWith('fastq') ? "fastq.gz" : "fq.gz"
-    def pigz = reads.name.endsWith('.gz') ? "-i ${reads}" : "-i ${reads} | pigz"
     """
     chopper \\
         --threads ${task.cpus} \\
         -q ${qual} \\
         --maxlength ${max_len} \\
         ${args} \\
-        ${pigz} > ${prefix}.${output_ext}
+        -i ${reads} \\
+        | pigz -p ${task.cpus} > ${prefix}.${output_ext}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
