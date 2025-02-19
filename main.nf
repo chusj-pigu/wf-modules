@@ -27,7 +27,7 @@ process CHOPPER_LENGTH {
         --maxlength ${max_len} \\
         ${args} \\
         -i ${reads} \\
-        | pigz -p ${task.cpus} > ${prefix}.${output_ext}
+        | pigz -p ${task.cpus} > ${prefix}_filt.${output_ext}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
