@@ -3,16 +3,14 @@ process NANOPLOT_FASTQ {
     container 'ghcr.io/chusj-pigu/nanoplot:latest'
 
     tag "$meta.id"
-    label 'process_cpu_med'
-    label 'process_memory_med'
-    label 'process_time_med'
-    
+    label 'process_medium'
+
     input:
     tuple val(meta),
         path(fastq)
 
     output:
-    tuple val(meta), 
+    tuple val(meta),
         path("*.png"),
         optional: true,
         emit: nanoplot
@@ -25,12 +23,14 @@ process NANOPLOT_FASTQ {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    NanoPlot \
-    --color blue \
-    --N50 \
-    -f png \
-    -cm Blues \
-    --fastq ${fastq}
+    NanoPlot \\
+        ${args} \\
+        -p ${prefix} \\
+        --color blue \\
+        --N50 \\
+        -f png \\
+        -cm Blues \\
+        --fastq ${fastq}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -44,16 +44,14 @@ process NANOPLOT_BAM {
     container 'ghcr.io/chusj-pigu/nanoplot:latest'
 
     tag "$meta.id"
-    label 'process_cpu_med'
-    label 'process_memory_med'
-    label 'process_time_med'
-    
+    label 'process_medium'
+
     input:
     tuple val(meta),
         path(bam)
 
     output:
-    tuple val(meta), 
+    tuple val(meta),
         path("*.png"),
         optional: true,
         emit: nanoplot
@@ -66,12 +64,14 @@ process NANOPLOT_BAM {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    NanoPlot \
-    --color blue \
-    --N50 \
-    -f png \
-    -cm Blues \
-    --bam ${bam}
+    NanoPlot \\
+        ${args} \\
+        -p ${prefix} \\
+        --color blue \\
+        --N50 \\
+        -f png \\
+        -cm Blues \\
+        --bam ${bam}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
