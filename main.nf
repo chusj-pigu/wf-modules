@@ -51,7 +51,7 @@ process DORADO_DEMULTIPLEX {
     tuple val(meta), path(bam)
 
     output:
-    tuple val(meta), path("${meta}/*.bam"), emit: demux_ubam
+    tuple val(meta), path("${meta.id}/*.bam"), emit: demux_ubam
     path "versions.yml"           , emit: versions
 
     when:
