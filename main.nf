@@ -4,6 +4,8 @@ process NANOPLOT_FASTQ {
 
     tag "$meta.id"
     label 'process_medium'
+    label 'high_mem_fast'
+    label 'Nanoplot'
 
     input:
     tuple val(meta),
@@ -45,6 +47,8 @@ process NANOPLOT_UBAM {
 
     tag "$meta.id"
     label 'process_medium'
+    label 'high_mem_fast'
+    label 'Nanoplot'
 
     input:
     tuple val(meta),
@@ -86,6 +90,8 @@ process NANOPLOT_BAM {
 
     tag "$meta.id"
     label 'process_medium'
+    label 'high_mem_fast'
+    label 'Nanoplot'
 
     input:
     tuple val(meta),
