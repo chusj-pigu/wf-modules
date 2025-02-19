@@ -23,13 +23,13 @@ process SAMTOOLS_QSFILTER {
     def threads = task.cpus
     """
     samtools \\
-    view \\
-    ${args} \\
-    -@ ${threads} \\
-    -e '[qs] >=${minqs}' \\
-    -b ${ubam} \\
-    --output ${barcode}_pass.bam \\
-    --unoutput ${barcode}_fail.bam
+        view \\
+        ${args} \\
+        -@ ${threads} \\
+        -e '[qs] >=${minqs}' \\
+        -b ${ubam} \\
+        --output ${barcode}_pass.bam \\
+        --unoutput ${barcode}_fail.bam
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
