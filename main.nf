@@ -1,3 +1,80 @@
+process SAMTOOLS_QSFILTER {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/samtools:latest'
+    label "process_small"
+    label "samtools_small"
+
+    tag "$barcode"
+
+    input:
+    tuple val(meta), val(barcode), path(ubam)
+
+    output:
+    tuple val(meta), val(barcode), path("${barcode}_pass.bam"), emit: ubam_pass
+    tuple val(meta), val(barcode), path("${barcode}_fail.bam"), emit: ubam_fail
+    path "versions.yml"           , emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: '--no-PG'
+    def minqs = params.minqs
+    def threads = task.cpus
+    """
+    samtools \\
+    view \\
+    ${args} \\
+    -@ ${threads} \\
+    -e '[qs] >=${minqs}' \\
+    -b ${ubam} \\
+    --output ${barcode}_pass.bam \\
+    --unoutput ${barcode}_fail.bam
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    END_VERSIONS
+    """
+}
+
+process SAMTOOLS_TOFASTQ {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/samtools:latest'
+    label "process_medium"
+    label "samtools_long"
+
+    tag "$meta.id"
+
+    input:
+    tuple val(meta), val(barcode), path(ubam)
+
+    output:
+    tuple val(meta), path("*.fq.gz"), emit: fq
+    path "versions.yml"           , emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def threads = task.cpus
+    def mod = params.m_bases_path ? "-T '*'" : (params.m_bases ? "-T '*'" : "")
+    def suffix = ubam.baseName.tokenize('_')[-1].replace('.bam', '')    // Keep pass and fail without the barcode in final fastq
+    """
+    samtools fastq \\
+        ${args} \\
+        ${mod} \\
+        -@ ${threads} \\
+        ${ubam} | \\
+        pigz -p ${threads} -c > ${prefix}_${suffix}.fq.gz
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    END_VERSIONS
+    """
+}
+
 process SAMTOOLS_TOBAM {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/samtools:latest'
