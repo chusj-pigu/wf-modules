@@ -14,8 +14,10 @@ process NANOPLOT_FASTQ {
     output:
     tuple val(meta),
         path("*.png"),
-        optional: true,
-        emit: nanoplot
+        emit: figure
+    tuple val(meta),
+        path("*.txt"),
+        emit: txt
     path "versions.yml", emit: versions
 
     when:
@@ -57,8 +59,10 @@ process NANOPLOT_UBAM {
     output:
     tuple val(meta),
         path("*.png"),
-        optional: true,
-        emit: nanoplot
+        emit: figure
+    tuple val(meta),
+        path("*.txt"),
+        emit: txt
     path "versions.yml", emit: versions
 
     when:
@@ -100,8 +104,10 @@ process NANOPLOT_BAM {
     output:
     tuple val(meta),
         path("*.png"),
-        optional: true,
-        emit: nanoplot
+        emit: figure
+    tuple val(meta),
+        path("*.txt"),
+        emit: txt
     path "versions.yml", emit: versions
 
     when:
