@@ -1,14 +1,33 @@
-FROM alpine:latest
+# Use the official Arch Linux base image
+FROM archlinux:latest
 
-# Install dependencies
-RUN apk add --no-cache \
-    bash \
-    curl \
-    git 
+# Install dependencies for building AUR packages
+RUN pacman -Syu --noconfirm && \
+    pacman -S --noconfirm \
+        base-devel \
+        git \
+        procps \
+        wget \
+        curl
 
-# TODO: Install procps for NextFlow
+# Create a non-root user and switch to it
+RUN useradd -m -s /bin/bash builder && \
+echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
-# TODO: Make an alias to get version
+# Switch to the non-root user
+USER builder
+WORKDIR /home/builder
 
-# RUN $()
-# ENV version = 
+# Install yay (AUR helper)
+RUN git clone https://aur.archlinux.org/yay.git && \
+    cd yay && \
+    makepkg -si --noconfirm && \
+    cd .. && \
+    rm -rf yay
+
+# Install mosdepth from AUR
+RUN yay -S --noconfirm mosdepth
+USER root
+
+# Default command (optional)
+CMD ["mosdepth", "--help"]
