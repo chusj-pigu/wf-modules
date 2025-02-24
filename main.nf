@@ -2,10 +2,11 @@ process MOSDEPTH_GENERAL {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/mosdepth:latest'
 
+    label 'process_medium'              // nf-core labels
+    label 'high_fast'               // Label for mpgi drac ressources
+    label 'mosdepth'                    // Label for publishing
+
     tag "$meta.id"
-    label 'process_medium'
-    label 'high_mem_fast'
-    label 'mosdepth'
 
     input:
     tuple val(meta), path(bam), path(bai)
@@ -40,9 +41,9 @@ process MOSDEPTH_ADAPTIVE {
     container 'ghcr.io/chusj-pigu/mosdepth:latest'
 
     tag "$meta.id"
-    label 'process_medium'
-    label 'high_mem_fast'
-    label 'mosdepth'
+    label 'process_medium'                  // nf-core labels
+    label 'high_fast'                   // Label for mpgi drac ressources
+    label 'mosdepth'                        // Label for publishing
 
     input:
     tuple val(meta), path(bam), path(bai), path(bed), val(flag), val(qual)
