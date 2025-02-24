@@ -1,6 +1,7 @@
 process MINIMAP2_ALIGN {
     tag "$meta.id"
-    label 'process_high'
+    label 'process_high'            // nf-core labels
+    label 'high_all'                // Label for mpgi drac ressources
 
     container "ghcr.io/chusj-pigu/minimap2:latest" // TO DO: SET CONTAINER TO FIXED VERSION
 
