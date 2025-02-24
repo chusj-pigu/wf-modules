@@ -2,10 +2,11 @@ process NANOPLOT_FASTQ {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/nanoplot:latest'
 
+    label 'process_medium'          // nf-core labels
+    label 'high_mem_mid'            // Label for mpgi drac ressources
+    label 'nanoplot'                // Label for publishing
+
     tag "$meta.id"
-    label 'process_medium'
-    label 'high_mem_fast'
-    label 'Nanoplot'
 
     input:
     tuple val(meta),
@@ -47,10 +48,11 @@ process NANOPLOT_UBAM {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/nanoplot:latest'
 
+    label 'process_medium'          // nf-core labels
+    label 'high_mem_mid'            // Label for mpgi drac ressources
+    label 'nanoplot'                // Label for publishing
+
     tag "$meta.id"
-    label 'process_medium'
-    label 'high_mem_fast'
-    label 'Nanoplot'
 
     input:
     tuple val(meta),
@@ -92,10 +94,11 @@ process NANOPLOT_BAM {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/nanoplot:latest'
 
+    label 'process_medium'          // nf-core labels
+    label 'high_mem_mid'            // Label for mpgi drac ressources
+    label 'nanoplot'                // Label for publishing
+
     tag "$meta.id"
-    label 'process_medium'
-    label 'high_mem_fast'
-    label 'Nanoplot'
 
     input:
     tuple val(meta),
