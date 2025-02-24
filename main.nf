@@ -3,8 +3,7 @@ process MODKIT_PILEUP {
     container 'ghcr.io/chusj-pigu/modkit:latest'
 
     tag "$meta.id"
-    label 'process_high'
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
+    label 'process_medium'
     
     input:
     tuple val(meta), 
@@ -24,7 +23,7 @@ process MODKIT_PILEUP {
     script:
     def args = task.ext.args ?: '--with-header'
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def threads = task.cpus
+    def threads = task.cpus * 2
     """
     modkit \\
         pileup \\
@@ -46,8 +45,7 @@ process MODKIT_SUMMARY {
 
     tag "$meta.id"
     label 'process_high'
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
-    
+
     input:
     tuple val(meta), path(in_bam), path(bam_index)
 
@@ -83,8 +81,7 @@ process MODKIT_DMR_PAIR {
     container 'ghcr.io/chusj-pigu/modkit:latest'
 
     tag "$meta.id"
-    label 'process_high'
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
+    label 'process_medium'
     
     input:
     tuple val(meta),
@@ -108,7 +105,7 @@ process MODKIT_DMR_PAIR {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def suffix = task.ext.suffix ?: "${exp_id.id}"
-    def threads = task.cpus
+    def threads = task.cpus * 2
     """
     pigz -dkc ${ref} > ${ref.baseName}
 
@@ -136,8 +133,8 @@ process MODKIT_EXTRACT_FULL {
     container 'ghcr.io/chusj-pigu/modkit:latest'
 
     tag "$meta.id"
-    label 'process_high'
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
+    label 'process_medium'
+    label 'process_highprocess_medium_high_memory'
     
     input:
     tuple val(meta),
