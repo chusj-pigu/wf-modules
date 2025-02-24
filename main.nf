@@ -3,7 +3,7 @@ process MOSDEPTH_GENERAL {
     container 'ghcr.io/chusj-pigu/mosdepth:latest'
 
     label 'process_medium'              // nf-core labels
-    label 'high_fast'               // Label for mpgi drac ressources
+    label 'mid_fast'               // Label for mpgi drac ressources
     label 'mosdepth'                    // Label for publishing
 
     tag "$meta.id"
@@ -42,7 +42,7 @@ process MOSDEPTH_ADAPTIVE {
 
     tag "$meta.id"
     label 'process_medium'                  // nf-core labels
-    label 'high_fast'                   // Label for mpgi drac ressources
+    label 'mid_fast'                   // Label for mpgi drac ressources
     label 'mosdepth'                        // Label for publishing
 
     input:
