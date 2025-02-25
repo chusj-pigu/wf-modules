@@ -3,7 +3,9 @@ process MODKIT_PILEUP {
     container 'ghcr.io/chusj-pigu/modkit:latest'
 
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_medium_high_cpu'
+    label 'process_low_memory'
+    label 'process_low_time'
     
     input:
     tuple val(meta), 
@@ -44,7 +46,7 @@ process MODKIT_SUMMARY {
     container 'ghcr.io/chusj-pigu/modkit:latest'
 
     tag "$meta.id"
-    label 'process_high'
+    label 'process_low'
 
     input:
     tuple val(meta), path(in_bam), path(bam_index)
@@ -81,7 +83,9 @@ process MODKIT_DMR_PAIR {
     container 'ghcr.io/chusj-pigu/modkit:latest'
 
     tag "$meta.id"
-    label 'process_medium'
+    label 'process_low_medium_memory'
+    label 'process_medium_cpu'
+    label 'process_low_time'
     
     input:
     tuple val(meta),
@@ -133,9 +137,10 @@ process MODKIT_EXTRACT_FULL {
     container 'ghcr.io/chusj-pigu/modkit:latest'
 
     tag "$meta.id"
-    label 'process_medium'
-    label 'process_highprocess_medium_high_memory'
-    
+    label 'process_medium_cpu'
+    label 'process_medium_high_memory'
+    label 'process_low_time'
+
     input:
     tuple val(meta),
         path(bam),
@@ -156,7 +161,8 @@ process MODKIT_EXTRACT_FULL {
     modkit extract full \
         ${bam} \
         ${prefix}-read-modifications.txt \
-        -t ${threads} \
+        --threads ${threads} \
+        --queue-size 5000 \
         ${args}
 
     cat <<-END_VERSIONS > versions.yml
