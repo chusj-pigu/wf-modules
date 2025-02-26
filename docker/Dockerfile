@@ -11,4 +11,4 @@ RUN apt-get update && apt-get install -y \
 
 RUN git clone https://gitlab.com/pesk/nanoDx.git
 
-RUN cd nanoDx
+WORKDIR /usr/src/app/nanoDx
