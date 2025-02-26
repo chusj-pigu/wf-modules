@@ -1,14 +1,10 @@
-FROM alpine:latest
+FROM snakemake/snakemake:v7.32.4
 
 # Install dependencies
-RUN apk add --no-cache \
-    bash \
-    curl \
-    git 
+RUN apt-get update && apt-get install -y \
+    procps \
+    texlive \
+    texlive-latex-extra \
+    git
 
-# TODO: Install procps for NextFlow
-
-# TODO: Make an alias to get version
-
-# RUN $()
-# ENV version = 
+RUN git clone https://gitlab.com/pesk/nanoDx.git
