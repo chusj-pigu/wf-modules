@@ -63,15 +63,12 @@ process SAMTOOLS_TOFASTQ {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
-    def mod = params.m_bases_path ? "-T '*'" : (params.m_bases ? "-T '*'" : "")
-    def suffix = ubam.baseName.tokenize('_')[-1].replace('.bam', '')    // Keep pass and fail without the barcode in final fastq
     """
     samtools fastq \\
         ${args} \\
-        ${mod} \\
         -@ ${threads} \\
         ${ubam} | \\
-        pigz -p ${threads} -c > ${prefix}_${suffix}.fq.gz
+        pigz -p ${threads} -c > ${prefix}.fq.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
