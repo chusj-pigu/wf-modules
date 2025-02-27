@@ -6,9 +6,9 @@ process MODKIT_PILEUP {
     label 'process_medium_high_cpu'
     label 'process_low_memory'
     label 'process_low_time'
-    
+
     input:
-    tuple val(meta), 
+    tuple val(meta),
         path(in_bam),
         path(bam_index)
 
@@ -16,7 +16,7 @@ process MODKIT_PILEUP {
     tuple val(meta),
         path("*.bed"),
         emit: bedmethyl
-    path "versions.yml", 
+    path "versions.yml",
         emit: versions
 
     when:
@@ -32,7 +32,7 @@ process MODKIT_PILEUP {
         -t ${threads} \\
         ${args} \\
         ${in_bam} \\
-        ${prefix}.bed 
+        ${prefix}.bed
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -49,11 +49,15 @@ process MODKIT_SUMMARY {
     label 'process_low'
 
     input:
-    tuple val(meta), path(in_bam), path(bam_index)
+    tuple val(meta),
+        path(in_bam),
+        path(bam_index)
 
     output:
-    tuple val(meta), path("*.txt"), emit: modkit_summary
-    path "versions.yml"           , emit: versions
+    tuple val(meta), path("*.txt"),
+        emit: modkit_summary
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -86,7 +90,7 @@ process MODKIT_DMR_PAIR {
     label 'process_low_medium_memory'
     label 'process_medium_cpu'
     label 'process_low_time'
-    
+
     input:
     tuple val(meta),
         path(ctl_pileup),
@@ -98,9 +102,12 @@ process MODKIT_DMR_PAIR {
     val(base)
 
     output:
-    tuple val(meta), path("*.txt"), emit: modkit_dmr
-    path "*.log"                  , emit: log
-    path "versions.yml"           , emit: versions
+    tuple val(meta), path("*.txt"),
+        emit: modkit_dmr
+    path "*.log",
+        emit: log
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -147,8 +154,11 @@ process MODKIT_EXTRACT_FULL {
         path(bam_index)
 
     output:
-    tuple val(meta), path("*.txt"), emit: modkit_read_mods
-    path "versions.yml"           , emit: versions
+    tuple val(meta),
+        path("*.txt"),
+        emit: modkit_read_mods
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
