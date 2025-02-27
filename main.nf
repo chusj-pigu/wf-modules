@@ -7,14 +7,16 @@ process SEQKIT_STATS {
     label 'process_memory_low'
     label 'process_time_low'
 
-    publishDir "output", mode: 'copy'
-
     input:
-    tuple val(meta), path(reads)
+    tuple val(meta),
+        path(reads)
 
     output:
-    tuple val(meta), path("*.tsv"), emit: stats
-    path "versions.yml"           , emit: versions
+    tuple val(meta),
+        path("*.tsv"),
+        emit: stats
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -39,18 +41,19 @@ process SEQKIT_INDEX {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/seqkit:latest'
 
-
     tag "$meta.id"
-    label 'process_index'
-
-    publishDir "output", mode: 'copy'
+    label 'process_low'
 
     input:
-    tuple val(meta), path(fasta)
+    tuple val(meta),
+        path(fasta)
 
     output:
-    tuple val(meta), path("*.fai"), emit: fasta_index
-    path "versions.yml", emit: versions
+    tuple val(meta),
+        path("*.fai"),
+        emit: fasta_index
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -85,14 +88,16 @@ process SEQKIT_FQ2FA {
     tag "$meta.id"
     label 'process_single'
 
-    publishDir "output", mode: 'copy'
-
     input:
-    tuple val(meta), path(fastq)
+    tuple val(meta),
+        path(fastq)
 
     output:
-    tuple val(meta), path("*.fa.gz"), emit: fasta
-    path "versions.yml"             , emit: versions
+    tuple val(meta),
+        path("*.fa.gz"),
+        emit: fasta
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
