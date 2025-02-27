@@ -2,9 +2,10 @@ process MOSDEPTH_GENERAL {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/mosdepth:latest'
 
-    label 'process_medium'              // nf-core labels
-    label 'mid_fast'               // Label for mpgi drac ressources
-    label 'mosdepth'                    // Label for publishing
+    label 'process_low'                      // nf-core labels
+    label "process_low_cpu"                 // Label for cpu ressources alloc
+    label "process_low_memory"              // Label for memory ressources alloc
+    label "process_low_time"                // Label for time ressources alloc
 
     tag "$meta.id"
 
@@ -24,8 +25,8 @@ process MOSDEPTH_GENERAL {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     mosdepth \\
+        -t ${task.cpus} \\
         ${args} \\
-        -n \\
         '${prefix}' \\
         ${bam}
 
@@ -40,10 +41,12 @@ process MOSDEPTH_ADAPTIVE {
    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/mosdepth:latest'
 
+    label 'process_low'                      // nf-core labels
+    label "process_low_cpu"                 // Label for cpu ressources alloc
+    label "process_low_memory"              // Label for memory ressources alloc
+    label "process_low_time"                // Label for time ressources alloc
+
     tag "$meta.id"
-    label 'process_medium'                  // nf-core labels
-    label 'mid_fast'                   // Label for mpgi drac ressources
-    label 'mosdepth'                        // Label for publishing
 
     input:
     tuple val(meta), path(bam), path(bai), path(bed), val(flag), val(qual)
@@ -62,11 +65,11 @@ process MOSDEPTH_ADAPTIVE {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     mosdepth \\
+        -t ${task.cpus} \\
         ${args} \\
         -F ${flag}  \\
         -Q ${qual} \\
         -b ${bed} \\
-        -n \\
         '${prefix}' \\
         ${bam}
 
