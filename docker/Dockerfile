@@ -1,14 +1,8 @@
-FROM alpine:latest
+FROM hkubal/clairs-to:latest
 
+WORKDIR /opt/bin
 # Install dependencies
-RUN apk add --no-cache \
-    bash \
-    curl \
-    git 
+RUN apt-get update && apt-get install -y \
+    procps
 
-# TODO: Install procps for NextFlow
-
-# TODO: Make an alias to get version
-
-# RUN $()
-# ENV version = 
+CMD run_clairs_to --help
