@@ -1,7 +1,9 @@
 process MINIMAP2_ALIGN {
     tag "$meta.id"
-    label 'process_high'            // nf-core labels
-    label 'high_all'                // Label for mpgi drac ressources
+    label 'process_high'                    // nf-core labels
+    label "process_medium_high_cpu"       // Label for mpgi drac cpu alloc
+    label "process_medium_memory"         // Label for mpgi drac memory alloc
+    label params.mapping_small ? "process_medium_low_time" : "process_medium_time" // Label for mpgi drac time alloc
 
     container "ghcr.io/chusj-pigu/minimap2:latest" // TO DO: SET CONTAINER TO FIXED VERSION
 
@@ -20,9 +22,6 @@ process MINIMAP2_ALIGN {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     minimap2 \\
-        -y \\
-        -ax \\
-        map-ont \\
         ${args} \\
         -t ${task.cpus} \\
         ${ref} \\
