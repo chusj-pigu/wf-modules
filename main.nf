@@ -5,8 +5,7 @@ process BEDTOOLS_INTERSECT {
 
     tag "$meta.id"
     label 'process_medium'
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
-    
+
     input:
     tuple val(meta),
         path(file1),
@@ -14,10 +13,10 @@ process BEDTOOLS_INTERSECT {
     path(file2)
 
     output:
-    tuple val(meta), 
+    tuple val(meta),
         path("*.txt"),
         emit: mapped_features
-    path "versions.yml", 
+    path "versions.yml",
         emit: versions
 
     when:
