@@ -1,16 +1,16 @@
 process QUARTO_REPORT {
     container 'ghcr.io/bwbioinfo/quarto-docker-cwl:latest'
-    
+
     tag "$meta.id"
     label 'process_low'
-    
+
     input:
-    tuple val(meta), 
+    tuple val(meta),
         val(section),
         path(report_inputs),
         val(report_section)
     path report_template
-    val report_title 
+    val report_title
     val report_description
 
     output:
@@ -26,11 +26,11 @@ process QUARTO_REPORT {
     def report_section_split = report_section.collect { it }.join(" ")
     """
     mkdir ${prefix}_report_output
-    
+
     for file in ${report_inputs}; do
         cp -r \${file}/* ${prefix}_report_output/
     done
-    
+
     cat ${report_template} >> ${prefix}_report_output/${prefix}.qmd
     echo "${report_section_split}"
     for section in ${report_section_split}; do
@@ -60,7 +60,6 @@ process QUARTO_REPORT {
         quarto: \$( quarto --version )
     END_VERSIONS
     """
-
 }
 
 process QUARTO_TABLE {
@@ -77,7 +76,6 @@ process QUARTO_TABLE {
     val col_names
     val section
     val process
-    
 
     output:
     tuple val(meta),
@@ -120,7 +118,6 @@ process QUARTO_TABLE {
     """
 }
 
-
 process QUARTO_FIGURE {
     container 'ghcr.io/bwbioinfo/quarto-docker-cwl:latest'
 
@@ -130,19 +127,17 @@ process QUARTO_FIGURE {
 
     input:
     tuple val(meta),
-        path(figure_data)
-        val caption
-        val section
-        val process
-    
+        path(figure_data),
+        val(caption),
+        val(section),
+        val(process)
 
     output:
-    tuple val(meta), 
+    tuple val(meta),
         val(section),
         path("*_inputs"),
         emit: quarto_figure
     path "versions.yml", emit: versions
-
 
     when:
     task.ext.when == null || task.ext.when
@@ -174,11 +169,10 @@ process QUARTO_SECTION {
     errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
 
     input:
-    tuple val(meta), 
+    tuple val(meta),
         val(section),
         path(section_inputs)
     val section_description
-    
 
     output:
     tuple val(meta),
@@ -187,7 +181,6 @@ process QUARTO_SECTION {
         val("${meta.id}-${section}.qmd"),
         emit: quarto_section
     path "versions.yml", emit: versions
-
 
     when:
     task.ext.when == null || task.ext.when
