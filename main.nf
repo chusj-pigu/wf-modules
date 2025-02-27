@@ -1,8 +1,10 @@
 process SAMTOOLS_QSFILTER {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/samtools:latest'
-    label "process_small"           // nf-core labels
-    label "mid_low_all"         // Label for mpgi drac ressources
+    label "process_small"                    // nf-core labels
+    label "process_medium_low_cpu"          // Label for mpgi drac cpu alloc
+    label "process_medium_low_memory"       // Label for mpgi drac memory alloc
+    label "process_low_time"                // Label for mpgi drac time alloc
 
     tag "$barcode"
 
@@ -41,8 +43,9 @@ process SAMTOOLS_TOFASTQ {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/samtools:latest'
     label "process_medium"              // nf-core labels
-    label "low_mem_long"            // Label for mpgi drac ressources
-    label "reads"                // Label for publishing
+    label "process_medium_low_cpu"          // Label for mpgi drac memory alloc
+    label "process_low_memory"              // Label for mpgi drac memory alloc
+    label "process_medium_low_time"         // Label for mpgi drac time alloc
 
     tag "$meta.id"
 
@@ -80,7 +83,9 @@ process SAMTOOLS_TOBAM {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/samtools:latest'
     label "process_medium"          // nf-core labels
-    label "mid_all"                 // Label for mpgi drac ressources
+    label "process_medium_low_cpu"          // Label for mpgi drac memory alloc
+    label "process_medium_low_memory"       // Label for mpgi drac memory alloc
+    label "process_low_time"                // Label for mpgi drac time alloc
 
     tag "$meta.id"
 
@@ -115,10 +120,11 @@ process SAMTOOLS_SORT {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/samtools:latest'
 
-    tag "$meta.id"
-    label "process_medium"              // nf-core labels
-    label "high_fast"                   // Label for mpgi drac ressources
+    label "process_medium_cpu"              // Label for mpgi drac memory alloc
+    label "process_medium_memory"           // Label for mpgi drac memory alloc
+    label "process_medium_low_time"         // Label for mpgi drac time alloc
 
+    tag "$meta.id"
 
     input:
     tuple val(meta), path(in_bam)
@@ -153,9 +159,10 @@ process SAMTOOLS_INDEX {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/samtools:latest'
 
-    label "process_low"         // nf-core labels
-    label "mid_low_all"         // Label for mpgi drac ressources
-    label "alignments"                // Label for publishing
+    label "process_low"                     // nf-core labels
+    label "process_low_cpu"              // Label for mpgi drac memory alloc
+    label "process_low_memory"           // Label for mpgi drac memory alloc
+    label "process_low_time"            // Label for mpgi drac time alloc
 
     tag "$meta.id"
 
@@ -163,7 +170,7 @@ process SAMTOOLS_INDEX {
     tuple val(meta), path(in_bam)
 
     output:
-    tuple val(meta), path(in_bam),path("*.bai"), emit: bamfile_index
+    tuple val(meta), path("*bam.bai"),path("*.bai"), emit: bamfile_index
     path "versions.yml"           , emit: versions
 
     when:
