@@ -3,15 +3,16 @@ process GXF_TO_BED {
     container 'ghcr.io/chusj-pigu/gxf2bed:latest'
 
     label 'process_medium'
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
-    
+
     input:
     path(gxf)
     val(feature)
 
     output:
-    tuple path("*.bed.gz"), emit: bed
-    path "versions.yml"           , emit: versions
+    path("*.bed.gz"),
+        emit: bed
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
