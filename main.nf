@@ -2,7 +2,10 @@ process DORADO_BASECALL {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/dorado:latest'
     label "process_high"            // nf-core label
-    label "gpu_high"                // Label for mpgi drac ressources
+    label "process_medium_cpu"             // Label for mpgi drac cpu alloc
+    label "process_medium_high_memory"    // Label for mpgi drac memory alloc
+    label "process_high_time"             // Label for mpgi drac time alloc
+    label "process_gpu"                   // Label for mpgi drac gpu alloc
 
     tag "$meta.id"
 
@@ -42,8 +45,10 @@ process DORADO_BASECALL {
 process DORADO_DEMULTIPLEX {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/dorado:latest'
-    label "process_single"          // nf-core label
-    label "mid_low_all"             // Label for mpgi drac ressources
+    label "process_high"                    // nf-core label
+    label "process_high_cpu"                 // Label for mpgi drac cpu alloc
+    label "process_medium_low_memory"        // Label for mpgi drac memory alloc
+    label "process_medium_low_time"          // Label for mpgi drac time alloc
 
     tag "$meta.id"
 
