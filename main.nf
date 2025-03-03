@@ -228,3 +228,41 @@ process SAMTOOLS_INDEX {
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    END_VERSIONS
     """
 }
+
+process SAMTOOLS_FAIDX {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/samtools:latest'
+
+    label "process_low"                     // nf-core labels
+    label "process_low_cpu"              // Label for mpgi drac memory alloc
+    label "process_low_memory"           // Label for mpgi drac memory alloc
+    label "process_low_time"            // Label for mpgi drac time alloc
+
+    tag "$meta.id"
+
+    input:
+    tuple val(meta), path(in_fa)
+
+    output:
+    tuple val(meta), path('*.fai'), emit: fasta_index
+    path "versions.yml"           , emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: ''
+    // def prefix = task.ext.prefix ?: "${meta.id}"
+    def threads = task.cpus
+    """
+    samtools \\
+        faidx \\
+        -@ ${threads} \\
+        ${args} \\
+        ${in_fa}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    END_VERSIONS
+    """
+}
