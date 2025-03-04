@@ -1,14 +1,15 @@
-FROM alpine:latest
+FROM rust:latest
 
 # Install dependencies
-RUN apk add --no-cache \
-    bash \
-    curl \
-    git 
+RUN apt-get update && apt-get install -y \
+    cmake \
+    libclang-dev \
+    procps
 
-# TODO: Install procps for NextFlow
+WORKDIR /opt/
+RUN git clone https://github.com/wdecoster/cramino.git
+    
+WORKDIR /opt/cramino
+RUN  cargo install --path .
 
-# TODO: Make an alias to get version
-
-# RUN $()
-# ENV version = 
+RUN cramino --help
