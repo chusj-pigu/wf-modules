@@ -16,7 +16,7 @@ process CLAIRS_TO_CALL {
         path(bai),
         path(ref),
         path(ref_idx),
-        val(chr)
+        val(chr),
         val(model)
 
     output:
