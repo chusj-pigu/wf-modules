@@ -266,3 +266,46 @@ process SAMTOOLS_FAIDX {
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    END_VERSIONS
     """
 }
+
+process SAMTOOLS_SEPARATE_BED {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/samtools:latest'
+
+    label "process_low"                     // nf-core labels
+    label "process_medium_low_cpu"         // Label for mpgi drac memory alloc
+    label "process_medium_mid_memory"    // Label for mpgi drac memory alloc
+    label "process_medium_mid_time"      // Label for mpgi drac time alloc
+
+    tag "$meta.id"
+
+    input:
+    tuple val(meta), path(bam), path(bed)
+
+    output:
+    tuple val(meta), path("*_panel.bam"), path("*_panel.bam.bai"), emit: panel
+    tuple val(meta), path("*_bg.bam"), path("*_bg.bam.bai"), emit: bg
+    path "versions.yml"           , emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def threads = task.cpus
+    """
+    samtools \\
+        view \\
+        ${args} \\
+        -@ ${threads} \\
+        -L ${bed} \\
+        --write-index \\
+        -o ${prefix}_panel.bam##idx##${prefix}_panel.bam.bai \\
+        -U ${prefix}_bg.bam##idx##${prefix}_bg.bam.bai \\
+        ${bam}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    END_VERSIONS
+    """
+}
