@@ -279,7 +279,7 @@ process SAMTOOLS_SPLIT_BY_BED {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(bam), path(bed)
+    tuple val(meta), path(bam), path(bai), path(bed)
 
     output:
     tuple val(meta), path("*_panel.bam"), path("*_panel.bam.bai"), emit: panel
