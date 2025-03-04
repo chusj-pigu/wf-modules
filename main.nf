@@ -267,7 +267,7 @@ process SAMTOOLS_FAIDX {
     """
 }
 
-process SAMTOOLS_SEPARATE_BED {
+process SAMTOOLS_SPLIT_BY_BED {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/samtools:latest'
 
