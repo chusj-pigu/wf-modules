@@ -3,7 +3,7 @@ process DORADO_BASECALL {
     container 'ghcr.io/chusj-pigu/dorado:latest'
     label "process_high"            // nf-core label
     label "process_medium_cpu"             // Label for mpgi drac cpu alloc
-    label "process_medium_high_memory"    // Label for mpgi drac memory alloc
+    label "process_high_memory"    // Label for mpgi drac memory alloc
     label "process_high_time"             // Label for mpgi drac time alloc
     label "process_gpu"                   // Label for mpgi drac gpu alloc
 
