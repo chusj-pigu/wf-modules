@@ -261,8 +261,8 @@ process SAMTOOLS_FAIDX {
         || cat ${in_fa}) | \\
     samtools \\
         faidx \\
-        -@ ${threads} \\
-        ${args}
+        ${args} \\
+        -@ ${threads}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
