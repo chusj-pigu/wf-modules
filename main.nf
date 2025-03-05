@@ -254,20 +254,36 @@ process SAMTOOLS_FAIDX {
     def args = task.ext.args ?: ''
     // def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
+    if (in_fa.name.endsWith('.gz')) {
     """
-    ([[ ${in_fa} =~ \\.gz\$ ]] && \\
-            pigz -d -p ${threads} \\
-                -c ${in_fa} \\
-        || cat ${in_fa}) | \\
+    pigz \\
+        -d \\
+        -p ${threads} \\
+        -c ${in_fa} > ${in_fa.name - '.gz'}
     samtools \\
         faidx \\
+        -@ ${threads} \\
         ${args} \\
-        -@ ${threads}
+        ${in_fa.name - '.gz'}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    END_VERSIONS
     """
+    } else {
+    """
+    samtools \\
+        faidx \\
+        -@ ${threads} \\
+        ${args} \\
+        ${in_fa}
+        
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    END_VERSIONS
+    """
+    }
+
 }
 
 process SAMTOOLS_SPLIT_BY_BED {
