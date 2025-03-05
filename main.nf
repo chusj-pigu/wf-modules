@@ -255,11 +255,14 @@ process SAMTOOLS_FAIDX {
     // def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
     """
+    ([[ ${in_fa} =~ \\.gz\$ ]] && \\
+            pigz -d -p ${threads} \\
+                -c ${in_fa} \\
+        || cat ${in_fa}) | \\
     samtools \\
         faidx \\
         -@ ${threads} \\
-        ${args} \\
-        ${in_fa}
+        ${args}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
