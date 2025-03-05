@@ -9,7 +9,8 @@ process CRAMINO_STATS {
 
     input:
     tuple val(meta),
-        path(bam)
+        path(bam),
+        path(bai)
 
     output:
     tuple val(meta),
