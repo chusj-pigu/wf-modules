@@ -30,7 +30,7 @@ process CLAIRS_TO_CALL {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: '-y -ax map-ont'
+    def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     run_clairs_to \\
