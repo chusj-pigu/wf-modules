@@ -1,5 +1,5 @@
 process QUARTO_REPORT {
-    container 'ghcr.io/bwbioinfo/quarto-docker-cwl:latest'
+    container 'ghcr.io/chusj-pigu/quarto:latest'
 
     tag "$meta.id"
     label 'process_low'
@@ -63,7 +63,7 @@ process QUARTO_REPORT {
 }
 
 process QUARTO_TABLE {
-    container 'ghcr.io/bwbioinfo/quarto-docker-cwl:latest'
+    container 'ghcr.io/chusj-pigu/quarto:latest'
 
     tag "$meta.id"
     label 'process_low'
@@ -71,11 +71,11 @@ process QUARTO_TABLE {
 
     input:
     tuple val(meta),
-        path(table_data)
-    val caption
-    val col_names
-    val section
-    val process
+        path(table_data),
+        val(caption),
+        val(col_names),
+        val(section),
+        val(process)
 
     output:
     tuple val(meta),
@@ -101,12 +101,16 @@ process QUARTO_TABLE {
     #| tbl-cap: ${caption}
     #| echo: false
     #| tbl-cap-location: bottom
-    library(readr)
+    library(vroom)
     library(knitr)
-    data <- read_tsv("${table_data}", col_names = ${col_names}, show_col_types = FALSE)
+    library(kableExtra)
+    data <- vroom("${table_data}", col_names = ${col_names}, show_col_types = FALSE)
     data |>
     head(1000) |>
-    kable()
+    kable() |>
+    kable_styling(
+        bootstrap_options = c("hover", "responsive")
+    )
     \\`\\`\\`
 
     END_REPORT
@@ -119,7 +123,7 @@ process QUARTO_TABLE {
 }
 
 process QUARTO_FIGURE {
-    container 'ghcr.io/bwbioinfo/quarto-docker-cwl:latest'
+    container 'ghcr.io/chusj-pigu/quarto:latest'
 
     tag "$meta.id"
     label 'process_low'
@@ -162,7 +166,7 @@ process QUARTO_FIGURE {
 }
 
 process QUARTO_SECTION {
-    container 'ghcr.io/bwbioinfo/quarto-docker-cwl:latest'
+    container 'ghcr.io/chusj-pigu/quarto:latest'
 
     tag "$meta.id"
     label 'process_low'
