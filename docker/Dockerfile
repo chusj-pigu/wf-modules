@@ -52,7 +52,3 @@ RUN ln -s /root/workspace/SnpEff/scripts_build /scripts_build
 # Make the build script executable and run it
 WORKDIR /root/workspace/SnpEff
 RUN chmod +x /scripts_build/make.sh && /scripts_build/make.sh
-
-# # Default command (optional)
-RUN java -jar /root/snpEff/snpEff.jar
-RUN java -jar /root/snpEff/SnpSift.jar
