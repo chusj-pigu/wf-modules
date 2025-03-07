@@ -18,3 +18,6 @@ RUN unzip snpEff_latest_core.zip
 
 WORKDIR /opt/app/snpEff
 
+# Pre download the hg38 genome in the container
+RUN java -jar snpEff.jar download GRCh38.99
+
