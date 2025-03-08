@@ -107,10 +107,7 @@ process QUARTO_TABLE {
     data <- vroom("${table_data}", col_names = ${col_names}, show_col_types = FALSE)
     data |>
     head(1000) |>
-    kable() |>
-    kable_styling(
-        bootstrap_options = c("hover", "responsive")
-    )
+    kable()
     \\`\\`\\`
 
     END_REPORT
