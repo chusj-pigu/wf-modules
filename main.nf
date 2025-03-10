@@ -32,7 +32,7 @@ process MINIMAP2_ALIGN {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        minima2: \$(minimap2 -V | cut -d ' ' -f2 | sed 's/v//')
+        minimap2: \$(minimap2 -V | cut -d ' ' -f2 | sed 's/v//')
     END_VERSIONS
     """
 }
