@@ -18,7 +18,7 @@ process SNPEFF_ANNOTATE {
     output:
     tuple val(meta),
         path("*.vcf.gz"),
-        emit: sam
+        emit: vcf
     path "versions.yml",
         emit: versions
 
