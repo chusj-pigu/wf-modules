@@ -1,17 +1,24 @@
 process SAMTOOLS_QSFILTER {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/samtools:latest'
-    label "process_small"           // nf-core labels
-    label "mid_low_all"         // Label for mpgi drac ressources
+    label "process_small"                    // nf-core labels
+    label "process_medium_low_cpu"          // Label for mpgi drac cpu alloc
+    label "process_medium_low_memory"       // Label for mpgi drac memory alloc
+    label "process_low_time"                // Label for mpgi drac time alloc
 
-    tag "$barcode"
+    tag "$meta.id"
 
     input:
-    tuple val(meta), val(barcode), path(ubam)
+    tuple val(meta),
+        path(ubam)
 
     output:
-    tuple val(meta), val(barcode), path("${barcode}_pass.bam"), emit: ubam_pass
-    tuple val(meta), val(barcode), path("${barcode}_fail.bam"), emit: ubam_fail
+    tuple val(meta),
+        path("${prefix}_pass.bam"),
+        emit: ubam_pass
+    tuple val(meta),
+        path("${prefix}_fail.bam"),
+        emit: ubam_fail
     path "versions.yml"           , emit: versions
 
     when:
@@ -20,6 +27,7 @@ process SAMTOOLS_QSFILTER {
     script:
     def args = task.ext.args ?: '--no-PG'
     def minqs = params.minqs
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
     """
     samtools \\
@@ -28,12 +36,13 @@ process SAMTOOLS_QSFILTER {
         -@ ${threads} \\
         -e '[qs] >=${minqs}' \\
         -b ${ubam} \\
-        --output ${barcode}_pass.bam \\
-        --unoutput ${barcode}_fail.bam
+        --output ${prefix}_pass.bam \\
+        --unoutput ${prefix}_fail.bam
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+
     END_VERSIONS
     """
 }
@@ -42,16 +51,20 @@ process SAMTOOLS_TOFASTQ {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/samtools:latest'
     label "process_medium"              // nf-core labels
-    label "low_mem_long"            // Label for mpgi drac ressources
-    label "reads"                // Label for publishing
+    label "process_medium_low_cpu"          // Label for mpgi drac memory alloc
+    label "process_low_memory"              // Label for mpgi drac memory alloc
+    label "process_medium_low_time"         // Label for mpgi drac time alloc
 
     tag "$meta.id"
 
     input:
-    tuple val(meta), val(barcode), path(ubam)
+    tuple val(meta),
+        path(ubam)
 
     output:
-    tuple val(meta), path("*.fq.gz"), emit: fq
+    tuple val(meta),
+        path("*.fq.gz"),
+        emit: fq
     path "versions.yml"           , emit: versions
 
     when:
@@ -61,19 +74,17 @@ process SAMTOOLS_TOFASTQ {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
-    def mod = params.m_bases_path ? "-T '*'" : (params.m_bases ? "-T '*'" : "")
-    def suffix = ubam.baseName.tokenize('_')[-1].replace('.bam', '')    // Keep pass and fail without the barcode in final fastq
     """
     samtools fastq \\
         ${args} \\
-        ${mod} \\
         -@ ${threads} \\
         ${ubam} | \\
-        pigz -p ${threads} -c > ${prefix}_${suffix}.fq.gz
+        pigz -p ${threads} -c > ${prefix}.fq.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+
     END_VERSIONS
     """
 }
@@ -82,15 +93,20 @@ process SAMTOOLS_TOBAM {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/samtools:latest'
     label "process_medium"          // nf-core labels
-    label "mid_all"                 // Label for mpgi drac ressources
+    label "process_medium_low_cpu"          // Label for mpgi drac memory alloc
+    label "process_medium_low_memory"       // Label for mpgi drac memory alloc
+    label "process_low_time"                // Label for mpgi drac time alloc
 
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(in_sam)
+    tuple val(meta),
+        path(in_sam)
 
     output:
-    tuple val(meta), path("*.bam"), emit: bamfile
+    tuple val(meta),
+        path("*.bam"),
+        emit: bamfile
     path "versions.yml"           , emit: versions
 
     when:
@@ -110,6 +126,7 @@ process SAMTOOLS_TOBAM {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+
     END_VERSIONS
     """
 }
@@ -118,16 +135,20 @@ process SAMTOOLS_SORT {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/samtools:latest'
 
-    tag "$meta.id"
-    label "process_medium"              // nf-core labels
-    label "high_fast"                   // Label for mpgi drac ressources
+    label "process_medium_cpu"              // Label for mpgi drac memory alloc
+    label "process_medium_memory"           // Label for mpgi drac memory alloc
+    label "process_medium_low_time"         // Label for mpgi drac time alloc
 
+    tag "$meta.id"
 
     input:
-    tuple val(meta), path(in_bam)
+    tuple val(meta),
+        path(in_bam)
 
     output:
-    tuple val(meta), path("*.sorted.bam"), emit: sortedbam
+    tuple val(meta),
+        path("*.sorted.bam"),
+        emit: sortedbam
     path "versions.yml"           , emit: versions
 
     when:
@@ -152,22 +173,72 @@ process SAMTOOLS_SORT {
     """
 }
 
+process SAMTOOLS_SORT_INDEX {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/samtools:latest'
+
+    label "process_medium_cpu"              // Label for mpgi drac memory alloc
+    label "process_medium_memory"           // Label for mpgi drac memory alloc
+    label "process_medium_low_time"         // Label for mpgi drac time alloc
+
+    tag "$meta.id"
+
+    input:
+    tuple val(meta),
+        path(in_bam)
+
+    output:
+    tuple val(meta),
+        path("*.sorted.bam"),
+        path("*.sorted.bam.bai"),
+        emit: sortedbamidx
+    path "versions.yml"           , emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def threads = task.cpus
+    """
+    samtools \\
+        sort \\
+        -@ ${threads} \\
+        ${args} \\
+        ${in_bam} \\
+        --write-index \\
+        -o ${prefix}.sorted.bam##idx##${prefix}.sorted.bam.bai
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+
+    END_VERSIONS
+    """
+}
+
 
 process SAMTOOLS_INDEX {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/samtools:latest'
 
-    label "process_low"         // nf-core labels
-    label "mid_low_all"         // Label for mpgi drac ressources
-    label "alignments"                // Label for publishing
+    label "process_low"                     // nf-core labels
+    label "process_low_cpu"              // Label for mpgi drac memory alloc
+    label "process_low_memory"           // Label for mpgi drac memory alloc
+    label "process_low_time"            // Label for mpgi drac time alloc
 
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(in_bam)
+    tuple val(meta),
+        path(in_bam)
 
     output:
-    tuple val(meta), path(in_bam),path("*.bai"), emit: bamfile_index
+    tuple val(meta),
+        path(in_bam),
+        path("*.bai"),
+        emit: bamfile_index
     path "versions.yml"           , emit: versions
 
     when:
@@ -187,6 +258,118 @@ process SAMTOOLS_INDEX {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
+    """
+}
+
+process SAMTOOLS_FAIDX {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/samtools:latest'
+
+    label "process_low"                     // nf-core labels
+    label "process_low_cpu"              // Label for mpgi drac memory alloc
+    label "process_low_memory"           // Label for mpgi drac memory alloc
+    label "process_low_time"            // Label for mpgi drac time alloc
+
+    tag "$meta.id"
+
+    input:
+    tuple val(meta),
+        path(in_fa)
+
+    output:
+    tuple val(meta),
+        path('*.fai'), emit: fasta_index
+    path "versions.yml"           , emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: ''
+    // def prefix = task.ext.prefix ?: "${meta.id}"
+    def threads = task.cpus
+    if (in_fa.name.endsWith('.gz')) {
+    """
+    pigz \\
+        -d \\
+        -p ${threads} \\
+        -c ${in_fa} > ${in_fa.name - '.gz'}
+    samtools \\
+        faidx \\
+        -@ ${threads} \\
+        ${args} \\
+        ${in_fa.name - '.gz'}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
+    """
+    } else {
+    """
+    samtools \\
+        faidx \\
+        -@ ${threads} \\
+        ${args} \\
+        ${in_fa}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+    END_VERSIONS
+    """
+    }
+
+}
+
+process SAMTOOLS_SPLIT_BY_BED {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/samtools:latest'
+
+    label "process_low"                     // nf-core labels
+    label "process_medium_low_cpu"         // Label for mpgi drac memory alloc
+    label "process_medium_mid_memory"    // Label for mpgi drac memory alloc
+    label "process_medium_mid_time"      // Label for mpgi drac time alloc
+
+    tag "$meta.id"
+
+    input:
+    tuple val(meta), path(bam), path(bai), path(bed)
+
+    output:
+    tuple val(meta),
+        path("*_panel.bam"),
+        path("*_panel.bam.bai"),
+        emit: panel
+    tuple val(meta),
+        path("*_bg.bam"),
+        path("*_bg.bam.bai"),
+        emit: bg
+    path "versions.yml"           , emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def threads = task.cpus
+    """
+    samtools \\
+        view \\
+        ${args} \\
+        -@ ${threads} \\
+        -L ${bed} \\
+        --write-index \\
+        -o ${prefix}_panel.bam##idx##${prefix}_panel.bam.bai \\
+        -U ${prefix}_bg.bam##idx##${prefix}_bg.bam.bai \\
+        ${bam}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+
     END_VERSIONS
     """
 }
