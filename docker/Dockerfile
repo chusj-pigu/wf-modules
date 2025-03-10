@@ -16,10 +16,9 @@ RUN apt-get update && apt-get install -y \
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r /opt/alma/reqs.txt
 
-RUN cp -r /opt/alma/models \ 
-    /usr/local/lib/python3.9/site-packages/alma_classifier/
-
 # Make alias for bed_to_pickle.py
 RUN echo "alias bed_to_pickle='python /opt/alma/scripts/bed_to_pickle.py'" >> ~/.bashrc
+
+RUN python -m alma_classifier.download_models
 
 CMD [ "alma-classifier" ]
