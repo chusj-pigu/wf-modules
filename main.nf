@@ -9,11 +9,16 @@ process SAMTOOLS_QSFILTER {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(ubam)
+    tuple val(meta), 
+        path(ubam)
 
     output:
-    tuple val(meta), path("${prefix}_pass.bam"), emit: ubam_pass
-    tuple val(meta), path("${prefix}_fail.bam"), emit: ubam_fail
+    tuple val(meta),
+        path("${prefix}_pass.bam"), 
+        emit: ubam_pass
+    tuple val(meta), 
+        path("${prefix}_fail.bam"), 
+        emit: ubam_fail
     path "versions.yml"           , emit: versions
 
     when:
@@ -36,7 +41,8 @@ process SAMTOOLS_QSFILTER {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    END_VERSIONS
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    
+    END_VERSIONS
     """
 }
 
@@ -51,10 +57,13 @@ process SAMTOOLS_TOFASTQ {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(ubam)
+    tuple val(meta), 
+        path(ubam)
 
     output:
-    tuple val(meta), path("*.fq.gz"), emit: fq
+    tuple val(meta), 
+        path("*.fq.gz"), 
+        emit: fq
     path "versions.yml"           , emit: versions
 
     when:
@@ -73,7 +82,8 @@ process SAMTOOLS_TOFASTQ {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    END_VERSIONS
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    
+    END_VERSIONS
     """
 }
 
@@ -88,10 +98,13 @@ process SAMTOOLS_TOBAM {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(in_sam)
+    tuple val(meta), 
+        path(in_sam)
 
     output:
-    tuple val(meta), path("*.bam"), emit: bamfile
+    tuple val(meta), 
+        path("*.bam"), 
+        emit: bamfile
     path "versions.yml"           , emit: versions
 
     when:
@@ -110,7 +123,8 @@ process SAMTOOLS_TOBAM {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    END_VERSIONS
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')   
+    END_VERSIONS
     """
 }
 
@@ -125,10 +139,13 @@ process SAMTOOLS_SORT {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(in_bam)
+    tuple val(meta), 
+        path(in_bam)
 
     output:
-    tuple val(meta), path("*.sorted.bam"), emit: sortedbam
+    tuple val(meta), 
+        path("*.sorted.bam"), 
+        emit: sortedbam
     path "versions.yml"           , emit: versions
 
     when:
@@ -148,7 +165,8 @@ process SAMTOOLS_SORT {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    END_VERSIONS
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    
+    END_VERSIONS
     """
 }
 
@@ -163,10 +181,14 @@ process SAMTOOLS_SORT_INDEX {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(in_bam)
+    tuple val(meta), 
+        path(in_bam)
 
     output:
-    tuple val(meta), path("*.sorted.bam"), path("*.sorted.bam.bai"), emit: sortedbamidx
+    tuple val(meta), 
+        path("*.sorted.bam"), 
+        path("*.sorted.bam.bai"), 
+        emit: sortedbamidx
     path "versions.yml"           , emit: versions
 
     when:
@@ -187,7 +209,8 @@ process SAMTOOLS_SORT_INDEX {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    END_VERSIONS
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')   
+    END_VERSIONS
     """
 }
 
@@ -204,10 +227,14 @@ process SAMTOOLS_INDEX {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(in_bam)
+    tuple val(meta), 
+        path(in_bam)
 
     output:
-    tuple val(meta), path(in_bam),path("*.bai"), emit: bamfile_index
+    tuple val(meta), 
+        path(in_bam),
+        path("*.bai"), 
+        emit: bamfile_index
     path "versions.yml"           , emit: versions
 
     when:
@@ -226,7 +253,8 @@ process SAMTOOLS_INDEX {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    END_VERSIONS
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    
+    END_VERSIONS
     """
 }
 
@@ -242,10 +270,12 @@ process SAMTOOLS_FAIDX {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(in_fa)
+    tuple val(meta), 
+        path(in_fa)
 
     output:
-    tuple val(meta), path('*.fai'), emit: fasta_index
+    tuple val(meta), 
+        path('*.fai'), emit: fasta_index
     path "versions.yml"           , emit: versions
 
     when:
@@ -269,7 +299,8 @@ process SAMTOOLS_FAIDX {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    END_VERSIONS
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    
+    END_VERSIONS
     """
     } else {
     """
@@ -281,7 +312,8 @@ process SAMTOOLS_FAIDX {
         
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    END_VERSIONS
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    
+    END_VERSIONS
     """
     }
 
@@ -302,8 +334,14 @@ process SAMTOOLS_SPLIT_BY_BED {
     tuple val(meta), path(bam), path(bai), path(bed)
 
     output:
-    tuple val(meta), path("*_panel.bam"), path("*_panel.bam.bai"), emit: panel
-    tuple val(meta), path("*_bg.bam"), path("*_bg.bam.bai"), emit: bg
+    tuple val(meta), 
+        path("*_panel.bam"), 
+        path("*_panel.bam.bai"), 
+        emit: panel
+    tuple val(meta), 
+        path("*_bg.bam"), 
+        path("*_bg.bam.bai"), 
+        emit: bg
     path "versions.yml"           , emit: versions
 
     when:
@@ -326,6 +364,7 @@ process SAMTOOLS_SPLIT_BY_BED {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    END_VERSIONS
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')    
+    END_VERSIONS
     """
 }
