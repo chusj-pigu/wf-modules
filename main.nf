@@ -36,7 +36,7 @@ process MODKIT_PILEUP {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        modkit: \$( modkit --version )
+        modkit: \$( modkit --version  | sed 's/^.*mod_kit //; s/Using.*\$//')
     END_VERSIONS
     """
 }
@@ -77,7 +77,7 @@ process MODKIT_SUMMARY {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        modkit: \$( modkit --version )
+        modkit: \$( modkit --version | sed 's/^.*mod_kit //; s/Using.*\$//')
     END_VERSIONS
     """
 }
@@ -102,7 +102,9 @@ process MODKIT_DMR_PAIR {
     val(base)
 
     output:
-    tuple val(meta), path("*.txt"),
+    tuple val(meta),
+        path("*.txt"),
+        val(exp_id),
         emit: modkit_dmr
     path "*.log",
         emit: log
@@ -133,7 +135,7 @@ process MODKIT_DMR_PAIR {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        modkit: \$( modkit --version )
+        modkit: \$( modkit --version | sed 's/^.*mod_kit //; s/Using.*\$//')
     END_VERSIONS
     """
 }
@@ -177,7 +179,7 @@ process MODKIT_EXTRACT_FULL {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        modkit: \$( modkit --version )
+        modkit: \$( modkit --version | sed 's/^.*mod_kit //; s/Using.*\$//')
     END_VERSIONS
     """
 }
