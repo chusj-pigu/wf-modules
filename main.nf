@@ -6,14 +6,14 @@ process SAMTOOLS_QSFILTER {
     label "process_medium_low_memory"       // Label for mpgi drac memory alloc
     label "process_low_time"                // Label for mpgi drac time alloc
 
-    tag "$barcode"
+    tag "$meta.id"
 
     input:
-    tuple val(meta), val(barcode), path(ubam)
+    tuple val(meta), path(ubam)
 
     output:
-    tuple val(meta), val(barcode), path("${barcode}_pass.bam"), emit: ubam_pass
-    tuple val(meta), val(barcode), path("${barcode}_fail.bam"), emit: ubam_fail
+    tuple val(meta), path("${prefix}_pass.bam"), emit: ubam_pass
+    tuple val(meta), path("${prefix}_fail.bam"), emit: ubam_fail
     path "versions.yml"           , emit: versions
 
     when:
@@ -22,6 +22,7 @@ process SAMTOOLS_QSFILTER {
     script:
     def args = task.ext.args ?: '--no-PG'
     def minqs = params.minqs
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
     """
     samtools \\
@@ -30,8 +31,8 @@ process SAMTOOLS_QSFILTER {
         -@ ${threads} \\
         -e '[qs] >=${minqs}' \\
         -b ${ubam} \\
-        --output ${barcode}_pass.bam \\
-        --unoutput ${barcode}_fail.bam
+        --output ${prefix}_pass.bam \\
+        --unoutput ${prefix}_fail.bam
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -50,7 +51,7 @@ process SAMTOOLS_TOFASTQ {
     tag "$meta.id"
 
     input:
-    tuple val(meta), val(barcode), path(ubam)
+    tuple val(meta), path(ubam)
 
     output:
     tuple val(meta), path("*.fq.gz"), emit: fq
