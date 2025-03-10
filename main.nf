@@ -6,10 +6,10 @@ process MPGI_SUMMARIZE_MODS {
     tag "$meta.id"
     label 'process_medium'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
-    
+
     input:
-    tuple val(meta), 
-        path(mods), 
+    tuple val(meta),
+        path(mods),
         path(mapped)
 
     output:
@@ -17,9 +17,9 @@ process MPGI_SUMMARIZE_MODS {
         path("*.csv"),
         optional: true,
         emit: modifications_summary
-    path "versions.yml", 
+    path "versions.yml",
         emit: versions
-        
+
     when:
     task.ext.when == null || task.ext.when
 
@@ -47,14 +47,14 @@ process MPGI_COUNTFEATURES {
     tag "$meta.id"
     label 'process_medium'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
-    
+
     input:
-    tuple val(meta), 
+    tuple val(meta),
         path(input)
 
     output:
-    tuple val(meta), 
-        path("*.csv"), 
+    tuple val(meta),
+        path("*.csv"),
         emit: features_summary
     path "versions.yml",
         emit: versions
@@ -65,7 +65,7 @@ process MPGI_COUNTFEATURES {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-        nu --plugins \
+    nu --plugins \
         '[/usr/local/cargo/bin/nu_plugin_polars]' \
         /opt/scripts/countfeatures.nu \
         ${input} \
