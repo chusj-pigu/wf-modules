@@ -27,7 +27,8 @@ process CHROMPLOTTER {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def threads = task.cpus
+    // TODO: Set threads when pipeline is stable
+    // def threads = task.cpus
     """
     chromplotter \\
     ${args} \\
@@ -37,7 +38,7 @@ process CHROMPLOTTER {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        chromplotter: \$( chromplotter --version )
+        chromplotter: \$( chromplotter --version  | sed 's/^.*chromplotter //; s/Using.*\$//')
     END_VERSIONS
     """
 }
