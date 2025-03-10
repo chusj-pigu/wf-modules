@@ -67,7 +67,6 @@ process QUARTO_TABLE {
 
     tag "$meta.id"
     label 'process_low'
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
 
     input:
     tuple val(meta),
@@ -124,7 +123,6 @@ process QUARTO_FIGURE {
 
     tag "$meta.id"
     label 'process_low'
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
 
     input:
     tuple val(meta),
@@ -167,7 +165,6 @@ process QUARTO_SECTION {
 
     tag "$meta.id"
     label 'process_low'
-    errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
 
     input:
     tuple val(meta),
@@ -181,7 +178,8 @@ process QUARTO_SECTION {
         path("*_inputs"),
         val("${meta.id}-${section}.qmd"),
         emit: quarto_section
-    path "versions.yml", emit: versions
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -213,4 +211,44 @@ process QUARTO_SECTION {
         quarto: \$( quarto --version )
     END_VERSIONS
     """
+}
+
+
+process QUARTO_TEXT {
+    container 'ghcr.io/chusj-pigu/quarto:latest'
+
+    tag "$meta.id"
+    label 'process_low'
+
+    input:
+    tuple val(meta),
+        val(text_data),
+        val(section),
+        val(process)
+
+    output:
+    tuple val(meta),
+        val(section),
+        path("*_inputs"),
+        emit: quarto_text
+    path "versions.yml", emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+
+"""
+mkdir ${prefix}_${section}_${process}_inputs
+
+cat <<-END_REPORT > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
+${text_data}
+END_REPORT
+
+cat <<-END_VERSIONS > versions.yml
+"${task.process}":
+    quarto: \$( quarto --version )
+END_VERSIONS
+"""
 }
