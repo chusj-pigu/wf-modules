@@ -22,7 +22,7 @@ process CLAIRS_TO_CALL {
     output:
     tuple val(meta),
         path("${meta.id}/*.vcf.gz"),
-        emit: sam
+        emit: vcf
     path "versions.yml",
         emit: versions
 
