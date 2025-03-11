@@ -10,11 +10,17 @@ process MOSDEPTH_GENERAL {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    tuple val(meta),
+        path(bam),
+        path(bai)
 
     output:
-    tuple val(meta), path("*.dist.txt"), emit: dist
-    tuple val(meta), path("*.summary.txt"), emit: summary
+    tuple val(meta),
+        path("*.dist.txt"),
+        emit: dist
+    tuple val(meta),
+        path("*.summary.txt"),
+        emit: summary
     path "versions.yml", emit: versions
 
     when:
@@ -49,12 +55,16 @@ process MOSDEPTH_ADAPTIVE {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(bam), path(bai), path(bed), val(flag), val(qual)
+    tuple val(meta),
+        path(bam),
+        path(bai),
+        path(bed),
+        val(flag),
+        val(qual)
 
     output:
-    tuple val(meta), path("*.dist.txt"), emit: dist
-    tuple val(meta), path("*.summary.txt"), emit: summary
-    tuple val(meta), path("*.bed.gz"), emit: bed
+    tuple val(meta),
+        path("*.bed.gz"), emit: bed
     path "versions.yml", emit: versions
 
     when:
