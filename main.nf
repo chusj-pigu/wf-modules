@@ -28,11 +28,11 @@ process SNPEFF_ANNOTATE {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def memory = task.memory
+    def memory = task.memory.giga
     def threads = task.cpus
     """
-    java -jar -Xmx${memory}g ''\\
-        snpEff.jar \\
+    java -jar -Xmx${memory}g \\
+        /opt/app/snpEff/snpEff.jar \\
         ann \\
         ${database} \\
         ${args} \\
