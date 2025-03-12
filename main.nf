@@ -32,7 +32,7 @@ process SNPEFF_ANNOTATE {
     def threads = task.cpus
     """
     java -jar -Xmx${memory}g \\
-        /opt/app/snpEff/snpEff.jar \\
+        /usr/local/bin/snpEff/snpEff.jar \\
         ann \\
         ${database} \\
         ${args} \\
