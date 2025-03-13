@@ -34,8 +34,8 @@ process SNPEFF_ANNOTATE {
     java -jar -Xmx${memory}g \\
         /opt/app/snpEff/snpEff.jar \\
         ann \\
-        ${database} \\
         ${args} \\
+        ${database} \\
         ${vcf} > ${prefix}_snp.vcf | pigz -p ${threads}
 
     cat <<-END_VERSIONS > versions.yml
