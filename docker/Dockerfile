@@ -4,7 +4,7 @@ FROM ubuntu:latest
 RUN apt-get update && apt-get install -y \
     build-essential \
     openjdk-21-jdk  \
-    git \ 
+    git \
     procps \
     wget \
     unzip \
@@ -23,4 +23,4 @@ WORKDIR /opt/app/snpEff
 RUN java -jar snpEff.jar download GRCh38.p14
 RUN java -jar snpEff.jar download GRCh37.p13
 
-CMD [ "java", "-jar", "snpEff.jar", "java", "-jar", "SnpSift.jar" ]
+#CMD [ "java", "-jar", "snpEff.jar", "java", "-jar", "SnpSift.jar" ]
