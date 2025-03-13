@@ -32,15 +32,15 @@ process SNPEFF_ANNOTATE {
     def threads = task.cpus
     """
     java -jar -Xmx${memory}g \\
-        /usr/local/bin/snpEff/snpEff.jar \\
+        /opt/app/snpEff/snpEff.jar \\
         ann \\
         ${database} \\
         ${args} \\
-        ${vcf} > ${prefix}_snp.vcf | pigz -p $threads
+        ${vcf} > ${prefix}_snp.vcf | pigz -p ${threads}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        SnpEff: \$( java -jar snpEff.jar | head -1 )
+        SnpEff: \$( java -jar /opt/app/snpEff/snpEff.jar | head -1 )
     END_VERSIONS
     """
 }
