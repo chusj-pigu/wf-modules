@@ -22,6 +22,8 @@ WORKDIR /usr/local/bin/snpEff
 RUN java -jar snpEff.jar download GRCh38.p14
 RUN java -jar snpEff.jar download GRCh37.p13
 
+CMD [ "java", "-jar", "snpEff.jar", "java", "-jar", "SnpSift.jar" ]
+
 
 
 
