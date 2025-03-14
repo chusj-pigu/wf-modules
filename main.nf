@@ -14,10 +14,10 @@ process SAMTOOLS_QSFILTER {
 
     output:
     tuple val(meta),
-        path("${prefix}_pass.bam"),
+        path("*_pass.bam"),
         emit: ubam_pass
     tuple val(meta),
-        path("${prefix}_fail.bam"),
+        path("*_fail.bam"),
         emit: ubam_fail
     path "versions.yml"           , emit: versions
 
