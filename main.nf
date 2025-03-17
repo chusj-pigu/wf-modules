@@ -36,7 +36,7 @@ process SNPEFF_ANNOTATE {
         ann \\
         ${args} \\
         ${database} \\
-        ${vcf} > ${prefix}_snp.vcf | pigz -p ${threads}
+        ${vcf} | pigz -p ${threads} > ${prefix}.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
