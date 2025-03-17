@@ -14,8 +14,11 @@ process QUARTO_REPORT {
     val report_description
 
     output:
-    tuple val(meta), path("*_report_output"), emit: report
-    path "versions.yml"           , emit: versions
+    tuple val(meta),
+        path("*_report_output"),
+        emit: report
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -81,7 +84,8 @@ process QUARTO_TABLE {
         val(section),
         path("*_inputs"),
         emit: quarto_table
-    path "versions.yml", emit: versions
+    path "versions.yml",
+        emit: versions
 
 
     when:
@@ -136,7 +140,8 @@ process QUARTO_FIGURE {
         val(section),
         path("*_inputs"),
         emit: quarto_figure
-    path "versions.yml", emit: versions
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -231,7 +236,8 @@ process QUARTO_TEXT {
         val(section),
         path("*_inputs"),
         emit: quarto_text
-    path "versions.yml", emit: versions
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
