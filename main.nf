@@ -31,7 +31,7 @@ process GXF_TO_BED {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        gxf2bed: \$( gxf2bed --version )
+        gxf2bed: echo \$(gxf2bed --version 2>&1 | tail -n1 | sed 's/^.*gxf2bed //; s/Using.*\$//')
     END_VERSIONS
     """
 }
