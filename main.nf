@@ -60,7 +60,8 @@ process SNPSIFT_ANNOTATE {
     input:
     tuple val(meta),
         path(vcf),
-        path(database)
+        path(database),
+        path(database_tbi)
 
     output:
     tuple val(meta),
@@ -82,7 +83,7 @@ process SNPSIFT_ANNOTATE {
         /opt/app/snpEff/SnpSift.jar \\
         ann \\
         ${args} \\
-        -id ${database} \\
+        ${database} \\
         ${vcf} | pigz -p ${threads} > ${prefix}_clinvar.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
