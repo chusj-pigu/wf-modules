@@ -78,3 +78,42 @@ process MPGI_COUNTFEATURES {
     END_VERSIONS
     """
 }
+
+process MPGI_GETINTRONS {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/tools:latest'
+
+    tag "$meta.id"
+    label 'process_medium'
+    errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
+
+    input:
+    tuple val(meta),
+        path(input)
+
+    output:
+    tuple val(meta),
+        path("*.csv"),
+        emit: features_summary
+    path "versions.yml",
+        emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    Rscript \
+        /opt/scripts/get_introns.R \
+        ${input} \
+        introns-summary.csv
+
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        R: \$(R --version | head -n 1 | awk '{print ""$3}')
+        GenomicFeatures: \$(R -q -e 'cat(as.character(packageVersion("GenomicFeatures")),"\n")' | tail -n 3 | head -n 1)
+    END_VERSIONS
+    """
+}
