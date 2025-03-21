@@ -17,7 +17,7 @@ process MPGI_SUMMARIZE_MODS {
         path("*.csv"),
         optional: true,
         emit: modifications_summary
-    path "versions.yml",
+    path("versions.yml"),
         emit: versions
 
     when:
@@ -56,7 +56,7 @@ process MPGI_COUNTFEATURES {
     tuple val(meta),
         path("*.csv"),
         emit: features_summary
-    path "versions.yml",
+    path("versions.yml"),
         emit: versions
 
     when:
@@ -83,26 +83,21 @@ process MPGI_GETINTRONS {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/tools:latest'
 
-    tag "$meta.id"
     label 'process_medium'
     errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
 
     input:
-    tuple val(meta),
-        path(input)
+    path(input)
 
     output:
-    tuple val(meta),
-        path("*.csv"),
-        emit: features_summary
-    path "versions.yml",
+    path("*.gff"),
+        emit: introns
+    path("versions.yml"),
         emit: versions
-
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     Rscript \
         /opt/scripts/R/get_introns.R \
@@ -112,8 +107,11 @@ process MPGI_GETINTRONS {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        R: \$(R --version | head -n 1 | awk '{print ""$3}')
+        R: \$(R --version | head -n 1 | awk '{print ""\$3}')
         GenomicFeatures: \$(R -q -e 'cat(as.character(packageVersion("GenomicFeatures")),"\n")' | tail -n 3 | head -n 1)
+        argparse: \$(R -q -e 'cat(as.character(packageVersion("argparse")),"\n")' | tail -n 3 | head -n 1)
+        GenomicRanges: \$(R -q -e 'cat(as.character(packageVersion("GenomicRanges")),"\n")' | tail -n 3 | head -n 1)
+        rtracklayer: \$(R -q -e 'cat(as.character(packageVersion("rtracklayer")),"\n")' | tail -n 3 | head -n 1)
     END_VERSIONS
     """
 }
