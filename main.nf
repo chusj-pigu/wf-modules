@@ -105,7 +105,7 @@ process MPGI_GETINTRONS {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     Rscript \
-        /opt/scripts/get_introns.R \
+        /opt/scripts/R/get_introns.R \
         ${input} \
         introns-summary.csv
 
