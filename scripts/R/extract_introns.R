@@ -31,6 +31,6 @@ output_gff <- gsub(".gtf.gz", ".introns.gff", args$input_gtf)
 
 # Export to GFF3 format
 message("Exporting introns to: ", args$output_gff)
-export(introns, args$output_gff, format = "gff3")
+rtracklayer::export(introns, args$output_gff, format = "gff3")
 
 message("Done! Introns saved to: ", args$output_gff)
