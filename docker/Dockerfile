@@ -31,7 +31,7 @@ RUN mkdir -p ${R_LIBS_USER}
 
 # Install CRAN packages
 RUN R -e "install.packages('BiocManager', repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages(c('tidyverse', 'ggplot2', 'ggrepel', 'RColorBrewer','paletteer','pheatmap','writexl'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages(c('argparse', 'tidyverse', 'ggplot2', 'ggrepel', 'RColorBrewer','paletteer','pheatmap','writexl'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
 # Install Bioconductor dependencies
 RUN R -e "BiocManager::install(c('GenomicRanges', 'AnnotationDbi', 'GenomicAlignments', 'rtracklayer'), ask=FALSE)"
