@@ -25,12 +25,12 @@ message("Loading GTF file: ", args$input_gtf)
 txdb <- makeTxDbFromGFF(args$input_gtf)
 
 message("Extracting introns...")
-introns <- intronsByTranscript(txdb)
+introns <- intronicParts(txdb)
 
 output_gff <- gsub(".gtf.gz", ".introns.gff", args$input_gtf)
 
 # Export to GFF3 format
-message("Exporting introns to: ", args$output_gff)
-rtracklayer::export(introns, args$output_gff, format = "gff3")
+message("Exporting introns to: ", output_gff)
+rtracklayer::export(introns, output_gff, format = "gff3")
 
-message("Done! Introns saved to: ", args$output_gff)
+message("Done! Introns saved to: ", output_gff)
