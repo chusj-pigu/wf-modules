@@ -100,7 +100,7 @@ process MPGI_GETINTRONS {
     script:
     """
     Rscript \
-        /opt/scripts/R/get_introns.R \
+        /opt/scripts/R/extract_introns.R \
         ${input} \
         introns-summary.csv
 
