@@ -101,8 +101,7 @@ process MPGI_GETINTRONS {
     """
     Rscript \
         /opt/scripts/R/extract_introns.R \
-        ${input} \
-        introns-summary.csv
+        ${input}
 
 
     cat <<-END_VERSIONS > versions.yml
