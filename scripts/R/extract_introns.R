@@ -8,14 +8,14 @@ suppressMessages(library(rtracklayer))
 
 # Set up argument parser
 parser <- ArgumentParser(
-	description = "Extract introns from a GTF file and export them as GFF3"
-	)
+    description = "Extract introns from a GTF file and export them as GFF3"
+)
 
 parser$add_argument(
-	"input_gtf",
-	type = "character",
-	help = "Path to the input GTF file (e.g., hg38.ncbiRefSeq.gtf.gz)"
-	)
+    "input_gtf",
+    type = "character",
+    help = "Path to the input GTF file (e.g., hg38.ncbiRefSeq.gtf.gz)"
+)
 
 # Parse arguments
 args <- parser$parse_args()
