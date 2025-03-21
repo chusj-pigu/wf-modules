@@ -18,7 +18,6 @@ process BCFTOOLS_CONCAT {
     output:
     tuple val(meta),
         path("*.vcf.gz"),
-        path("*.vcf.gz.tbi"),
         emit: vcf
     path "versions.yml",
         emit: versions
