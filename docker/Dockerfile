@@ -24,6 +24,9 @@ RUN apt-get update && apt-get install -y \
 # Set CRAN mirror
 RUN echo 'options(repos = c(CRAN = "https://cloud.r-project.org"))' >> /etc/R/Rprofile.site
 
+# Install optparse
+RUN R -e 'install.packages("optparse")'
+
 # Install tidyverse
 RUN R -e 'install.packages("tidyverse")'
 
