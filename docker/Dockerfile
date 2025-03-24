@@ -37,4 +37,3 @@ RUN R -e 'install.packages("data.table")'
 RUN R -e 'library(tidyverse)'
 
 WORKDIR /opt/
-CMD ["R"]
