@@ -24,7 +24,7 @@ RUN git clone --recurse-submodules https://github.com/samtools/htslib.git
 RUN git clone https://github.com/samtools/bcftools.git
 
 WORKDIR /opt/app/bcftools
- # The following is optional:
+
 RUN autoheader && autoconf && ./configure --prefix=/opt/app/ --enable-libgsl --enable-perl-filters --
 RUN make
 RUN make install
@@ -32,5 +32,11 @@ RUN make install
 # Add /opt/app/bin to the PATH
 ENV PATH="/opt/app/bin:${PATH}"
 
-WORKDIR /opt/app
+WORKDIR /opt/app/htslib
+RUN autoreconf -i  # Build the configure script and install files it uses
+RUN ./configure    # Optional but recommended, for choosing extra functionality
+RUN make
+RUN make install
+ENV PATH="/opt/app/bin:${PATH}"
 
+WORKDIR /opt/app/
