@@ -12,10 +12,12 @@ process BEDTOOLS_INTERSECT {
         path (file1_index)
     path(file2)
     val(extra)
+    val(output_format)
+
 
     output:
     tuple val(meta),
-        path("*.txt"),
+        path("*.${output_format}"),
         emit: mapped_features
     path "versions.yml",
         emit: versions
@@ -26,14 +28,14 @@ process BEDTOOLS_INTERSECT {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def extra = extra ?: "${extra}"
+    def extra_id = extra ?: "${extra}"
     """
     bedtools intersect \
         -a ${file2} \
         -b ${file1} \
         -wa \
         -wb \
-        ${args} > ${prefix}-${extra}-mapped_features.txt
+        ${args} > ${prefix}-${extra_id}-mapped_features.${output_format}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -55,10 +57,11 @@ process BEDTOOLS_LEFTOUTER {
         path (file1_index)
     path(file2)
     val(extra)
+    val(output_format)
 
     output:
     tuple val(meta),
-        path("*.txt"),
+        path("*.${output_format}"),
         emit: mapped_features
     path "versions.yml",
         emit: versions
@@ -69,13 +72,13 @@ process BEDTOOLS_LEFTOUTER {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def extra = extra ?: "${extra}"
+    def extra_id = extra ?: "${extra}"
     """
     bedtools intersect \
         -a ${file1} \
         -b ${file2} \
         -v \
-        ${args} > ${prefix}-${extra}-mapped_features.txt
+        ${args} > ${prefix}-${extra_id}-mapped_features.${output_format}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
