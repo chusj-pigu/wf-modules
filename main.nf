@@ -34,7 +34,7 @@ process CRAMINO_STATS {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        cramino: \$(echo \$(cramino --version 2>&1) | sed 's/^.*cramino //; s/Using.*\$//')    END_VERSIONS
+        cramino: \$(echo \$(cramino --version 2>&1) | sed 's/^.*cramino //; s/Using.*\$//')
     END_VERSIONS
     """
 }
