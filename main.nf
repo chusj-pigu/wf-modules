@@ -40,7 +40,7 @@ process SNPEFF_ANNOTATE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        SnpEff: \$( java -jar /opt/app/snpEff/snpEff.jar | head -1 )
+        SnpEff: "5.2f"
     END_VERSIONS
     """
 }
@@ -88,7 +88,7 @@ process SNPSIFT_ANNOTATE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        SnpSift: \$( java -jar /opt/app/snpEff/SnpSift.jar | head -1 )
+        SnpSift: "5.2f"
     END_VERSIONS
     """
 }
