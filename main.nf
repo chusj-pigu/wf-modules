@@ -107,10 +107,10 @@ process MPGI_GETINTRONS {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         R: \$(R --version | head -n 1 | awk '{print ""\$3}')
-        GenomicFeatures: \$(R -q -e 'cat(as.character(packageVersion("GenomicFeatures")),"\n")' | tail -n 3 | head -n 1)
-        argparse: \$(R -q -e 'cat(as.character(packageVersion("argparse")),"\n")' | tail -n 3 | head -n 1)
-        GenomicRanges: \$(R -q -e 'cat(as.character(packageVersion("GenomicRanges")),"\n")' | tail -n 3 | head -n 1)
-        rtracklayer: \$(R -q -e 'cat(as.character(packageVersion("rtracklayer")),"\n")' | tail -n 3 | head -n 1)
+        GenomicFeatures: \$(Rscript -e 'cat(as.character(packageVersion("GenomicFeatures")))')
+        argparse: \$(Rscript -e 'cat(as.character(packageVersion("argparse")))')
+        GenomicRanges: \$(Rscript -e 'cat(as.character(packageVersion("GenomicRanges")))')
+        rtracklayer: \$(Rscript -e 'cat(as.character(packageVersion("rtracklayer")))')
     END_VERSIONS
     """
 }
