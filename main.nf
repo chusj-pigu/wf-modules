@@ -149,7 +149,8 @@ process SAMTOOLS_SORT {
     tuple val(meta),
         path("*.sorted.bam"),
         emit: sortedbam
-    path "versions.yml"           , emit: versions
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -239,7 +240,8 @@ process SAMTOOLS_INDEX {
         path(in_bam),
         path("*.bai"),
         emit: bamfile_index
-    path "versions.yml"           , emit: versions
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
