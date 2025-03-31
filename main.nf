@@ -49,7 +49,7 @@ process CLAIRS_TO_CALL {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        ClairS-to: "0.3.1"
+        ClairS-TO: "0.3.1"
     END_VERSIONS
     """
 }
