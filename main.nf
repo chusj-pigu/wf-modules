@@ -149,6 +149,7 @@ process MPGI_COMPARE_INTRONIC {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         nushell: \$( nu --version )
+        nu_plugin_polars: \$(nu --plugins '[/usr/local/cargo/bin/nu_plugin_polars]' -e ' plugin list | where name == "polars" | get version | flatten | each { |x| echo $"Polars: ($x)" }' )
     END_VERSIONS
     """
 }
