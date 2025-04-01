@@ -201,8 +201,11 @@ process QUARTO_SECTION {
         cp -r \${file}/* ${prefix}_${section}_inputs
     done
 
+    # Transform: uppercase and replace underscores with spaces
+    formatted_section=\$(echo "${section}" | tr '_' ' ' | tr '[:lower:]' '[:upper:]')
+
     cat <<-END_REPORT > ${prefix}_${section}_inputs/${prefix}-${section}.qmd
-    # ${section}
+    # \${formatted_section}
     ${section_description}
 
     END_REPORT
