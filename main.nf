@@ -114,3 +114,41 @@ process MPGI_GETINTRONS {
     END_VERSIONS
     """
 }
+
+process MPGI_COMPARE_INTRONIC {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/tools:latest'
+
+    label 'process_medium'
+    errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
+
+    input:
+    tuple val(meta),
+        path(intronic_reads),
+        path(non_intronic_reads)
+
+    output:
+    path("*.csv"),
+        emit: premrna_comparison
+    path("versions.yml"),
+        emit: versions
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    nu --plugins \
+        '[/usr/local/cargo/bin/nu_plugin_polars]' \
+        /opt/scripts/count_reads.nu \
+        ${intronic_reads} \
+        ${non_intronic_reads} \
+        ${prefix}-premrna-comparison.csv
+
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        nushell: \$( nu --version )
+    END_VERSIONS
+    """
+}
