@@ -131,3 +131,40 @@ process SEQKIT_FQ2FA {
     END_VERSIONS
     """
 }
+
+
+process SEQKIT_SEQUENCE_COUNTS {
+
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/seqkit:latest'
+
+    label 'process_low'
+
+    input:
+    path(bed)
+    path(fasta)
+    val(base)
+
+    output:
+    path("*.tsv"),
+        emit: sequence_counts
+    path "versions.yml",
+        emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: '-C ${base}'
+    """
+    seqkit subseq \
+        --bed ${bed} \
+        ${fasta} |
+        seqkit fx2tab ${args} > ${bed.simpleName}.tsv
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        seqkit: \$( seqkit | sed '3!d; s/Version: //' )
+    END_VERSIONS
+    """
+}
