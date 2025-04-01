@@ -94,6 +94,7 @@ process MPGI_GETINTRONS {
         emit: introns
     path("versions.yml"),
         emit: versions
+
     when:
     task.ext.when == null || task.ext.when
 
@@ -128,10 +129,12 @@ process MPGI_COMPARE_INTRONIC {
         path(non_intronic_reads)
 
     output:
-    path("*.csv"),
+    tuple val(meta),
+        path("*.csv"),
         emit: premrna_comparison
     path("versions.yml"),
         emit: versions
+
     when:
     task.ext.when == null || task.ext.when
 
@@ -149,7 +152,88 @@ process MPGI_COMPARE_INTRONIC {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         nushell: \$( nu --version )
-        nu_plugin_polars: \$(nu --plugins '[/usr/local/cargo/bin/nu_plugin_polars]' -e ' plugin list | where name == "polars" | get version | flatten | each { |x| echo $"Polars: ($x)" }' )
+    END_VERSIONS
+    """
+}
+
+process MPGI_SLIM_FEATURES {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/tools:latest'
+
+    label 'process_medium'
+    errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
+
+    input:
+    path(features_bed_gz)
+
+    output:
+    path("*.bed"),
+        emit: slim_bed
+    path("versions.yml"),
+        emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    """
+    nu -c 'zcat ${features_bed_gz} |
+        from tsv --noheaders |
+        select column0 column1 column2 column3 |
+        to tsv --noheaders |
+        save ${features_bed_gz.simpleName}.bed'
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        nushell: \$( nu --version )
+    END_VERSIONS
+    """
+}
+
+process MPGI_POTENTIAL_MODS {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/tools:latest'
+
+    label 'process_medium'
+    errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
+
+    input:
+    path(genes_tsv)
+
+    output:
+    path("*.tsv"),
+        emit: potential_mod_sequences
+    path("versions.yml"),
+        emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    """
+    nu -c 'open --raw ${genes_tsv} |
+    lines |
+    split column --regex "_|:|\\s+" |
+    to tsv --noheaders |
+    from tsv --noheaders |
+    each {
+        |x| echo {
+            chrom: \$x.column0 ,
+            range: (\$x.column1 | split column "-" ),
+            strand: \$x.column2,
+            gene: \$x.column3,
+            sequence: \$x.column4,
+            a_counts: \$x.column5
+            }
+    } |
+    flatten |
+    flatten |
+    to tsv --noheaders |
+    save ${genes_tsv.simpleName}-potential-mods.tsv'
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        nushell: \$( nu --version )
     END_VERSIONS
     """
 }
