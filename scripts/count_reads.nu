@@ -133,9 +133,8 @@ def main [
     # Concatenate both summaries into a single DataFrame
     # Ensure schemas match by using consistent initialization and casting
     let df_combined = $intronic_summary |
-        polars concat $non_intronic_summary |  # Safe concat now that types match
-        polars filter ((polars col Gene) != "") |  # Filter out empty genes
-        polars collect                       # Realize the lazy frame
+        polars concat $non_intronic_summary |
+        polars pivot --streamable --on ["Type"] --index ["Gene" "Chromosome" "Strand" ] --values ["Read Counts"]
 
     # ─────────────────────────────────────────────────────────────
     # Print the final combined summary
