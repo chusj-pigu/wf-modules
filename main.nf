@@ -183,3 +183,45 @@ process MODKIT_EXTRACT_FULL {
     END_VERSIONS
     """
 }
+
+
+
+process MODKIT_SUMMARY_PER_FEATURE {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/modkit:latest'
+
+    tag "$meta.id"
+    label 'process_low'
+
+    input:
+    tuple val(meta),
+        path(bedmethyl),
+        path(bedmethyl_index),
+        path(slim_features_bed)
+
+    output:
+    tuple val(meta), path("*.tsv"),
+        emit: modkit_summary
+    path "versions.yml",
+        emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: '--mod-codes a'
+    def prefix = task.ext.prefix ?: "${meta.id}"
+
+    """
+    modkit stats \
+        ${args} \
+        --regions ${slim_features_bed} \
+        -o ${prefix}-MODSTATS-PER-FEATURE.tsv \
+        ${bedmethyl}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        modkit: \$( modkit --version | sed 's/^.*mod_kit //; s/Using.*\$//')
+    END_VERSIONS
+    """
+}
