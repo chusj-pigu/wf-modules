@@ -38,7 +38,7 @@ process MOSDEPTH_GENERAL {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        mosdepth: \$( mosdepth -h | head -n 2 | tail -n 1 )
+        mosdepth: \$(echo \$(mosdepth --version 2>&1 | awk '{print \$2}') )
     END_VERSIONS
     """
 }
@@ -85,7 +85,7 @@ process MOSDEPTH_ADAPTIVE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        mosdepth: \$( mosdepth -h | head -n 2 | tail -n 1 )
+        mosdepth: \$(echo \$(mosdepth --version 2>&1 | awk '{print \$2}') )
     END_VERSIONS
     """
 }
