@@ -31,7 +31,8 @@ def main [
             polars join $df_per_read [name chrom] ["Gene" "chrom"] --full |
             polars join $df_pre_mrna [name chrom] [Gene Chromosome] --full |
             polars join $df_gene [name chrom] [column_5 column_1] --full |
-            polars select "name" "chrom" "column_2" "column_3" "count_a" "count_valid_a" "percent_a" "Total A" "Min Read Length" "Max Read Length" "Mean Read Length" "Low >=0.25" "High >=0.75" "Med >=0.50" "V Low / Unmodified <0.25" "Intronic" "Non-Intronic" |
+            polars select "name" "chrom" "column_2" "column_3" "column_4" "column_7" "count_a" "count_valid_a" "percent_a" "Total A" "Min Read Length" "Max Read Length" "Mean Read Length" "Low >=0.25" "High >=0.75" "Med >=0.50" "V Low / Unmodified <0.25" "Intronic" "Non-Intronic" |
+            polars rename [ "name" "chrom" "column_2" "column_3" "column_4" "column_7" "count_a" "count_valid_a" "percent_a" "Total A" "Min Read Length" "Max Read Length" "Mean Read Length" "Low >=0.25" "High >=0.75" "Med >=0.50" "V Low / Unmodified <0.25" "Intronic" "Non-Intronic" ] [ "Gene" "Chrom" "Gene Start" "Gene End" "Strand" "Gene A Counts" "Count A (modkit)" "Count Valid A (modkit)" "Percent Modified A (modkit)" "Total A (modkit)" "Min Read Length" "Max Read Length" "Mean Read Length" "Low >=0.25" "High >=0.75" "Med >=0.50" "V Low / Unmodified <0.25" "Intronic Read Counts" "Non-Intronic Read Counts" ] |
             polars collect
 
         print $df_combined
