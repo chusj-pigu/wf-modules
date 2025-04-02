@@ -31,7 +31,7 @@ process MPGI_SUMMARIZE_MODS {
         /opt/scripts/summarize_modifications.nu \
         ${mods} \
         ${mapped} \
-        ${prefix}.csv
+        ${prefix}-mod-details.csv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -213,7 +213,7 @@ process MPGI_POTENTIAL_MODS {
     """
     nu -c 'open --raw ${genes_tsv} |
     lines |
-    split column --regex "_|:|\\s+" |
+    split column --regex "_|:|\\\\s+" |
     to tsv --noheaders |
     from tsv --noheaders |
     each {
@@ -230,6 +230,54 @@ process MPGI_POTENTIAL_MODS {
     flatten |
     to tsv --noheaders |
     save ${genes_tsv.simpleName}-potential-mods.tsv'
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        nushell: \$( nu --version )
+    END_VERSIONS
+    """
+}
+
+process MPGI_COMBINE_TABLES {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/tools:latest'
+
+    label 'process_medium'
+    errorStrategy { task.attempt <= 3 ? 'retry' : 'terminate' }
+
+    input:
+    tuple val(meta),
+        path(gene_mods),
+        path(comparison),
+        path(gene_mods_summary)
+    path(genes_tsv)
+
+    output:
+    path("*.csv"),
+        emit: potential_mod_sequences
+    path("versions.yml"),
+        emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    //  per_feature_table: string, # Path to the per feature modifications table
+    //     pre_mrna_table:string, # Path to the pre-mRNA table
+    //     per_read_table: string  # Path to the per read table
+    //     gene_table: string # Path to the gene information table
+    //     output: string  # Path to the output csv
+    script:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    nu --plugins \
+        '[/usr/local/cargo/bin/nu_plugin_polars]' \
+        /opt/scripts/combine_tables.nu \
+        ${gene_mods} \
+        ${comparison} \
+        ${gene_mods_summary} \
+        ${genes_tsv} \
+        ${prefix}-final-summary.csv
+
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

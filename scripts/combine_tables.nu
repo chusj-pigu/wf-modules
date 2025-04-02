@@ -36,4 +36,7 @@ def main [
 
         print $df_combined
 
+        $df_combined |
+            polars save $output
+
 }
