@@ -109,8 +109,8 @@ process SEQKIT_FQ2FA {
     """
     seqkit \\
         fq2fa \\
-        $args \\
-        -j $task.cpus \\
+        ${args} \\
+        -j ${task.cpus} \\
         -o ${prefix}.fa.gz \\
         $fastq
 
@@ -155,7 +155,7 @@ process SEQKIT_SEQUENCE_COUNTS {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: '-C ${base}'
+    def args = task.ext.args ?: "-C ${base}"
     """
     seqkit subseq \
         --bed ${bed} \
