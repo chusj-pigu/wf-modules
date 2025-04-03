@@ -1,14 +1,16 @@
-FROM alpine:latest
+FROM python:latest
 
 # Install dependencies
-RUN apk add --no-cache \
-    bash \
-    curl \
-    git 
+RUN apt update && apt install -y \
+    build-essential \
+    python3-dev \
+    procps \
+    && apt-get clean 
 
-# TODO: Install procps for NextFlow
+WORKDIR /opt/app
 
-# TODO: Make an alias to get version
+RUN pip3 install whatshap
 
-# RUN $()
-# ENV version = 
+ENV PATH /opt/app/:$PATH
+
+CMD ["bash"]
