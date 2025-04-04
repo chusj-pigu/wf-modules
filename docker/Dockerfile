@@ -14,6 +14,7 @@ RUN apt update && apt install -y \
     libxml2-dev
 
 RUN pipx install jupyter --include-deps
+RUN pipx install papermill
 
 ENV CONTAINER_NAME="Quarto with Tidyverse"
 ENV R_LIBS_USER=/lib/R/site-library
