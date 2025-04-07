@@ -1,37 +1,28 @@
-# Use the official Alpine image as the base image
+# Use the official Ubuntu image as the base image
 FROM ubuntu:latest
 
 # Update the package list and install any necessary packages
-RUN apt update && apt install -y \
-    python3 \
-    python3-pip \
-    r-base-dev \
-    pipx \
-    wget \
-    procps \
-    libfontconfig1-dev \
-    libcurl4-openssl-dev \
-    libxml2-dev
+RUN apt update && apt upgrade -y \
+    && apt install -y \
+    build-essential \
+    git \
+    g++ \
+    zlib1g-dev \
+    libbz2-dev \
+    liblzma-dev \
+    libcurl4-gnutls-dev \
+    libssl-dev \
+    libxml2-dev \
+    libncurses5-dev \
+    libncursesw5-dev
 
-RUN pipx install jupyter --include-deps
-RUN pipx install papermill
+WORKDIR /opt/
+# Install hifiasm (requiring g++ and zlib)
+RUN git clone https://github.com/chhylp123/hifiasm
+WORKDIR /opt/hifiasm
+RUN make
+# Set the PATH environment variable to include the hifiasm binary
+ENV PATH="/opt/hifiasm:${PATH}"
 
-ENV CONTAINER_NAME="Quarto with Tidyverse"
-ENV R_LIBS_USER=/lib/R/site-library
 
-ENV R_LIBS_USER=/usr/local/lib/R/site-library
-RUN mkdir -p ${R_LIBS_USER}
-
-RUN R -e "install.packages(c('knitr', 'tidyverse', 'kableExtra'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
-
-RUN wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.6.39/quarto-1.6.39-linux-amd64.deb
-
-RUN dpkg -i quarto-1.6.39-linux-amd64.deb
-
-# Set the working directory in the container
-
-WORKDIR /data
-
-# Set the default command for the container
-
-CMD [ "quarto" ]
+CMD [ "hifiasm" ]
