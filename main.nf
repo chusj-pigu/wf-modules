@@ -15,12 +15,13 @@ process WHATSHAP_PHASE {
         path(bam),
         path(bai),
         path(vcf),
-        path(ref)
+        path(vcf_tbi),
+        path(ref),
+        path(ref_idx)
 
     output:
     tuple val(meta),
         path("*phased.vcf.gz"),
-        path("*phased.vcf.gz.tbi"),
         emit: vcf_phased
     path "versions.yml",
         emit: versions
@@ -41,9 +42,6 @@ process WHATSHAP_PHASE {
         --ignore-read-groups \\
         ${vcf} \\
         ${bam}
-    tabix \\
-        -f -p vcf \\
-        ${prefix}_phased.vcf.gz
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -70,7 +68,8 @@ process WHATSHAP_HAPLOTAG {
         path(bai),
         path(phased_vcf),
         path(phased_vcf_tbx),
-        path(ref)
+        path(ref),
+        path(ref_idx)
 
     output:
     tuple val(meta),
