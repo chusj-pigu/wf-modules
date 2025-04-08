@@ -4,7 +4,7 @@ process SNPEFF_ANNOTATE {
     container "ghcr.io/chusj-pigu/snpeff:latest"
 
     label 'process_low'                    // nf-core labels
-    label "process_low_cpu"       // Label for mpgi drac cpu alloc
+    label "process_single_cpu"       // Label for mpgi drac cpu alloc
     label "process_medium_mid_memory"         // Label for mpgi drac memory alloc
     label "process_low_time"
 
@@ -17,7 +17,7 @@ process SNPEFF_ANNOTATE {
 
     output:
     tuple val(meta),
-        path("*.vcf.gz"),
+        path("*.vcf"),
         emit: vcf
     path "versions.yml",
         emit: versions
@@ -29,14 +29,14 @@ process SNPEFF_ANNOTATE {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def memory = task.memory.giga
-    def threads = task.cpus
+    //def threads = task.cpus
     """
     java -jar -Xmx${memory}g \\
         /opt/app/snpEff/snpEff.jar \\
         ann \\
         ${args} \\
         ${database} \\
-        ${vcf} | pigz -p ${threads} > ${prefix}.vcf.gz
+        ${vcf} > ${prefix}.vcf
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -51,7 +51,7 @@ process SNPSIFT_ANNOTATE {
     container "ghcr.io/chusj-pigu/snpeff:latest"
 
     label 'process_low'                    // nf-core labels
-    label "process_low_cpu"              // Label for mpgi drac cpu alloc
+    label "process_single_cpu"              // Label for mpgi drac cpu alloc
     label "process_low_memory"         // Label for mpgi drac memory alloc
     label "process_very_low_time"
 
@@ -65,7 +65,7 @@ process SNPSIFT_ANNOTATE {
 
     output:
     tuple val(meta),
-        path("*.vcf.gz"),
+        path("*.vcf"),
         emit: vcf
     path "versions.yml",
         emit: versions
@@ -77,14 +77,14 @@ process SNPSIFT_ANNOTATE {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def memory = task.memory.giga
-    def threads = task.cpus
+    //def threads = task.cpus
     """
     java -jar -Xmx${memory}g \\
         /opt/app/snpEff/SnpSift.jar \\
         ann \\
         ${args} \\
         ${database} \\
-        ${vcf} | pigz -p ${threads} > ${prefix}_clinvar.vcf.gz
+        ${vcf} > ${prefix}_clinvar.vcf
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
