@@ -14,7 +14,8 @@ process SNIFFLES_CALL {
     tuple val(meta),
         path(bam),
         path(bai),
-        path(ref)
+        path(ref),
+        path(ref_fai)
 
     output:
     tuple val(meta),
