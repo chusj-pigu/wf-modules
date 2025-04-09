@@ -48,7 +48,7 @@ process SNIFFLES_CALL {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        Sniffles2: \$(echo \$(sniffles --version 2>&1) | sed 's/^.*Sniffles2 //; s/Version.*\$//')
+        Sniffles2: \$(echo \$(sniffles --version 2>&1) | awk '{print \$NF}' )
     END_VERSIONS
     """
 }
