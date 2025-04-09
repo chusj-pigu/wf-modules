@@ -129,7 +129,7 @@ process BGZIP_VCF {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        bcftools: \$( echo \$(bcftools --version 2>&1) | sed 's/^.*bcftools //; s/Using.*\$//' )
+        bcftools: \$( echo \$(bgzip --version 2>&1) | head -1 | awk '{print \$NF}' )
     END_VERSIONS
     """
 }
