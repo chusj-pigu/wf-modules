@@ -1,25 +1,14 @@
-FROM ubuntu:latest
+FROM alpine:latest
 
 # Install dependencies
-RUN apt update && apt upgrade -y
-RUN apt-get install -y \
+RUN apk add --no-cache \
+    bash \
     curl \
-    git \
-    procps \
-    make \
-    gcc \
-    g++ \
-    libz-dev \
-    libbz2-dev \
-    liblzma-dev
-
+    git
 
 # TODO: Install procps for NextFlow
 
-WORKDIR /opt/
-RUN git clone https://github.com/lh3/gfatools
-WORKDIR /opt/gfatools
-RUN make
+# TODO: Make an alias to get version
 
-# Add gfatools to PATH
-ENV PATH="/opt/gfatools:${PATH}"
+# RUN $()
+# ENV version =
