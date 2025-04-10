@@ -35,16 +35,22 @@ RUN mkdir -p ${R_LIBS_USER}
 
 #Install cran dependencies
 RUN R -e "install.packages('BiocManager', repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages(c('BH', 'R.utils', 'snow', 'future.apply', 'matrixStats', 'bitops', 'snowfall', 'RCurl', 'crayon', 'futile.logger', 'optparse'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages(c('BH', 'R.utils', 'snow', 'future.apply', 'matrixStats', 'bitops', 'snowfall', 'RCurl', 'crayon', 'futile.logger', 'optparse', 'remotes'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
 # Install Bioconductor dependencies
 RUN R -e "BiocManager::install(c('CGHcall', 'Biostrings', 'GenomicRanges', 'Rsamtools', 'BiocParallel', 'GenomeInfoDb'), ask=FALSE)"
 
 # Install QDNAseq
-RUN R -e "BiocManager::install(c('QDNAseq'), ask=FALSE)"
+RUN R -e "BiocManager::install(c('QDNAseq', 'QDNAseq.hg19'), ask=FALSE)"
+
+# Install QDNAseq.hg38 from github
+
+# Install QDNAseq
+RUN R -e "remotes::install_github('asntech/QDNAseq.hg38')"
 
 # Verify installation
 RUN R -e "library('QDNAseq')"
+RUN R -e "library('QDNAseq.hg38')"
 
 # Set default command
 CMD ["R"]
