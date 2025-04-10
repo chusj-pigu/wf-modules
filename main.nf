@@ -46,7 +46,7 @@ process QDNASEQ_CALL {
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def binsize = params.binsize
+    def binsize = params.qdnaseq_binsize
     """
     call_qdnaseq.R \\
         -b ${bam} \\
