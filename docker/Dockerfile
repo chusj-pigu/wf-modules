@@ -35,7 +35,7 @@ RUN mkdir -p ${R_LIBS_USER}
 
 #Install cran dependencies
 RUN R -e "install.packages('BiocManager', repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages(c('BH', 'R.utils', 'snow', 'future.apply', 'matrixStats', 'bitops', 'snowfall', 'RCurl', 'crayon', 'futile.logger'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages(c('BH', 'R.utils', 'snow', 'future.apply', 'matrixStats', 'bitops', 'snowfall', 'RCurl', 'crayon', 'futile.logger', 'optparse'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
 # Install Bioconductor dependencies
 RUN R -e "BiocManager::install(c('CGHcall', 'Biostrings', 'GenomicRanges', 'Rsamtools', 'BiocParallel', 'GenomeInfoDb'), ask=FALSE)"
