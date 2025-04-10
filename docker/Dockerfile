@@ -51,6 +51,3 @@ RUN R -e "remotes::install_github('asntech/QDNAseq.hg38')"
 # Verify installation
 RUN R -e "library('QDNAseq')"
 RUN R -e "library('QDNAseq.hg38')"
-
-# Set default command
-CMD ["R"]
