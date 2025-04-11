@@ -18,7 +18,7 @@ process QDNASEQ_CALL {
 
     output:
     tuple val(meta),
-        path("*call.vcf"),
+        path("*calls.vcf"),
         emit: call_vcf
     tuple val(meta),
         path("*calls.bed"),
