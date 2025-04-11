@@ -31,6 +31,7 @@ process CHROMPLOTTER {
     // def threads = task.cpus
     """
     chromplotter \\
+    chromplot \\
     ${args} \\
     --bedfile ${in_bed} \\
     --chrom ${in_chrom} \\
