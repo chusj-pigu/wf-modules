@@ -8,8 +8,8 @@ process ONTIME_RANGE_FILTER {
 
     input:
     tuple val(meta),
-        path(bam),
-        val(from),
+        path(bam)
+    tuple val(from),
         val(to)
 
     output:
