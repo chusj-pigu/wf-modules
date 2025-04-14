@@ -2,7 +2,8 @@ process QDNASEQ_CALL {
 
     //TODO: SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/qdnaseq:latest'
-    label 'local'
+
+    label 'medium'
     label 'process_low'
     label 'process_single_cpu'
     label 'process_medium_mid_memory'
