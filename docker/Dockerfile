@@ -9,7 +9,8 @@ RUN apt-get update && apt-get install -y \
     gcc \
     make \
     openjdk-17-jre \
-    autoconf
+    autoconf \
+    unzip
 
 
 # Install htslib
@@ -58,3 +59,10 @@ RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Set working directory
 WORKDIR /data
+
+# Get the SNP databases:
+
+RUN curl -o SNPmarker_hg38.zip https://zenodo.org/records/10155688/files/SNPmarker_hg38.zip?download=1 && \
+    unzip SNPmarker_hg38.zip
+RUN curl -o SNPmarker_hg19.zip https://zenodo.org/records/10155688/files/SNPmarker_hg19.zip?download=1 && \
+    unzip SNPmarker_hg19.zip
