@@ -35,7 +35,7 @@ process SUBCHROM_CALL_WGS {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     def database = ref_type in ["hg38", "GRCh38"] ? "/data/SNPmarker_hg38" : "/data/SNPmarker_hg19"
-    def gene_list = bed.name('NO_BED') ? '' : "--gl ${bed}"
+    def gene_list = bed.name == 'NO_BED' ? '' : "--gl ${bed}"
     """
     SubChrom.sh \\
         -s ${prefix} \\
