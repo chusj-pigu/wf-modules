@@ -60,6 +60,8 @@ RUN rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 # Set working directory
 WORKDIR /data
 
+ENV MPLCONFIGDIR=/tmp/mplconfig
+
 # Get the SNP databases:
 
 RUN curl -o SNPmarker_hg38.zip https://zenodo.org/records/10155688/files/SNPmarker_hg38.zip?download=1 && \
