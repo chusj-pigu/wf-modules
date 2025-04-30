@@ -51,3 +51,9 @@ RUN R -e "remotes::install_github('asntech/QDNAseq.hg38')"
 # Verify installation
 RUN R -e "library('QDNAseq')"
 RUN R -e "library('QDNAseq.hg38')"
+
+WORKDIR /opt/
+COPY scripts /opt/scripts
+
+# Add call_qdnaseq.R to path
+ENV PATH="/opt/scripts:${PATH}"
