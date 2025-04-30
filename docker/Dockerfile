@@ -54,6 +54,8 @@ RUN R -e "library('QDNAseq.hg38')"
 
 WORKDIR /opt/
 COPY scripts /opt/scripts
+# Make scripts executable
+RUN chmod +x /opt/scripts/*.R
 
 # Add call_qdnaseq.R to path
 ENV PATH="/opt/scripts:${PATH}"
