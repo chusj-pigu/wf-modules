@@ -204,3 +204,46 @@ exportBins(
   format = "vcf",
   type = "segments"
 )
+
+# ---- EXPORT FREEC-COMPATIBLE FILES ----
+
+# Prepare log2 ratio output (ratios.txt)
+bins <- bins(cn_called)
+log2_ratios <- assayData(cn_called)$log2
+ratios_df <- data.frame(
+  Chromosome = gsub("^chr", "", as.character(seqnames(bins))),
+  Start = start(bins),
+  End = end(bins),
+  Ratio = round(log2_ratios, 4)
+)
+ratios_df <- ratios_df[!is.na(ratios_df$Ratio), ]
+
+write.table(
+  ratios_df,
+  file = paste0(opt$prefix, "_freec_ratios.txt"),
+  sep = "\t",
+  row.names = FALSE,
+  col.names = TRUE,
+  quote = FALSE
+)
+
+# Prepare CNA output (CNAs.txt) from segmented data
+segments <- copynumberRegions(cn_called)
+cnas_df <- data.frame(
+  Chromosome = gsub("^chr", "", as.character(seqnames(segments))),
+  Start = start(segments),
+  End = end(segments),
+  CopyNumber = round(mcols(segments)$mean, 4)
+)
+# Optional: Filter true CNAs based on a log2 ratio threshold
+threshold <- 0.2
+cnas_df <- cnas_df[abs(cnas_df$CopyNumber) > threshold, ]
+
+write.table(
+  cnas_df,
+  file = paste0(opt$prefix, "_freec_cnas.txt"),
+  sep = "\t",
+  row.names = FALSE,
+  col.names = TRUE,
+  quote = FALSE
+)
