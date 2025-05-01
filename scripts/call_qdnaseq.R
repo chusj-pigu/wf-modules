@@ -129,17 +129,17 @@ cn_called <- callBins(
 # ---- GENERATE PLOTS ----
 
 # Coverage profile plot
-png(paste(opt$prefix, "cov.png", sep = "_"), width = 1600, height = 800)
+png(paste(opt$prefix, "cov.png", sep = "_"), width = 1800, height = 400)
 plot(cn_called)
 dev.off()
 
 # Noise diagnostic plot — helps assess signal quality
-png(paste(opt$prefix, "noise_plot.png", sep = "_"), width = 1600, height = 800)
+png(paste(opt$prefix, "noise_plot.png", sep = "_"), width = 1800, height = 400)
 noisePlot(filt_read_counts)
 dev.off()
 
 # Isobar plot — plots bias correction effects
-png(paste(opt$prefix, "isobar_plot.png", sep = "_"), width = 1600, height = 800)
+png(paste(opt$prefix, "isobar_plot.png", sep = "_"), width = 1800, height = 400)
 isobarPlot(filt_read_counts)
 dev.off()
 
