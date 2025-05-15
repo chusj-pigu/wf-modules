@@ -330,7 +330,7 @@ process SAMTOOLS_SPLIT_BY_BED {
     container 'ghcr.io/chusj-pigu/samtools:latest'
 
     label "process_low"                     // nf-core labels
-    label "process_medium_low_cpu"         // Label for mpgi drac memory alloc
+    label "process_medium_cpu"         // Label for mpgi drac memory alloc
     label "process_medium_mid_memory"    // Label for mpgi drac memory alloc
     label "process_medium_mid_time"      // Label for mpgi drac time alloc
 
