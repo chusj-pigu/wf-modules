@@ -1,0 +1,7 @@
+pysam
+tqdm
+certifi
+pandas
+scipy
+matplotlib
+seaborn
