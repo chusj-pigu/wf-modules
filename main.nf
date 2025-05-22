@@ -37,9 +37,6 @@ process CLAIRS_TO_CALL {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     ## Prevent clairs-to error due to missing files
-    mkdir -p ${prefix}
-    touch ${prefix}/snv.vcf.gz
-    touch ${prefix}/indel.vcf.gz
     ## Run ClairS-TO
     run_clairs_to \\
         ${args} \\
