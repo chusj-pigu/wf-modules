@@ -13,38 +13,33 @@ process SUBCHROM_CALL_WGS {
 
     input:
     tuple val(meta),
-        path(bam),
-        path(bai),
+        path(vcf),
         val(ref_type),
-        path(ref_path),
-        path(bed)
+        path(ref_path)
 
     output:
     tuple val(meta),
-        path("*.txt"),
-        emit: calls_txt
-    tuple val(meta),
-        path("*CNV.png"),
+        path("${meta.id}*/results/*CNV.png"),
         emit: cnv_png
     tuple val(meta),
-        path("*focal.png"),
+        path("${meta.id}*/results/*focal.png"),
         emit: focal_png
     path "versions.yml",
         emit: versions
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def database = ref_type in ["hg38", "GRCh38"] ? "/data/SNPmarker_hg38" : "/data/SNPmarker_hg19"
-    def gene_list = bed.name == 'NO_BED' ? '' : "-gl ${bed}"
+    def marker_db = ref_type in ["hg38", "GRCh38"] ? "hg38" : "hg19"
+    def data_type = 'WGS'
+    def panel_bin = 'WGS'
     """
     SubChrom.sh \\
         -s ${prefix} \\
-        -i ${bam} \\
-        -d WGS \\
+        -i ${vcf} \\
+        -d ${data_type} \\
         -r ${ref_path} \\
-        -p WGS \\
-        ${gene_list} \\
-        -md ${database}
+        -p ${panel_bin} \\
+        -md ${marker_db}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
