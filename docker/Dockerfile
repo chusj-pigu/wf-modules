@@ -1,14 +1,26 @@
-FROM alpine:latest
+FROM python:3.13-slim
 
-# Install dependencies
-RUN apk add --no-cache \
-    bash \
-    curl \
-    git
+RUN apt update && apt install -y \
+    build-essential \
+    gcc \
+    libz-dev \
+    libbz2-dev \
+    liblzma-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    procps \
+    && apt clean
 
-# TODO: Install procps for NextFlow
+WORKDIR /opt/app
 
-# TODO: Make an alias to get version
+RUN pip3 install --upgrade pip && \
+    pip3 install scipy \
+    pysam==0.21.0 \
+    biopython \
+    cigar \
+    numpy \
+    pyvcf3 \
+    scikit-learn \
+    cuteSV
 
-# RUN $()
-# ENV version =
+CMD ["bash"]
