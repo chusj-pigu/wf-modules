@@ -36,14 +36,15 @@ process CLAIR3_CALL {
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     ## Prevent clair3 error due to missing files
-    mkdir -p ${prefix}
-    touch ${prefix}/snv.vcf.gz
-    touch ${prefix}/indel.vcf.gz
+    #mkdir -p ${prefix}
+    #touch ${prefix}/snv.vcf.gz
+    #touch ${prefix}/indel.vcf.gz
     ## Run Clair3
     run_clair3.sh \\
         ${args} \\
         --threads ${task.cpus} \\
         --sample_name ${prefix} \\
+        --platform 'ont' \\
         --model_path /opt/models/${model} \\
         --bam_fn ${bam} \\
         --ref_fn ${ref} \\
