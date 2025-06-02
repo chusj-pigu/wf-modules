@@ -36,7 +36,7 @@ process SNPEFF_ANNOTATE {
         ann \\
         ${args} \\
         ${database} \\
-        ${vcf} > ${prefix}.vcf
+        ${vcf} > ${prefix}_ann.vcf
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
