@@ -12,12 +12,14 @@ process BCFTOOLS_CONCAT {
 
     input:
     tuple val(meta),
-        path(indel),
-        path(snv)
+        path(vcf1),
+        path(vcf1_index),
+        path(vcf2),
+        path(vcf2_index)
 
     output:
     tuple val(meta),
-        path("*.vcf.gz"),
+        path("*.vcf"),
         emit: vcf
     path "versions.yml",
         emit: versions
@@ -33,8 +35,8 @@ process BCFTOOLS_CONCAT {
     bcftools concat \\
         ${args} \\
         --threads ${threads} \\
-        ${indel} \\
-        ${snv} > ${prefix}.vcf
+        ${vcf1} \\
+        ${vcf2} > ${prefix}.vcf
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
