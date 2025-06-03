@@ -105,7 +105,7 @@ process BCFTOOLS_INDEX {
     output:
     tuple val(meta),
         path(vcf),
-        path("*vcf.gz.tbi"),
+        path("*.tbi"),
         emit: vcf_tbi
     path "versions.yml",
         emit: versions
