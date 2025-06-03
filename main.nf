@@ -16,7 +16,6 @@ process CLAIRS_TO_CALL {
         path(bai),
         path(ref),
         path(ref_idx),
-        val(chr),
         val(model)
 
     output:
@@ -45,7 +44,6 @@ process CLAIRS_TO_CALL {
         --tumor_bam_fn ${bam} \\
         --ref_fn ${ref} \\
         --platform ${model} \\
-        -c ${chr} \\
         --whatshap /opt/micromamba/envs/clairs-to/bin/whatshap \\
         -o ${prefix}
 
