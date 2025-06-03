@@ -115,7 +115,7 @@ process BCFTOOLS_INDEX {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    //def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
     """
     bcftools \\
@@ -124,7 +124,7 @@ process BCFTOOLS_INDEX {
         ${args} \\
         --threads ${threads} \\
         ${vcf} \\
-        -o ${prefix}.vcf.gz.tbi
+        -o ${vcf}.tbi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
