@@ -33,8 +33,8 @@ process BCFTOOLS_CONCAT {
     def threads = task.cpus
     """
     bcftools concat \\
-        ${args} \\
         --threads ${threads} \\
+        ${args} \\
         ${vcf1} \\
         ${vcf2} > ${prefix}.vcf
 
