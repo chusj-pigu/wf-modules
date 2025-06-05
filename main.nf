@@ -4,9 +4,9 @@ process CLAIR3_CALL {
     container "ghcr.io/chusj-pigu/clair3:latest"
 
     label 'process_high'                    // nf-core labels
-    label "process_high_cpu"       // Label for mpgi drac cpu alloc
+    label "process_medium_high_cpu"       // Label for mpgi drac cpu alloc
     label "process_higher_memory"         // Label for mpgi drac memory alloc
-    label "process_medium_low_time"
+    label "process_low_time"
 
     tag "$meta.id"
 
