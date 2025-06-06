@@ -15,7 +15,7 @@ process ONTIME_RANGE_FILTER {
 
     output:
     tuple val(meta),
-        path(bam),
+        path("*.bam"),
         emit: bam
     path "versions.yml",
         emit: versions
@@ -57,7 +57,7 @@ process ONTIME_RANGE_FILTER_FASTQ {
 
     output:
     tuple val(meta),
-        path(fastq),
+        path("*.fastq"),
         emit: fastq
     path "versions.yml",
         emit: versions
