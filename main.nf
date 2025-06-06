@@ -44,7 +44,6 @@ process CLAIRS_TO_CALL {
         --tumor_bam_fn ${bam} \\
         --ref_fn ${ref} \\
         --platform ${model} \\
-        --whatshap /opt/micromamba/envs/clairs-to/bin/whatshap \\
         -o ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
