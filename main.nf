@@ -160,11 +160,11 @@ process BGZIP_VCF {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
+    def args = task.ext.args ?: '-Oz'
     def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
     """
-    bgzip \\
+    bcftools view \\
         ${args} \\
         -@ ${threads} \\
         ${vcf} \\
