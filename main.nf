@@ -166,7 +166,7 @@ process BGZIP_VCF {
     """
     bcftools view \\
         ${args} \\
-        -@ ${threads} \\
+        --threads ${threads} \\
         ${vcf} \\
         -o ${prefix}.vcf.gz
 
