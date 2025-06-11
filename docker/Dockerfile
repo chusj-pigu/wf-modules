@@ -14,7 +14,9 @@ RUN apt update && apt install -y \
     git \
     curl \
     ca-certificates \
-    pipx
+    pipx \
+    libharfbuzz-dev \
+    libfribidi-dev
 
 # Install pipx packages
 RUN pip install jupyter && \
@@ -23,7 +25,7 @@ RUN pip install jupyter && \
 ENV R_LIBS_USER=/usr/local/lib/R/site-library
 RUN mkdir -p ${R_LIBS_USER}
 
-RUN R -e "install.packages(c('knitr', 'tidyverse', 'kableExtra'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages(c('textshaping','knitr', 'tidyverse', 'kableExtra'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
 RUN wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.7.31/quarto-1.7.31-linux-amd64.deb
 
