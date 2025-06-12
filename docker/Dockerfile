@@ -25,6 +25,11 @@ RUN pip install jupyter && \
 ENV R_LIBS_USER=/usr/local/lib/R/site-library
 RUN mkdir -p ${R_LIBS_USER}
 
+# Ensure that Rscript is available in the PATH
+ENV PATH="${PATH}:/usr/lib/R/bin"
+ENV R_HOME=/usr/lib/R
+ENV QUARTO_R=/usr/lib/R/bin/Rscript
+
 RUN R -e "install.packages(c('textshaping','knitr', 'tidyverse', 'kableExtra'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
 RUN wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.7.31/quarto-1.7.31-linux-amd64.deb
