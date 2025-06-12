@@ -81,6 +81,7 @@ process SNPSIFT_ANNOTATE {
     //def threads = task.cpus
     """
     java -jar -Xmx${memory}g \\
+        -Xlog:perf+memops=warning:stderr \\
         /opt/app/snpEff/SnpSift.jar \\
         ann \\
         ${args} \\
