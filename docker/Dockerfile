@@ -16,7 +16,9 @@ RUN apt update && apt install -y \
     ca-certificates \
     pipx \
     libharfbuzz-dev \
-    libfribidi-dev
+    libfribidi-dev \
+    libmagick++-dev \
+    cargo
 
 # Install pipx packages
 RUN pip install jupyter && \
