@@ -29,11 +29,13 @@ process SNPEFF_ANNOTATE {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def memory = task.memory.giga
+    def java_args = task.ext.args2 ?: ''
     //def threads = task.cpus
     """
     java -jar -Xmx${memory}g \\
         -Xlog:perf+memops=off \\
         /opt/app/snpEff/snpEff.jar \\
+        ${java_args} \\
         ann \\
         ${args} \\
         ${database} \\
@@ -78,11 +80,13 @@ process SNPSIFT_ANNOTATE {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def memory = task.memory.giga
+    def java_args = task.ext.args2 ?: ''
     //def threads = task.cpus
     """
     java -jar -Xmx${memory}g \\
         -Xlog:perf+memops=off \\
         /opt/app/snpEff/SnpSift.jar \\
+        ${java_args} \\
         ann \\
         ${args} \\
         ${database} \\
