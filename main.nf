@@ -57,7 +57,7 @@ process QDNASEQ_CALL {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        R: "\$(echo 'cat(sub(\"R version ([0-9.]+) \\\\(.*\\\\)\", \"\\\\1\", R.version.string)' | R --vanilla --slave)"
+        R: \$(R --version | head -n 1 | awk '{print ""\$3}')
         QDNAseq: "\$(echo 'cat(as.character(packageVersion(\"QDNAseq\")))' | R --vanilla --slave)"
     END_VERSIONS
     """
