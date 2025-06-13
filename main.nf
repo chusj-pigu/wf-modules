@@ -32,7 +32,7 @@ process SNPEFF_ANNOTATE {
     //def threads = task.cpus
     """
     java -jar -Xmx${memory}g \\
-        -Xlog:perf+memops=warning:stderr \\
+        -Xlog:perf+memops=off \\
         /opt/app/snpEff/snpEff.jar \\
         ann \\
         ${args} \\
@@ -81,6 +81,7 @@ process SNPSIFT_ANNOTATE {
     //def threads = task.cpus
     """
     java -jar -Xmx${memory}g \\
+        -Xlog:perf+memops=off \\
         /opt/app/snpEff/SnpSift.jar \\
         ann \\
         ${args} \\
