@@ -40,7 +40,7 @@ process BCFTOOLS_CONCAT {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        bcftools: \$( echo \$(bcftools --version 2>&1) | sed 's/^.*bcftools //; s/Using.*\$//' )
+        bcftools: "\$(bcftools --version 2>&1 | awk '/bcftools/ {b=\$2} /htslib/ {h=\$3} END {printf \"bcftools %s, htslib %s\", b, h}')"
     END_VERSIONS
     """
 }
@@ -81,7 +81,7 @@ process BCFTOOLS_SORT {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        bcftools: \$( echo \$(bcftools --version 2>&1) | sed 's/^.*bcftools //; s/Using.*\$//' )
+        bcftools: "\$(bcftools --version 2>&1 | awk '/bcftools/ {b=\$2} /htslib/ {h=\$3} END {printf \"bcftools %s, htslib %s\", b, h}')"
     END_VERSIONS
     """
 }
@@ -128,7 +128,7 @@ process BCFTOOLS_INDEX {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        bcftools: \$( echo \$(bcftools --version 2>&1) | sed 's/^.*bcftools //; s/Using.*\$//' )
+        bcftools: "\$(bcftools --version 2>&1 | awk '/bcftools/ {b=\$2} /htslib/ {h=\$3} END {printf \"bcftools %s, htslib %s\", b, h}')"
     END_VERSIONS
     """
 }
