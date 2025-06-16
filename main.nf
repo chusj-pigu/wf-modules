@@ -2,13 +2,11 @@ process OARFISH_QUANTIFY_FQ {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/oarfish:latest'
     // TODO : SET LEVEL OF RESSOURCES
-    tag "$meta"
+    tag "$meta.id"
     label 'process_medium'
     label 'process_medium_high_cpu'
     label 'process_low_memory'
     label 'process_low_time'
-
-    publishDir "${params.out_dir}", mode: 'copy'
 
     input:
     tuple val(meta),
@@ -48,13 +46,11 @@ process OARFISH_QUANTIFY_BAM {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/oarfish:latest'
     // TODO : SET LEVEL OF RESSOURCES
-    tag "$meta"
+    tag "$meta.id"
     label 'process_medium'
     label 'process_medium_high_cpu'
     label 'process_low_memory'
     label 'process_low_time'
-
-    publishDir "${params.out_dir}", mode: 'copy'
 
     input:
     tuple val(meta),
