@@ -26,19 +26,25 @@ ENV PATH=$CONDA_DIR/bin:$PATH
 RUN conda install -y -n base -c conda-forge mamba
 
 # Create environment with straglr dependencies
-COPY environment.yaml /opt/environment.yaml
-RUN mamba env create -n straglr -f /opt/environment.yaml && conda clean -a -y
-
-# Set shell to activate the env
-SHELL ["/bin/bash", "--login", "-c"]
-ENV CONDA_DEFAULT_ENV=straglr
-ENV PATH=$CONDA_DIR/envs/straglr/bin:$PATH
+RUN mamba create -y -n straglr-env -c bioconda -c conda-forge \
+    python=3.8.13 \
+    pysam>=0.14.0 \
+    pybedtools>=0.9.0 \
+    numpy>=1.22.3 \
+    pathos>=0.2.3 \
+    scikit-learn>=1.1 \
+    scipy>=1.8.0 \
+    trf=4.09.1 \
+    blast=2.5.0 && \
+    conda clean -afy
 
 WORKDIR /opt/app
+RUN git clone https://github.com/bcgsc/straglr.git && \
+    chmod +x /opt/app/straglr/straglr.py && \
+    ln -s /opt/app/straglr/straglr.py /usr/local/bin/straglr
 
-RUN git clone https://github.com/bcgsc/straglr
+ENV PATH=$CONDA_DIR/envs/straglr-env/bin:$PATH
 
-WORKDIR /opt/app/straglr
 
 
 
