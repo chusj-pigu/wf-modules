@@ -3,7 +3,7 @@
 Container for running [cuteSV](https://github.com/tjiangHIT/cuteSV)
 
 ```
-git submodule add -b cuteSV https://github.com/chusj-pigu/wf-modules modules/local/cuteSV
+git submodule add -b cutesv https://github.com/chusj-pigu/wf-modules modules/local/cutesv
 ```
 
 ## CI/CD
