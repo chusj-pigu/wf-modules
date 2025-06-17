@@ -1,10 +1,9 @@
 process ONTIME_RANGE_FILTER {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/ontime:latest'
-    label "process_small"                   // nf-core labels
     label "process_single_cpu"          // Label for mpgi drac cpu alloc
     label "process_low_memory"       // Label for mpgi drac memory alloc
-    label "process_low_time"                // Label for mpgi drac time alloc
+    label "process_medium_low_time"                // Label for mpgi drac time alloc
 
     input:
     tuple val(meta),
@@ -44,10 +43,9 @@ process ONTIME_RANGE_FILTER {
 process ONTIME_RANGE_FILTER_FASTQ {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/ontime:latest'
-    label "process_small"
     label "process_single_cpu"          // Label for mpgi drac cpu alloc
     label "process_low_memory"       // Label for mpgi drac memory alloc
-    label "process_low_time"                // Label for mpgi drac time alloc
+    label "process_medium_low_time"                // Label for mpgi drac time alloc
 
     input:
     tuple val(meta),
