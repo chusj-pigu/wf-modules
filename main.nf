@@ -32,7 +32,7 @@ process ONTIME_RANGE_FILTER {
         --to ${to}h \
         ${args} \
         ${bam} \
-        -o ${prefix}-time-${from}h-${to}.bam
+        -o ${prefix}-time-${from}h-${to}h.bam
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -74,7 +74,7 @@ process ONTIME_RANGE_FILTER_FASTQ {
         --to ${to}h \
         ${args} \
         ${fastq} \
-        -o ${prefix}-time-${from}h-${to}.fastq
+        -o ${prefix}-time-${from}h-${to}h.fastq
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
