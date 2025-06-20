@@ -210,7 +210,7 @@ process SAMTOOLS_INDEX {
         index \\
         -@ ${threads} \\
         ${args} \\
-        ${in_bam}
+        ${prefix}.indexed.bam
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
