@@ -29,6 +29,8 @@ process SNIFFLES_CALL {
     task.ext.when == null || task.ext.when
 
     script:
+    def isPhased = bam.baseName.contains('phased')
+    def argsPhased = isPhased ? '--phase' : ''
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
@@ -43,6 +45,7 @@ process SNIFFLES_CALL {
         --reference ${ref_fasta} \\
         ${tr_bed} \\
         ${args} \\
+        ${argsPhased} \\
         -t ${threads} \\
         --vcf ${prefix}_sv.vcf.gz
 
