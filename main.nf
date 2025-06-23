@@ -316,7 +316,6 @@ process SAMTOOLS_SPLIT_BY_BED {
         ${args} \\
         -@ ${threads} \\
         -L ${bed} \\
-        --write-index \\
         -o ${prefix}_panel.bam \\
         -U ${prefix}_bg.bam \\
         ${bam}
