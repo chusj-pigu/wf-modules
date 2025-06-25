@@ -15,8 +15,14 @@ process OARFISH_QUANTIFY_FQ {
 
     output:
     tuple val(meta),
-        path("*"),
+        path("*.quant"),
         emit: quant
+    tuple val(meta),
+        path("*.tsv"),
+        emit: ambig
+    tuple val(meta),
+        path("*.json"),
+        emit: meta_info
     path "versions.yml",
         emit: versions
 
@@ -58,8 +64,14 @@ process OARFISH_QUANTIFY_BAM {
 
     output:
     tuple val(meta),
-        path("*"),
+        path("*.quant"),
         emit: quant
+    tuple val(meta),
+        path("*.tsv"),
+        emit: ambig
+    tuple val(meta),
+        path("*.json"),
+        emit: meta_info
     path "versions.yml",
         emit: versions
 
