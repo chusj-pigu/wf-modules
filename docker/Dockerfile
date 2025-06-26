@@ -1,14 +1,21 @@
-FROM alpine:latest
+FROM rust:latest
 
-# Install dependencies
-RUN apk add --no-cache \
-    bash \
+
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    pkg-config \
+    libssl-dev \
+    libclang-dev \
+    llvm-dev \
+    clang \
+    cmake \
     curl \
-    git
+    git \
+    procps \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# TODO: Install procps for NextFlow
+RUN cargo install perbase
 
-# TODO: Make an alias to get version
+# Cleanup
 
-# RUN $()
-# ENV version =
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
