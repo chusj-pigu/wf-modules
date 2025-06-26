@@ -8,6 +8,7 @@
 suppressPackageStartupMessages({
   library(optparse) # For command-line argument parsing
   library(QDNAseq) # Main library for CNV analysis
+  library(grDevices)
 })
 
 # ---- Define command-line options ----
@@ -130,7 +131,17 @@ cn_called <- callBins(
 
 # Coverage profile plot
 png(paste(opt$prefix, "cov.png", sep = "_"), width = 1800, height = 400)
-plot(cn_called)
+# plot(cn_called)
+
+plot(
+	cn_called,
+	delcol  = adjustcolor("#1BFFFF", alpha.f = 0.6),
+	losscol = adjustcolor("turquoise4", alpha.f = 0.6),
+	gaincol = adjustcolor("firebrick", alpha.f = 0.6),
+	ampcol  = adjustcolor("orangered3", alpha.f = 0.6),
+	pointcol= adjustcolor("gray40", alpha.f = 0.9),
+	segcol  = adjustcolor("orange", alpha.f = 0.8)
+)
 dev.off()
 
 # Noise diagnostic plot — helps assess signal quality
