@@ -1,14 +1,9 @@
-FROM alpine:latest
+FROM rust:latest
 
-# Install dependencies
-RUN apk add --no-cache \
-    bash \
-    curl \
-    git
+# Install required system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libclang-dev llvm-dev clang ca-certificates curl build-essential \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# TODO: Install procps for NextFlow
-
-# TODO: Make an alias to get version
-
-# RUN $()
-# ENV version =
+# Install alignoth from crates.io
+RUN cargo install alignoth --locked
