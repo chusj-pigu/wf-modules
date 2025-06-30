@@ -106,3 +106,46 @@ process SUBCHROM_CALL_PANEL {
     END_VERSIONS
     """
 }
+
+process SUBCHROM_PANEL_BIN {
+
+    //TODO: SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/subchrom:latest'
+
+    label 'medium'
+    label 'process_low'
+    label 'process_single_cpu'
+    label 'process_medium_mid_memory'
+    label 'process_low_time'
+
+    tag "$meta.id"
+
+    input:
+    tuple val(meta),
+        path(bed),
+        val(ref_type),
+        val(bin_size)
+
+    output:
+    tuple val(meta),
+        path("*SubChrom_PanelBin*.bed"),
+        emit: subchrom_panelbin_bed
+    path "versions.yml",
+        emit: versions
+
+    script:
+    def prefix = task.ext.prefix ?: bed.getBaseName()
+    def gen_build = ref_type in ["hg38", "GRCh38"] ? "hg38" : "hg19"
+    """
+    PanelBin.py \\
+        -i ${bed} \\
+        -o "${prefix}.SubChrom_PanelBin_${bin_size}pb.bed" \\
+        -g ${gen_build} \\
+        -s ${bin_size}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        SubChrom: \$(echo \$(SubChrom.sh --help 2>&1) | head -4 | tail -1 | awk '{print \$2}' )
+    END_VERSIONS
+    """
+}
