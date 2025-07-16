@@ -28,6 +28,11 @@ RUN set -e && \
     R -e "remotes::install_version('keras', version = '2.13.0', repos='http://cran.rstudio.com/')"
 
 
+# Install python packages
+RUN pip3 install --upgrade pip
+RUN pip3 install tensorflow==2.15.1
+
+
 # Install rust
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
 # Add .cargo/bin to PATH
@@ -44,5 +49,8 @@ COPY ./MARLIN /opt/MARLIN
 RUN echo 'alias marlin="/opt/MARLIN/MARLIN_realtime/0_real_time_prediction_main.sh"' >> ~/.bashrc
 RUN echo 'alias marlin_rt="/opt/MARLIN/MARLIN_realtime/1_process_live.sh"' >> ~/.bashrc
 
-RUN pip3 install --upgrade pip
-RUN pip3 install tensorflow==2.15.1
+# Add executable permissions to MARLIN scripts
+RUN chmod +x /opt/MARLIN/MARLIN_realtime/*.sh
+
+# Add to path
+ENV PATH="/opt/MARLIN/MARLIN_realtime:${PATH}"
