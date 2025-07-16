@@ -1,59 +1,44 @@
 FROM python:3.11
 
-# Install dependencies
-RUN apt-get update && apt-get install -y \
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
     bash \
     curl \
     git \
-    r-base-dev
+    procps \
+    r-base-dev \
+    samtools && \
+    rm -rf /var/lib/apt/lists/*
 
-# TODO: Install procps for NextFlow
-
-RUN apt-get update && apt-get install -y \
-    procps
-
+# Set working directory
 WORKDIR /opt
 
-RUN git clone https://github.com/hovestadt/MARLIN
-
-RUN set -e && \
-    R -e "install.packages('textshaping', dependencies=TRUE, repos='http://cran.rstudio.com/')" && \
-    R -e "install.packages('knitr', dependencies=TRUE, repos='http://cran.rstudio.com/')" && \
-    R -e "install.packages('tidyverse', dependencies=TRUE, repos='http://cran.rstudio.com/')" && \
-    R -e "install.packages('kableExtra', dependencies=TRUE, repos='http://cran.rstudio.com/')" && \
-    R -e "install.packages('tensorflow', dependencies=TRUE, repos='http://cran.rstudio.com/')" && \
-    R -e "install.packages('data.table', dependencies=TRUE, repos='http://cran.rstudio.com/')" && \
-    R -e "install.packages('openxlsx', dependencies=TRUE, repos='http://cran.rstudio.com/')" && \
-    R -e "install.packages('remotes', dependencies=TRUE, repos='http://cran.rstudio.com/')" && \
+# Install R packages
+RUN R -e "install.packages(c('textshaping', 'knitr', 'tidyverse', 'kableExtra', \
+    'tensorflow', 'data.table', 'openxlsx', 'remotes'), dependencies=TRUE, repos='http://cran.rstudio.com/')" && \
     R -e "remotes::install_version('keras', version = '2.13.0', repos='http://cran.rstudio.com/')"
 
+# Install Python packages
+RUN pip3 install --upgrade pip && \
+    pip3 install tensorflow==2.15.1
 
-# Install python packages
-RUN pip3 install --upgrade pip
-RUN pip3 install tensorflow==2.15.1
+# Install Rust and modkit
+RUN curl https://sh.rustup.rs -sSf | sh -s -- -y && \
+    . "$HOME/.cargo/env" && \
+    cargo install --git https://github.com/nanoporetech/modkit.git
 
-
-# Install rust
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
-# Add .cargo/bin to PATH
+# Add Rust to PATH
 ENV PATH="/root/.cargo/bin:${PATH}"
-# install modkit
 
-# Install modkit
-RUN cargo install --git https://github.com/nanoporetech/modkit.git
-
-# Install MARLIN
+# Copy local MARLIN repo if needed (overrides the cloned version)
 COPY ./MARLIN /opt/MARLIN
 
-# Make Alias
-RUN echo 'alias marlin="/opt/MARLIN/MARLIN_realtime/0_real_time_prediction_main.sh"' >> ~/.bashrc
-RUN echo 'alias marlin_rt="/opt/MARLIN/MARLIN_realtime/1_process_live.sh"' >> ~/.bashrc
+# Download MARLIN model
+RUN wget -O /opt/MARLIN/MARLIN_realtime/files/marlin_v1.model.hdf5 \
+    "https://zenodo.org/records/15565404/files/marlin_v1.model.hdf5?download=1"
 
-# Add executable permissions to MARLIN scripts
-RUN chmod +x /opt/MARLIN/MARLIN_realtime/*.sh
+# Set executable permissions for MARLIN scripts
+RUN chmod a+x /opt/MARLIN/MARLIN_realtime/*.sh
 
-# Add to path
+# Add MARLIN scripts to PATH
 ENV PATH="/opt/MARLIN/MARLIN_realtime:${PATH}"
-
-# install samtools
-RUN apt-get update && apt-get install -y samtools
