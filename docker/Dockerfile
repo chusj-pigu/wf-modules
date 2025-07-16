@@ -54,3 +54,6 @@ RUN chmod +x /opt/MARLIN/MARLIN_realtime/*.sh
 
 # Add to path
 ENV PATH="/opt/MARLIN/MARLIN_realtime:${PATH}"
+
+# install samtools
+RUN apt-get update && apt-get install -y samtools
