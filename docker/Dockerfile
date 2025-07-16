@@ -34,8 +34,9 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 COPY ./MARLIN /opt/MARLIN
 
 # Download MARLIN model
-RUN wget -O /opt/MARLIN/MARLIN_realtime/files/marlin_v1.model.hdf5 \
-    "https://zenodo.org/records/15565404/files/marlin_v1.model.hdf5?download=1"
+RUN wget -O /opt/marlin_v1.model.hdf5 "https://zenodo.org/records/15565404/files/marlin_v1.model.hdf5?download=1"
+
+RUN mv /opt/marlin_v1.model.hdf5 /opt/MARLIN/MARLIN_realtime/files/
 
 # Set executable permissions for MARLIN scripts
 RUN chmod a+x /opt/MARLIN/MARLIN_realtime/*.sh
