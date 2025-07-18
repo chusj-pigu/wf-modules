@@ -44,4 +44,7 @@ This project is licensed under the [GNU GENERAL PUBLIC LICENSE](https://github.c
 
 ## Contact
 
-If you have any questions or feedback, please contact the maintainers via the [Figeno GitHub Repository](https://github.com/CompEpigen/figeno).
+If you have any questions or feedback, please contact the maintainers via the [Figeno GitHub Repository](https://github.com/CompEpigen/figeno).## CI/CD
+
+[![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3A)
+
