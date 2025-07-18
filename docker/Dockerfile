@@ -1,12 +1,13 @@
 FROM python:3.11
 
 # Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y \
     bash \
     curl \
     git \
     procps \
     r-base-dev \
+    r-cran-matrix \
     samtools && \
     rm -rf /var/lib/apt/lists/*
 
@@ -14,9 +15,23 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /opt
 
 # Install R packages
-RUN R -e "install.packages(c('textshaping', 'knitr', 'tidyverse', 'kableExtra', \
-    'tensorflow', 'data.table', 'openxlsx', 'remotes'), dependencies=TRUE, repos='http://cran.rstudio.com/')" && \
-    R -e "remotes::install_version('keras', version = '2.13.0', repos='http://cran.rstudio.com/')"
+# Set CRAN repository URL as environment variable
+ENV CRAN_REPO=http://cran.rstudio.com/
+
+# Install R packages individually and fail fast if any fail
+RUN R -e "stopifnot(install.packages('textshaping', dependencies=TRUE, repos=Sys.getenv('CRAN_REPO')) == 0)"
+RUN R -e "stopifnot(install.packages('knitr', dependencies=TRUE, repos=Sys.getenv('CRAN_REPO')) == 0)"
+RUN R -e "stopifnot(install.packages('tidyverse', dependencies=TRUE, repos=Sys.getenv('CRAN_REPO')) == 0)"
+RUN R -e "stopifnot(install.packages('kableExtra', dependencies=TRUE, repos=Sys.getenv('CRAN_REPO')) == 0)"
+RUN R -e "stopifnot(install.packages('tensorflow', dependencies=TRUE, repos=Sys.getenv('CRAN_REPO')) == 0)"
+RUN R -e "stopifnot(install.packages('data.table', dependencies=TRUE, repos=Sys.getenv('CRAN_REPO')) == 0)"
+RUN R -e "stopifnot(install.packages('openxlsx', dependencies=TRUE, repos=Sys.getenv('CRAN_REPO')) == 0)"
+RUN R -e "stopifnot(install.packages('remotes', dependencies=TRUE, repos=Sys.getenv('CRAN_REPO')) == 0)"
+
+# Install specific version of keras and fail if it doesn't work
+RUN R -e "remotes::install_version('keras', version = '2.13.0', repos=Sys.getenv('CRAN_REPO'))"
+
+
 
 # Install Python packages
 RUN pip3 install --upgrade pip && \
