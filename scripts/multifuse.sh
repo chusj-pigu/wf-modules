@@ -15,12 +15,15 @@ vcf="$3"
 
 # Path to the JSON generator script
 SCRIPT_DIR="$(dirname "$0")"
-GENERATOR_SCRIPT="/opt/scripts/fusion2.sh"
+GENERATOR_SCRIPT="/opt/scripts/fusion.sh"
 
 if [[ ! -x "$GENERATOR_SCRIPT" ]]; then
     echo "Error: $GENERATOR_SCRIPT not found or not executable"
     exit 1
 fi
+
+batch_size=20
+count=0
 
 while read -r line; do
     # Skip empty or comment lines
@@ -29,7 +32,6 @@ while read -r line; do
     # Split line into words
     read -r name region1 region2 <<< "$line"
 
-    # Optional: support more than 2 regions
     extra_regions=()
     for r in $line; do
         [[ "$r" == "$name" ]] && continue
@@ -39,5 +41,15 @@ while read -r line; do
     output="${name}"
 
     echo "Generating figure for ${name}..."
-    "$GENERATOR_SCRIPT" "$output" "$bam" "$vcf" "${extra_regions[@]}"
+    "$GENERATOR_SCRIPT" "$output" "$bam" "$vcf" "${extra_regions[@]}" &
+
+    ((count++))
+    if (( count % batch_size == 0 )); then
+        echo "Waiting for batch of $batch_size jobs to finish..."
+        wait
+    fi
 done < "$fusion_list"
+
+# Wait for any remaining jobs after final batch
+wait
+echo "All batches complete."
