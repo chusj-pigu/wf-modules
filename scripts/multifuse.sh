@@ -1,19 +1,19 @@
 #!/bin/bash
 
-# Usage: ./generate_all_configs.sh fusion_list.txt /path/to/bam.bam /path/to/vcf.vcf
+# Usage: ./generate_all_configs_parallel.sh fusion_list.txt input.bam input.vcf [--jobs N]
 
 set -euo pipefail
 
-if [[ $# -ne 3 ]]; then
-    echo "Usage: $0 <fusion_list.txt> <input.bam> <input.vcf>"
+if [[ $# -lt 3 ]]; then
+    echo "Usage: $0 <fusion_list.txt> <input.bam> <input.vcf> [--jobs N]"
     exit 1
 fi
 
 fusion_list="$1"
 bam="$2"
 vcf="$3"
+jobs="${4:---jobs 20}"  # Default to 20 jobs
 
-# Path to the JSON generator script
 SCRIPT_DIR="$(dirname "$0")"
 GENERATOR_SCRIPT="/opt/scripts/fusion.sh"
 
@@ -22,34 +22,28 @@ if [[ ! -x "$GENERATOR_SCRIPT" ]]; then
     exit 1
 fi
 
-batch_size=20
-count=0
+# Create temp command list
+cmd_file=$(mktemp)
 
+# Parse fusion list into generator commands
 while read -r line; do
-    # Skip empty or comment lines
     [[ -z "$line" || "$line" == \#* ]] && continue
-
-    # Split line into words
     read -r name region1 region2 <<< "$line"
 
+    # Prepare extra regions array
     extra_regions=()
     for r in $line; do
         [[ "$r" == "$name" ]] && continue
         extra_regions+=("$r")
     done
 
-    output="${name}"
-
-    echo "Generating figure for ${name}..."
-    "$GENERATOR_SCRIPT" "$output" "$bam" "$vcf" "${extra_regions[@]}" &
-
-    ((count++))
-    if (( count % batch_size == 0 )); then
-        echo "Waiting for batch of $batch_size jobs to finish..."
-        wait
-    fi
+    # Compose the command string
+    quoted_regions=$(printf " '%s'" "${extra_regions[@]}")
+    echo "\"$GENERATOR_SCRIPT\" \"$name\" \"$bam\" \"$vcf\" $quoted_regions" >> "$cmd_file"
 done < "$fusion_list"
 
-# Wait for any remaining jobs after final batch
-wait
-echo "All batches complete."
+echo "Launching parallel jobs..."
+parallel --eta --jobs "${jobs#--jobs }" < "$cmd_file"
+
+rm -f "$cmd_file"
+echo "All jobs complete."
