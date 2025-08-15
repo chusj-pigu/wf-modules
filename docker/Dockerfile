@@ -1,14 +1,34 @@
-FROM alpine:latest
+# Stable base (Jammy) to avoid surprises
+FROM ubuntu:22.04
 
-# Install dependencies
-RUN apk add --no-cache \
-    bash \
-    curl \
-    git
+ENV DEBIAN_FRONTEND=noninteractive
 
-# TODO: Install procps for NextFlow
+# Build deps: autotools + dev libs for htslib/Delly + boost
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    bash ca-certificates curl git procps \
+    build-essential cmake \
+    autoconf automake libtool pkg-config \
+    zlib1g-dev libbz2-dev liblzma-dev \
+    libboost-all-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# TODO: Make an alias to get version
+WORKDIR /opt
 
-# RUN $()
-# ENV version =
+# Clone with submodules
+RUN git clone --recursive https://github.com/dellytools/delly.git
+
+WORKDIR /opt/delly
+
+# Build with OpenMP support
+RUN make clean && make PARALLEL=1 src/delly
+
+# Install
+RUN install -m 0755 src/delly /usr/local/bin/delly
+
+# Default threads can be set at runtime; example:
+# ENV OMP_NUM_THREADS=4
+
+# Quick sanity check (optional): show linked libgomp => proves OpenMP
+# RUN ldd /usr/local/bin/delly | grep gomp || true
+
+ENTRYPOINT ["delly"]
