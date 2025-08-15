@@ -25,10 +25,7 @@ RUN make clean && make PARALLEL=1 src/delly
 # Install
 RUN install -m 0755 src/delly /usr/local/bin/delly
 
-# Default threads can be set at runtime; example:
-# ENV OMP_NUM_THREADS=4
-
-# Quick sanity check (optional): show linked libgomp => proves OpenMP
-# RUN ldd /usr/local/bin/delly | grep gomp || true
+# Add to path
+ENV PATH="/usr/local/bin:${PATH}"
 
 ENTRYPOINT ["delly"]
