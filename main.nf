@@ -269,3 +269,47 @@ process BCFTOOLS_CALL {
     END_VERSIONS
     """
 }
+
+process BCFTOOLS_FILTER_SV {
+    // TODO SET CONTAINER TO FIXED VERSION
+
+    container "ghcr.io/chusj-pigu/bcftools:latest"
+
+    label 'process_low'                    // nf-core labels
+    label "process_medium_low_cpu"       // Label for mpgi drac cpu alloc
+    label "process_medium_low_memory"
+    label "process_low_time"
+
+    tag "$meta.id"
+
+    input:
+    tuple val(meta),
+        path(sv_vcf)
+
+    output:
+    tuple val(meta),
+        path("*.vcf"),
+        emit: filt_vcf
+    path "versions.yml",
+        emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def threads = task.cpus
+    """
+    bcftools view \\
+        -i 'INFO/SUPPORT > 4' \\
+        ${args} \\
+        --threads ${threads} \\
+        ${sv_vcf} > ${prefix}sv_filt.vcf
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        bcftools: \$( echo \$(bcftools --version 2>&1) | sed 's/^.*bcftools //; s/Using.*\$//' )
+    END_VERSIONS
+    """
+}
