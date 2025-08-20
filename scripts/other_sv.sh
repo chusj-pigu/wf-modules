@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Usage: ./generate_config.sh <output_prefix> <input_bam> <input_vcf> chr:start-end [chr:start-end ...]
+# Usage: ./other_sv.sh <output_prefix> <input_bam> <input_vcf> chr:start-end [chr:start-end ...]
 
 set -euo pipefail
 
@@ -68,27 +68,6 @@ cat > "${output}.conf" <<EOF
 			"bounding_box": false,
 			"fontscale": 1,
 			"file": "${bam}",
-			"label": "Split Reads",
-			"label_rotate": false,
-			"hgap_bp": 30,
-			"vgap_frac": 0.3,
-			"read_color": "#a29bfe",
-			"link_splitreads": true,
-			"splitread_color": "#a29bfe",
-			"link_color": "#9b59b6",
-			"link_lw": "0.6",
-			"only_show_splitreads": true,
-			"min_splitreads_breakpoints": 2,
-			"group_by": "none",
-			"color_by": "none"
-		},
-		{
-			"type": "alignments",
-			"height": 50,
-			"margin_above": 1.5,
-			"bounding_box": false,
-			"fontscale": 1,
-			"file": "${bam}",
 			"label": "All Reads",
 			"label_rotate": false,
 			"hgap_bp": 30,
@@ -131,21 +110,21 @@ cat > "${output}.conf" <<EOF
 			"show_gene_names": true
 		},
 		{
-            "type": "chr_axis",
-            "height": 10,
-            "margin_above": 1.5,
-            "bounding_box": false,
-            "fontscale": 1,
-            "label": "",
-            "label_rotate": false,
-            "style": "arrow",
-            "lw_scale": "1.0",
-            "ticklabels_pos": "below",
-            "unit": "kb",
-            "ticks_interval": "auto",
-            "ticks_angle": 0,
-            "chr_prefix": "chr"
-        }
+			"type": "chr_axis",
+			"height": 10,
+			"margin_above": 1.5,
+			"bounding_box": false,
+			"fontscale": 1,
+			"label": "",
+			"label_rotate": false,
+			"style": "default",
+			"lw_scale": "1.0",
+			"ticklabels_pos": "below",
+			"unit": "kb",
+			"ticks_interval": "auto",
+			"ticks_angle": 0,
+			"chr_prefix": "chr"
+		}
 	]
 }
 EOF
