@@ -305,7 +305,7 @@ process BCFTOOLS_FILTER_SV {
         -i 'INFO/SUPPORT > 4' \\
         ${args} \\
         --threads ${threads} \\
-        ${sv_vcf} > ${prefix}sv_filt.vcf
+        ${sv_vcf} > ${prefix}_filt.vcf
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
