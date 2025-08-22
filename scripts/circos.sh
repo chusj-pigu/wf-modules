@@ -29,7 +29,7 @@ cat > "${output}.conf" <<EOF
 	"regions": [
             {"chr": "1","color": "#98671F"},
             {"chr": "2","color": "#65661B"},
-            {"chr": "3""color": "#969833"},
+            {"chr": "3","color": "#969833"},
             {"chr": "4","color": "#CE151D"},
             {"chr": "5","color": "#FF1A25"},
             {"chr": "6","color": "#FF0BC8"},
