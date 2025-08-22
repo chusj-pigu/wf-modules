@@ -18,7 +18,7 @@ shift 3
 cat > "${output}.conf" <<EOF
 {
 	"general": {
-		"layout": "horizontal",
+		"layout": "circular",
 		"reference": "hg38"
 	},
 	"output": {
