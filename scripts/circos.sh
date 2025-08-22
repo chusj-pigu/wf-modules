@@ -23,8 +23,8 @@ cat > "${output}.conf" <<EOF
 	},
 	"output": {
 		"file": "${output}_circos.png",
-		"dpi": 800,
-		"width": 600
+		"dpi": 400,
+        "width": 180
 	},
 	"regions": [
             {"chr": "1","color": "#98671F"},
