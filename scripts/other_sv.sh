@@ -104,7 +104,7 @@ cat > "${output}.conf" <<EOF
 			"label_rotate": false,
 			"style": "default",
 			"collapsed": false,
-			"only_protein_coding": false,
+			"only_protein_coding": true,
 			"exon_color": "#2980b9",
 			"genes": "auto",
 			"show_gene_names": true
@@ -117,7 +117,7 @@ cat > "${output}.conf" <<EOF
 			"fontscale": 1,
 			"label": "",
 			"label_rotate": false,
-			"style": "default",
+			"style": "ideogram",
 			"lw_scale": "1.0",
 			"ticklabels_pos": "below",
 			"unit": "kb",
