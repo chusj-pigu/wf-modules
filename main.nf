@@ -327,3 +327,46 @@ process SAMTOOLS_SPLIT_BY_BED {
     END_VERSIONS
     """
 }
+
+process SAMTOOLS_MERGE {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/samtools:latest'
+    label "process_medium"          // nf-core labels
+    label "process_medium_low_cpu"          // Label for mpgi drac memory alloc
+    label "process_medium_low_memory"       // Label for mpgi drac memory alloc
+    label "process_low_time"                // Label for mpgi drac time alloc
+
+    tag "$meta.id"
+
+    input:
+    tuple val(meta),
+        path(in_bam)
+
+    output:
+    tuple val(meta),
+        path("*.bam"),
+        emit: bamfile
+    path "versions.yml"           , emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: '--no-PG'
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def threads = task.cpus
+    """
+    samtools \\
+        merge \\
+        -@ ${threads} \\
+        ${args} \\
+        ${in_bam} \\
+        -o ${prefix}_merged.bam
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
+
+    END_VERSIONS
+    """
+}
