@@ -332,9 +332,9 @@ process SAMTOOLS_MERGE {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/samtools:latest'
     label "process_medium"          // nf-core labels
-    label "process_medium_low_cpu"          // Label for mpgi drac memory alloc
-    label "process_medium_low_memory"       // Label for mpgi drac memory alloc
-    label "process_low_time"                // Label for mpgi drac time alloc
+    label "process_medium_cpu"              // Label for mpgi drac memory alloc
+    label "process_medium_memory"           // Label for mpgi drac memory alloc
+    label "process_medium_time"                // Label for mpgi drac time alloc
 
     tag "$meta.id"
 
