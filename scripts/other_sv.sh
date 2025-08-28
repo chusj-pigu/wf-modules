@@ -104,7 +104,7 @@ cat > "${output}.conf" <<EOF
 			"label_rotate": false,
 			"style": "default",
 			"collapsed": true,
-			"only_protein_coding": true,
+			"only_protein_coding": false,
 			"exon_color": "#2980b9",
 			"genes": "auto",
 			"show_gene_names": true

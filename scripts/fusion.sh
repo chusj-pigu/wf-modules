@@ -14,14 +14,19 @@ bam="$2"
 vcf="$3"
 shift 3
 
+colors=("#95cdcd" "#f4a460")
 regions=()
+i=0
+
 for reg in "$@"; do
     # Extract chromosome, start, and end using parameter expansion and pattern matching
     if [[ "$reg" =~ ^([^:]+):([0-9]+)-([0-9]+)$ ]]; then
         chr="${BASH_REMATCH[1]}"
         start="${BASH_REMATCH[2]}"
         end="${BASH_REMATCH[3]}"
-        regions+=("{\"chr\": \"${chr}\", \"start\": ${start}, \"end\": ${end}}")
+        color="${colors[$i]}"
+        regions+=("{\"chr\": \"${chr}\", \"start\": ${start}, \"end\": ${end}, \"color\": \"${color}\"}")
+        ((i++))
     else
         echo "Invalid region format: $reg (expected chr:start-end)"
         exit 1
@@ -125,7 +130,7 @@ cat > "${output}.conf" <<EOF
 			"label_rotate": false,
 			"style": "default",
 			"collapsed": true,
-			"only_protein_coding": true,
+			"only_protein_coding": false,
 			"exon_color": "#2980b9",
 			"genes": "auto",
 			"show_gene_names": true
