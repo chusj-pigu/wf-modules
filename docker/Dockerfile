@@ -1,14 +1,17 @@
-FROM alpine:latest
+FROM ghcr.io/chusj-pigu/htslib:latest
 
 # Install dependencies
-RUN apk add --no-cache \
+RUN apt update && apt install -y \
     bash \
     curl \
-    git
+    git \
+    make \
+    wget \
+    gcc \
+    procps
 
-# TODO: Install procps for NextFlow
-
-# TODO: Make an alias to get version
-
-# RUN $()
-# ENV version =
+WORKDIR /opt/
+# Clone and build Pomfret
+COPY pomfret /opt/pomfret
+WORKDIR /opt/pomfret
+RUN make
