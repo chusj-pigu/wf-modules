@@ -52,7 +52,9 @@ SCRIPT_DIR="$(dirname "$0")"
 case "$type" in
     fusion)    GENERATOR_SCRIPT="/opt/scripts/fusion.sh" ;;
     other_sv) GENERATOR_SCRIPT="/opt/scripts/other_sv.sh" ;;
-    *) echo "Error: unknown type '$type' (must be fusion or other_sv)"; exit 1 ;;
+    ts_gene_cov) GENERATOR_SCRIPT="/opt/scripts/ts_gene_cov.sh" ;;
+    gene_cov) GENERATOR_SCRIPT="/opt/scripts/gene_cov.sh" ;;
+    *) echo "Error: unknown type '$type' (must be fusion, other_sv, ts_gene_cov, or gene_cov)"; exit 1 ;;
 esac
 
 if [[ ! -x "$GENERATOR_SCRIPT" ]]; then
