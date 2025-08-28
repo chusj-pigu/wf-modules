@@ -15,3 +15,4 @@ WORKDIR /opt/
 COPY pomfret /opt/pomfret
 WORKDIR /opt/pomfret
 RUN make
+ENV PATH="/opt/pomfret:${PATH}"
