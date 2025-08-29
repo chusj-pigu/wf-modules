@@ -10,11 +10,17 @@ process DORADO_BASECALL {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(pod5), path(ubam), val(model)
+    tuple val(meta),
+        path(pod5),
+        path(ubam),
+        val(model)
 
     output:
-    tuple val(meta), path("*.bam"), emit: ubam
-    path "versions.yml"           , emit: versions
+    tuple val(meta),
+        path("*.bam"),
+        emit: ubam
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -53,11 +59,16 @@ process DORADO_DEMULTIPLEX {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(bam)
+    tuple val(meta),
+        val(kit)
+        path(bam)
 
     output:
-    tuple val(meta), path("${meta.id}/*.bam"), emit: demux_ubam
-    path "versions.yml"           , emit: versions
+    tuple val(meta),
+        path("${meta.id}/*.bam"),
+        emit: demux_ubam
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -65,12 +76,11 @@ process DORADO_DEMULTIPLEX {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def kit = "--kit-name $params.demux"
     """
     dorado \\
         demux \\
         $args \\
-        $kit \\
+        --kit-name ${kit} \\
         --output-dir $prefix \\
         $bam
 
