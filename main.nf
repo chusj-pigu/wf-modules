@@ -60,7 +60,7 @@ process DORADO_DEMULTIPLEX {
 
     input:
     tuple val(meta),
-        val(kit)
+        val(kit),
         path(bam)
 
     output:
