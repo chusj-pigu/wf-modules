@@ -35,7 +35,9 @@ RUN R -e "remotes::install_version('keras', version = '2.13.0', repos=Sys.getenv
 
 # Install Python packages
 RUN pip3 install --upgrade pip && \
-    pip3 install tensorflow==2.15.1
+    pip3 install tensorflow==2.15.1 \
+    pip3 install uv \
+    pip3 install h5py
 
 # Install Rust and modkit
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y && \
