@@ -11,8 +11,9 @@ RUN apt-get update && apt-get install -y \
     samtools && \
     rm -rf /var/lib/apt/lists/*
 
-# Set working directory
 WORKDIR /opt
+
+RUN git clone https://github.com/hovestadt/MARLIN
 
 # Install R packages
 # Set CRAN repository URL as environment variable
