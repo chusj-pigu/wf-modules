@@ -49,6 +49,10 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 # Copy local MARLIN repo if needed (overrides the cloned version)
 COPY ./MARLIN /opt/MARLIN
 
+# Unpack probes
+RUN gzip -d /opt/MARLIN/MARLIN_realtime/files/marlin_v1.probes_hg38.bed.gz
+RUN gzip -d /opt/MARLIN/MARLIN_realtime/files/marlin_v1.probes_hg19.bed.gz
+
 # Download MARLIN model
 RUN wget -O /opt/marlin_v1.model.hdf5 "https://zenodo.org/records/15565404/files/marlin_v1.model.hdf5?download=1"
 
