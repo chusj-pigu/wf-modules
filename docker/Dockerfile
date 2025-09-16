@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     procps \
     r-base-dev \
     r-cran-matrix \
+    libhdf5-dev \
     samtools && \
     rm -rf /var/lib/apt/lists/*
 
@@ -47,7 +48,7 @@ RUN curl https://sh.rustup.rs -sSf | sh -s -- -y && \
 ENV PATH="/root/.cargo/bin:${PATH}"
 
 # Copy local MARLIN repo if needed (overrides the cloned version)
-COPY ./MARLIN /opt/MARLIN
+#COPY ./MARLIN /opt/MARLIN
 
 # Unpack probes
 RUN gzip -d /opt/MARLIN/MARLIN_realtime/files/marlin_v1.probes_hg38.bed.gz
