@@ -8,6 +8,7 @@ RUN apt-get update && apt-get install -y \
     procps \
     r-base-dev \
     r-cran-matrix \
+    libhdf5-dev \
     samtools && \
     rm -rf /var/lib/apt/lists/*
 
