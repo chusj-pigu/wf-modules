@@ -6,11 +6,18 @@ process HMMCOPY_WIG {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    tuple val(meta),
+        path(bam),
+        path(bai),
+        val(window),
+        val(min_mapq)
 
     output:
-    tuple val(meta), path("*.wig"), emit: wig
-    path "versions.yml"           , emit: versions
+    tuple val(meta),
+        path("*.wig"),
+        emit: wig
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -19,8 +26,6 @@ process HMMCOPY_WIG {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def args = task.ext.args ?: ''
     def chr_list = params.chr_wig
-    def window = params.bin_size
-    def min_mapq = params.minmapq_wig
     """
     /opt/hmmcopy_utils/bin/readCounter \\
         ${args} \\
@@ -41,14 +46,22 @@ process ICHORCNA_DOWNLOAD {
     container 'ghcr.io/chusj-pigu/ichorcna:latest'
 
     label "process_low"
+    label "local"
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(wig), val(purity)
+    tuple val(meta),
+        path(wig),
+        val(purity)
 
     output:
-    tuple val(meta), path(wig), val(purity), path("seqinfo.RData"), emit: seq_info
-    path "versions.yml"           , emit: versions
+    tuple val(meta),
+        path(wig),
+        val(purity),
+        path("seqinfo.RData"),
+        emit: seq_info
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -117,11 +130,17 @@ process ICHORCNA {
     tag "$meta.id"
 
     input:
-    tuple val(meta), path(wig), val(purity), path(seq_info)
+    tuple val(meta),
+        path(wig),
+        val(purity),
+        path(seq_info)
 
     output:
-    tuple val(meta), path("*"), emit: ichor_dir
-    path "versions.yml"           , emit: versions
+    tuple val(meta),
+        path("*"),
+        emit: ichor_dir
+    path "versions.yml",
+        emit: versions
 
     when:
     task.ext.when == null || task.ext.when
