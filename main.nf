@@ -10,9 +10,9 @@ process CHOPPER_LENGTH {
 
     input:
     tuple val(meta),
-        path(reads)
-    val max_len
-    val qual
+        path(reads),
+        val(len),
+        val(qual)
 
     output:
     tuple val(meta),
@@ -26,13 +26,13 @@ process CHOPPER_LENGTH {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}_filt"
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def output_ext = reads.baseName.endsWith('fastq') ? "fastq.gz" : "fq.gz"
     """
     chopper \\
         --threads ${task.cpus} \\
         -q ${qual} \\
-        --maxlength ${max_len} \\
+        --maxlength ${len} \\
         ${args} \\
         -i ${reads} \\
         | pigz -p ${task.cpus} > ${prefix}.${output_ext}
