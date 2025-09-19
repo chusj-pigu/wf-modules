@@ -3,7 +3,6 @@ process COUNT_BY_BIOTYPE {
     //TODO: SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/deseq:latest'
     label 'local'
-    label 'process_low'
     label 'process_single_cpu'
     label 'process_very_low_memory'
 
