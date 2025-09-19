@@ -26,7 +26,10 @@ process SAMTOOLS_QSFILTER {
 
     script:
     def args = task.ext.args ?: '--no-PG'
-    def minqs = params.minqs
+    def model_str = (params.basecall_model ?: params.basecall_model_path ?: '').toString()
+    def minqs = model_str.contains('sup') ? 10 :
+             model_str.contains('hac') ? 9 :
+             8
     def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
     """
