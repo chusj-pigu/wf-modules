@@ -156,7 +156,14 @@ process SAMTOOLS_SORT {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
+    def args
+        if (task.ext.args) {
+            args = task.ext.args
+        } else if (meta.id.toString().contains('oarfish')) {      // Sort by read ID required by oarfish
+            args = '-n'
+        } else {
+            args = ''
+        }
     def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
     """
