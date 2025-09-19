@@ -45,8 +45,9 @@ process ICHORCNA_DOWNLOAD {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/ichorcna:latest'
 
-    label "process_low"
     label "local"
+    label "process_single_cpu"
+    label "process_very_low_memory"
     tag "$meta.id"
 
     input:
