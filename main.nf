@@ -6,7 +6,7 @@ process COUNT_BY_BIOTYPE {
     label 'process_single_cpu'
     label 'process_very_low_memory'
 
-    tag 'meta.id'
+    tag "meta.id"
 
     input:
     tuple val(meta),
