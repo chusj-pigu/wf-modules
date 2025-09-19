@@ -2,7 +2,7 @@ process QUARTO_REPORT {
     container 'ghcr.io/chusj-pigu/quarto:latest'
 
     tag "$meta.id"
-    label 'process_low'
+    label 'local'
 
     input:
     tuple val(meta),
@@ -306,16 +306,16 @@ process QUARTO_TEXT {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
 
-"""
-mkdir ${prefix}_${section}_${process}_inputs
+    """
+    mkdir ${prefix}_${section}_${process}_inputs
 
-cat <<-END_REPORT > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
-${text_data}
-END_REPORT
+    cat <<-END_REPORT > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
+    ${text_data}
+    END_REPORT
 
-cat <<-END_VERSIONS > versions.yml
-"${task.process}":
-    quarto: \$( quarto --version )
-END_VERSIONS
-"""
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        quarto: \$( quarto --version )
+    END_VERSIONS
+    """
 }
