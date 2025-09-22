@@ -59,6 +59,8 @@ RUN wget -O /opt/marlin_v1.model.hdf5 "https://zenodo.org/records/15565404/files
 
 RUN mv /opt/marlin_v1.model.hdf5 /opt/MARLIN/MARLIN_realtime/files/
 
+COPY extra_scripts/*.sh /opt/MARLIN/MARLIN_realtime/
+
 # Set executable permissions for MARLIN scripts
 RUN chmod a+x /opt/MARLIN/MARLIN_realtime/*.sh
 
