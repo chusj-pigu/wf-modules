@@ -14,7 +14,7 @@ process NANOPLOT_FASTQ {
 
     output:
     tuple val(meta),
-        path("*.png"),
+        path("*.html"),
         emit: figure
     tuple val(meta),
         path("*.txt"),
