@@ -33,6 +33,9 @@ RUN R -e "stopifnot(install.packages('remotes', dependencies=TRUE, repos=Sys.get
 # Install specific version of keras and fail if it doesn't work
 RUN R -e "remotes::install_version('keras', version = '2.13.0', repos=Sys.getenv('CRAN_REPO'))"
 
+# Ensure R always uses system library
+ENV R_LIBS_USER=/usr/local/lib/R/site-library
+
 # Install Python packages
 RUN pip3 install --upgrade pip && \
     pip3 install tensorflow==2.15.1 && \
