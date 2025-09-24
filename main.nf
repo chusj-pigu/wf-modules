@@ -15,8 +15,11 @@ process COUNT_BY_BIOTYPE {
 
     output:
     tuple val(meta),
-        path("*.csv"),
-        emit: table
+        path("*transcripts.csv"),
+        emit: transcripts
+    tuple val(meta),
+        path("*genes.csv"),
+        emit: genes
     path "versions.yml",
         emit: versions
 
