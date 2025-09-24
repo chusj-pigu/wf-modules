@@ -30,7 +30,12 @@ process DORADO_BASECALL {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def device = params.device != null ? "-x $params.device" : ""
-    def mod = params.basecall_offline ? "--modified-bases-models ${model.toPath().parent}/${model_mh}" : (model_mh != 'none' ? "--modified-bases ${model_mh}" : "")
+    def modelFile = params.basecall_offline ? file(model.toString()) : null
+    def mod = (params.basecall_offline && model_mh != 'none')
+        ? "--modified-bases-models ${modelFile.parent}/${model_mh}"
+        : ((model_mh != 'none' && !params.basecall_offline)
+            ? "--modified-bases ${model_mh}"
+            : "")
     def multi = params.demux != null ? "--no-trim" : ""
     def resume = ubam.name != 'NO_UBAM' ? "--resume-from $ubam > ${prefix}_unaligned_final.bam" : "> ${prefix}_unaligned.bam"
     """
