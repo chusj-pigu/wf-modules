@@ -309,6 +309,7 @@ process QUARTO_TEXT {
 
     cat <<-END_REPORT > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
     ${text_data}
+    
     END_REPORT
     """
 }
