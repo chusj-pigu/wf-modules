@@ -168,3 +168,42 @@ process SEQKIT_SEQUENCE_COUNTS {
     END_VERSIONS
     """
 }
+
+process SEQKIT_REPLACE {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/seqkit:latest'
+
+    tag "$meta.id"
+    label 'process_single'
+
+    input:
+    tuple val(meta),
+        path(fasta)
+
+    output:
+    tuple val(meta),
+        path("*.fa"),
+        emit: fasta
+    path "versions.yml",
+        emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+
+    """
+    seqkit \\
+        replace \\
+        ${args} \\
+        -p ' .*' -r '' \\
+        ${fasta} > ${prefix}_cleaned.fa
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        seqkit: \$( seqkit | sed '3!d; s/Version: //' )
+    END_VERSIONS
+    """
+}
