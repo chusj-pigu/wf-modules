@@ -1,4 +1,4 @@
-process TIDEHUNTER_FASTQ {
+process TIDEHUNTER_FASTA {
 
     tag "$meta.id"
 
@@ -15,8 +15,8 @@ process TIDEHUNTER_FASTQ {
 
     output:
     tuple val(meta),
-        path("*.fq"),
-        emit: fq
+        path("*.fa"),
+        emit: fa
     path "versions.yml",
         emit: versions
 
@@ -30,9 +30,8 @@ process TIDEHUNTER_FASTQ {
     """
     TideHunter \\
         -t ${threads} \\
-        -f 3 \\
         ${args} \\
-        -o ${prefix}_cons.fq \\
+        -o ${prefix}_cons.fa \\
         ${reads}
 
     cat <<-END_VERSIONS > versions.yml
