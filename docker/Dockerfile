@@ -128,6 +128,7 @@ BiocManager::install('DESeq2', ask=FALSE, update=TRUE); \
 BiocManager::install('pcaExplorer', ask=FALSE, update=TRUE); \
 BiocManager::install('GenomicFeatures', ask=FALSE, update=TRUE); \
 BiocManager::install('txdbmaker', ask=FALSE, update=TRUE); \
+BiocManager::install('bambu', ask=FALSE, update=TRUE); \
 install.packages('ragg', dependencies=TRUE, repos='https://cloud.r-project.org'); \
 install.packages('textshaping', dependencies=TRUE, repos='https://cloud.r-project.org'); \
 install.packages('tidyverse', dependencies=TRUE, repos='https://cloud.r-project.org')"
