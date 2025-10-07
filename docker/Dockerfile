@@ -1,14 +1,16 @@
-FROM alpine:latest
+FROM debian:bullseye
 
-# Install dependencies
-RUN apk add --no-cache \
-    bash \
-    curl \
-    git
+RUN apt-get update && apt-get install -y \
+    git \
+    python3.9 \
+    python3-pip \
+    python3.9-venv
 
-# TODO: Install procps for NextFlow
+RUN git clone https://github.com/marcpaga/sturgeon
+WORKDIR /sturgeon
 
-# TODO: Make an alias to get version
+RUN python3.9 -m venv venv
+RUN ./venv/bin/pip install --upgrade pip
+RUN ./venv/bin/pip install .
 
-# RUN $()
-# ENV version =
+ENV PATH="/sturgeon/venv/bin:${PATH}"
