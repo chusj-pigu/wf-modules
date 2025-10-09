@@ -37,7 +37,7 @@ process DORADO_BASECALL {
             ? "--modified-bases ${model_mh}"
             : "")
     def multi = params.demux != null ? "--no-trim" : ""
-    def resume = ubam.name != 'NO_UBAM' ? "--resume-from $ubam > ${prefix}_unaligned_final.bam" : "> ${prefix}_unaligned.bam"
+    def resume = ubam.name != 'NOFILE' ? "--resume-from $ubam > ${prefix}_unaligned_final.bam" : "> ${prefix}_unaligned.bam"
     """
     dorado basecaller \\
         $args \\
