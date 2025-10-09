@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y \
     procps \
     wget
 
-RUN git clone https://github.com/marcpaga/sturgeon
+RUN git clone https://github.com/UMCUGenetics/sturgeon
 WORKDIR /sturgeon
 
 RUN python3.9 -m venv venv
