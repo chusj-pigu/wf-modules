@@ -23,7 +23,7 @@ process MODKIT_PILEUP {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: '--with-header'
+    def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus * 2
     """
