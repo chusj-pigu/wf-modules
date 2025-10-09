@@ -13,7 +13,7 @@ process STURGEON_INPUT_TOBED {
 
     output:
     tuple val(meta),
-        path("sturgeon"),
+        path("sturgeon_bed"),
         emit: dir
     path "versions.yml",
         emit: versions
@@ -29,7 +29,7 @@ process STURGEON_INPUT_TOBED {
         inputtobed \\
         ${args} \\
         -i ${bedmethyl} \\
-        -o sturgeon \\
+        -o sturgeon_bed \\
         -s modkit_pileup
 
     cat <<-END_VERSIONS > versions.yml
