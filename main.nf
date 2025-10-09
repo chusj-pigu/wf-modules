@@ -17,7 +17,8 @@ process CLAIR3_CALL {
         path(bai),
         path(ref),
         path(ref_idx),
-        val(model)
+        val(model),
+        path(bed)
 
     output:
     tuple val(meta),
@@ -32,12 +33,14 @@ process CLAIR3_CALL {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def bed_in = params.realtime < 72 ? "--bed_fn=${bed}" : ""
     """
     ## Run Clair3
     run_clair3.sh \\
         ${args} \\
         --threads=${task.cpus} \\
         --sample_name=${prefix} \\
+        ${bed_in} \\
         --platform='ont' \\
         --model_path="/opt/models/${model}" \\
         --bam_fn=${bam} \\
