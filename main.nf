@@ -23,14 +23,14 @@ process MINIMAP2_ALIGN {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: '-y -ax map-ont'
+    def args = task.ext.args ?: '-y -ax lr:hq'
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     minimap2 \\
         ${args} \\
         -t ${task.cpus} \\
         ${ref} \\
-        ${reads} > ${prefix}.${ref.simpleName}.sam
+        ${reads} > ${prefix}.sam
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
