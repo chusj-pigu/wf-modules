@@ -14,7 +14,7 @@ process NANOPLOT_FASTQ {
 
     output:
     tuple val(meta),
-        path("*.html"),
+        path("*.svg"),
         emit: figure
     tuple val(meta),
         path("*.txt"),
@@ -33,7 +33,7 @@ process NANOPLOT_FASTQ {
         -p ${prefix} \\
         --color blue \\
         --N50 \\
-        -f png \\
+        -f svg \\
         -cm Blues \\
         --fastq ${fastq}
 
