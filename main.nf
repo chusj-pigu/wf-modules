@@ -2,7 +2,7 @@ process QUARTO_REPORT {
     container 'ghcr.io/chusj-pigu/quarto:latest'
 
     tag "$meta.id"
-    label 'local'
+    label 'process_low'
 
     input:
     tuple val(meta),
