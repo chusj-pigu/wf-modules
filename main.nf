@@ -46,7 +46,7 @@ process QUARTO_REPORT {
 
     cd ${prefix}_report_output
 
-    quarto render --no-cache ${prefix}.qmd ${args} \
+    quarto render ${prefix}.qmd --no-cache ${args} \
     -P report_title:"${report_title}" \
     -P report_description:"${report_description}" \
     --output ${prefix}.html
