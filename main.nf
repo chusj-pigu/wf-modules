@@ -3,6 +3,9 @@ process QUARTO_REPORT {
 
     tag "$meta.id"
     label 'process_low'
+    label 'process_single_cpu'
+    label 'process_very_low_memory'
+    label 'process_very_low_time'
 
     input:
     tuple val(meta),
@@ -70,6 +73,9 @@ process QUARTO_TABLE {
 
     tag "$meta.id"
     label 'process_low'
+    label 'process_single_cpu'
+    label 'process_very_low_memory'
+    label 'process_very_low_time'
 
     input:
     tuple val(meta),
@@ -127,6 +133,9 @@ process QUARTO_TABLE_COLNAMES {
 
     tag "$meta.id"
     label 'process_low'
+    label 'process_single_cpu'
+    label 'process_very_low_memory'
+    label 'process_very_low_time'
 
     input:
     tuple val(meta),
@@ -184,6 +193,9 @@ process QUARTO_FIGURE {
 
     tag "$meta.id"
     label 'process_low'
+    label 'process_single_cpu'
+    label 'process_very_low_memory'
+    label 'process_very_low_time'
 
     input:
     tuple val(meta),
@@ -228,6 +240,9 @@ process QUARTO_SECTION {
 
     tag "$meta.id"
     label 'process_low'
+    label 'process_single_cpu'
+    label 'process_very_low_memory'
+    label 'process_very_low_time'
 
     input:
     tuple val(meta),
@@ -285,6 +300,9 @@ process QUARTO_TEXT {
 
     tag "$meta.id"
     label 'process_low'
+    label 'process_single_cpu'
+    label 'process_very_low_memory'
+    label 'process_very_low_time'
 
     input:
     tuple val(meta),
@@ -309,7 +327,7 @@ process QUARTO_TEXT {
 
     cat <<-END_REPORT > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
     ${text_data}
-    
+
     END_REPORT
     """
 }
