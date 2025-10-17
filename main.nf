@@ -56,6 +56,12 @@ process STURGEON_PREDICT {
     tuple val(meta),
         path("sturgeon"),
         emit: dir
+    tuple val(meta),
+        path("sturgeon/*.pdf"),
+        emit: pdf
+    tuple val(meta),
+        path("sturgeon/*.csv"),
+        emit: pred
     path "versions.yml",
         emit: versions
 
