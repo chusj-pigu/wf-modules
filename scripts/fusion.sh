@@ -143,7 +143,7 @@ cat > "${output}.conf" <<EOF
             "fontscale": 1,
             "label": "",
             "label_rotate": false,
-            "style": "ideogram",
+            "style": "arrow",
             "lw_scale": "1.0",
             "ticklabels_pos": "below",
             "unit": "kb",
