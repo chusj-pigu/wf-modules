@@ -33,13 +33,9 @@ for reg in "$@"; do
     fi
 done
 
-region_json=$(IFS=,; echo "${regions[*]}")
+region_json=$(IFS=, ; echo "${regions[*]}")
 
-echo "region_json = ${region_json}"
-
-conf_file="${output}.conf"
-
-cat <<EOF > "$conf_file"
+cat > "${output}.conf" <<EOF
 {
 	"general": {
 		"layout": "horizontal",
@@ -112,7 +108,7 @@ cat <<EOF > "$conf_file"
 			"height": 15,
 			"margin_above": 1.5,
 			"bounding_box": true,
-			"fontscale": 2,
+			"fontscale": 1,
 			"label": "Structural Variants",
 			"label_rotate": false,
 			"file": "${vcf}",
@@ -129,7 +125,7 @@ cat <<EOF > "$conf_file"
 			"height": 15,
 			"margin_above": 1.5,
 			"bounding_box": false,
-			"fontscale": 2,
+			"fontscale": 1,
 			"label": "",
 			"label_rotate": false,
 			"style": "default",
@@ -144,7 +140,7 @@ cat <<EOF > "$conf_file"
             "height": 10,
             "margin_above": 1.5,
             "bounding_box": false,
-            "fontscale": 2,
+            "fontscale": 1,
             "label": "",
             "label_rotate": false,
             "style": "arrow",
@@ -159,13 +155,4 @@ cat <<EOF > "$conf_file"
 }
 EOF
 
-# --- DEBUG CHECK ---
-if [[ ! -s "$conf_file" ]]; then
-    echo "ERROR: Config file '$conf_file' is missing or empty!"
-    exit 1
-else
-    echo "Config file '$conf_file' successfully created."
-fi
-
-# --- Run Figeno ---
-figeno make "$conf_file"
+figeno make ${output}.conf
