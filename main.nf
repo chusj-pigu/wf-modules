@@ -11,7 +11,7 @@ process CONVERT_PDF_PNG {
 
     output:
     tuple val(meta),
-        path("*.svg"),
+        path("*.png"),
         emit: png
     path "versions.yml",
         emit: versions
@@ -20,12 +20,13 @@ process CONVERT_PDF_PNG {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
+    def args = task.ext.args ?: '-density 300 -define png:compression-filter=Flate'
     def prefix = task.ext.prefix ?: "${pdf}.baseName"
     """
     convert \\
+        ${args} \\
         ${pdf} \\
-        ${prefix}.svg
+        ${prefix}.png
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
