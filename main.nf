@@ -2,7 +2,7 @@ process CONVERT_PDF_PNG {
     container "ghcr.io/chusj-pigu/magick:latest" // TO DO: SET CONTAINER TO FIXED VERSION
 
     tag "$meta.id"
-    label 'process_single'                 
+    label 'process_single'
     label 'local'
 
     input:
@@ -11,7 +11,7 @@ process CONVERT_PDF_PNG {
 
     output:
     tuple val(meta),
-        path("*.png"),
+        path("*.svg"),
         emit: png
     path "versions.yml",
         emit: versions
@@ -25,7 +25,7 @@ process CONVERT_PDF_PNG {
     """
     convert \\
         ${pdf} \\
-        ${prefix}.png
+        ${prefix}.svg
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
