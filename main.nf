@@ -9,7 +9,7 @@ process FIGENO_SV_FIGURE {
     tuple val(meta),
         path(in_bam),
         path(bam_index),
-        val(vcf),
+        path(vcf),
         path(vcf_idx),
         path(region)
 
