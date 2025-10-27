@@ -3,7 +3,10 @@ process FIGENO_SV_FIGURE {
     container 'ghcr.io/chusj-pigu/figeno:19aa9f62432a17c91152afc9a2f3df647884f214'
 
     tag "$meta.id"
-    label 'local'
+    label 'process_low'
+    label 'process_medium_low_cpu'
+    label 'process_low_memory'
+    label 'process_very_low_time'
 
     input:
     tuple val(meta),
@@ -47,7 +50,10 @@ process FIGENO_CIRCOS {
     container 'ghcr.io/chusj-pigu/figeno:19aa9f62432a17c91152afc9a2f3df647884f214'
 
     tag "$meta.id"
-    label 'local'
+    label 'process_low'
+    label 'process_medium_low_cpu'
+    label 'process_low_memory'
+    label 'process_very_low_time'
 
     input:
     tuple val(meta),
