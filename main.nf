@@ -4,9 +4,7 @@ process FIGENO_SV_FIGURE {
 
     tag "$meta.id"
     label 'process_low'
-    label 'process_medium_low_cpu'
-    label 'process_low_memory'
-    label 'process_very_low_time'
+    label 'local'
 
     input:
     tuple val(meta),
@@ -51,9 +49,7 @@ process FIGENO_CIRCOS {
 
     tag "$meta.id"
     label 'process_low'
-    label 'process_medium_low_cpu'
-    label 'process_low_memory'
-    label 'process_very_low_time'
+    label 'local'
 
     input:
     tuple val(meta),
