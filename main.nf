@@ -129,3 +129,47 @@ process BEDTOOLS_LEFTOUTER {
     END_VERSIONS
     """
 }
+
+
+process BEDTOOLS_SUBTRACT {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/bedtools:latest'
+
+    tag "$meta.id"
+    label 'process_low'
+    label 'process_single_cpu'
+    label 'process_very_low_memory'
+    label 'process_very_low_time'
+
+    input:
+    tuple val(meta),
+        path(bed_panel),
+        path (bed_chr)
+
+
+    output:
+    tuple val(meta),
+        path("*.bed"),
+        emit: bed
+    path "versions.yml",
+        emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    bedtools subtract \\
+        ${args} \\
+        -a ${bed_chr} \\
+        -b ${bed_panel} \\
+        > ${prefix}_background.bed
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        bedtools: \$( bedtools --version  | sed 's/bedtools v//' )
+    END_VERSIONS
+    """
+}
