@@ -37,7 +37,7 @@ process FIGENO_SV_FIGURE {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        figeno: cat /opt/version.txt
+        figeno: $(awk '{print \$NF}' /opt/version.txt)
     END_VERSIONS
     """
 }
@@ -79,7 +79,7 @@ process FIGENO_CIRCOS {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        figeno: cat /opt/version.txt
+        figeno: $(awk '{print \$NF}' /opt/version.txt)
     END_VERSIONS
     """
 }
