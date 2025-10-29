@@ -33,7 +33,7 @@ process CLAIR3_CALL {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def bed_in = params.realtime = null ? "" : "--bed_fn=${bed}"
+    def bed_in = params.realtime >= 1 && params.realtime <= 72 ? "--bed_fn=${bed}" : ""
     """
     ## Run Clair3
     run_clair3.sh \\
