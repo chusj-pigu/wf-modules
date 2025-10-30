@@ -64,7 +64,14 @@ process MOSDEPTH_ADAPTIVE {
 
     output:
     tuple val(meta),
-        path("*.bed.gz"), emit: bed
+        path("*.bed.gz"),
+        emit: bed
+    tuple val(meta),
+        path("*.dist.txt"),
+        emit: dist
+    tuple val(meta),
+        path("*.summary.txt"),
+        emit: summary
     path "versions.yml", emit: versions
 
     when:
