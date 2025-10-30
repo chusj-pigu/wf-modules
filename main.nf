@@ -144,7 +144,7 @@ process BEDTOOLS_SUBTRACT {
     input:
     tuple val(meta),
         path(bed_panel),
-        path (bed_chr)
+        val(ref_id)
 
 
     output:
@@ -160,10 +160,11 @@ process BEDTOOLS_SUBTRACT {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def chrom_bed = ref_id in ["hg38", "GRCh38"] ? "/opt/data/hg38_chrom.bed" : "hg19_chrom.bed"
     """
     bedtools subtract \\
         ${args} \\
-        -a ${bed_chr} \\
+        -a ${chrom_bed} \\
         -b ${bed_panel} \\
         > ${prefix}_background.bed
 
