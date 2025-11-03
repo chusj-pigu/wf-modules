@@ -4,7 +4,7 @@ process QUARTO_REPORT {
     tag "$meta.id"
     label 'process_low'
     label 'process_single_cpu'
-    label 'process_very_low_memory'
+    label 'process_low_memory'
     label 'process_very_low_time'
 
     input:
