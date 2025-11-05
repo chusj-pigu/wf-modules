@@ -3,8 +3,9 @@ process NANOPLOT_FASTQ {
     container 'ghcr.io/chusj-pigu/nanoplot:latest'
 
     label 'process_medium'          // nf-core labels
-    label 'high_mem_mid'            // Label for mpgi drac ressources
-    label 'nanoplot'                // Label for publishing
+    label 'process_medium_memory'            // Label for mpgi drac ressources
+    label 'process_medium_low_cpu'                // Label for publishing
+    label 'process_medium_low_time'
 
     tag "$meta.id"
 
@@ -30,6 +31,7 @@ process NANOPLOT_FASTQ {
     """
     NanoPlot \\
         ${args} \\
+        -t ${task.cpus} \\
         -p ${prefix} \\
         --color blue \\
         --N50 \\
@@ -49,8 +51,9 @@ process NANOPLOT_UBAM {
     container 'ghcr.io/chusj-pigu/nanoplot:latest'
 
     label 'process_medium'          // nf-core labels
-    label 'high_mem_mid'            // Label for mpgi drac ressources
-    label 'nanoplot'                // Label for publishing
+    label 'process_medium_memory'            // Label for mpgi drac ressources
+    label 'process_medium_low_cpu' 
+    label 'process_medium_low_time'      
 
     tag "$meta.id"
 
@@ -76,6 +79,7 @@ process NANOPLOT_UBAM {
     """
     NanoPlot \\
         ${args} \\
+        -t ${task.cpus} \\
         -p ${prefix} \\
         --color blue \\
         --N50 \\
