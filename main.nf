@@ -4,7 +4,7 @@ process CRAMINO_STATS {
 
     tag "$meta.id"
     label 'process_medium_low_cpu'
-    label 'process_low_memory'
+    label 'process_medium_low_memory'
     label 'process_low_time'
 
     input:
