@@ -138,7 +138,7 @@ process ICHORCNA {
 
     output:
     tuple val(meta),
-        path("${meta.id}/*"),
+        path("${meta.id}*"),
         emit: ichor_dir
     tuple val(meta),
         path("${meta.id}/*_genomeWide.pdf"),
