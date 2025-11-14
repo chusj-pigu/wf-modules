@@ -13,8 +13,8 @@ process QUARTO_REPORT {
         path(report_inputs),
         val(report_section),
         val(report_title),
-        val(report_description)
-    path report_template
+        val(report_description),
+        path(report_template)
 
     output:
     tuple val(meta),
