@@ -1,14 +1,13 @@
-FROM alpine:latest
+FROM python:3.12
 
 # Install dependencies
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y \
     bash \
-    curl \
-    git
+    git \
+    procps \
+    samtools
 
-# TODO: Install procps for NextFlow
+WORKDIR /opt/app
 
-# TODO: Make an alias to get version
-
-# RUN $()
-# ENV version =
+RUN pip install --upgrade pip
+RUN pip install matplotlib methylartist
