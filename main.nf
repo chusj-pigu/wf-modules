@@ -83,3 +83,42 @@ process FIGENO_CIRCOS {
     END_VERSIONS
     """
 }
+
+process FIGENO_PAN_CHR {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/figeno:19aa9f62432a17c91152afc9a2f3df647884f214'
+
+    tag "$meta.id"
+    label 'local'
+
+    input:
+    tuple val(meta),
+        path(delly_cov),
+        path(delly_bed)
+
+    output:
+    tuple val(meta),
+        path("*.png"),
+        emit: figure
+    path "versions.yml",
+        emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    //def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    //def threads = task.cpus
+    """
+    pan_chr.sh \\
+        ${prefix} \\
+        ${delly_cov} \\
+        ${delly_bed}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        figeno: \$(awk '{print \$NF}' /opt/version.txt)
+    END_VERSIONS
+    """
+}
