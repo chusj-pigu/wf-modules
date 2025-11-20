@@ -1,9 +1,3 @@
-#!/bin/bash
-
-# Usage: ./generate_config.sh <output_prefix> <input_bam> <input_vcf> chr:start-end [chr:start-end ...]
-
-set -eo pipefail
-
 if [[ $# -lt 4 ]]; then
     echo "Usage: $0 <output_prefix> <input_bam> <input_vcf> <chr:start-end> [chr:start-end ...]"
     exit 1
@@ -50,12 +44,29 @@ cat > "${output}.conf" <<EOF
 	],
 	"highlights": [],
 	"tracks": [
+        {
+			"type": "sv",
+			"height": 25,
+			"margin_above": 1.5,
+			"bounding_box": true,
+			"fontscale": 2,
+			"label": "Structural Variants",
+			"label_rotate": false,
+			"file": "${vcf}",
+			"lw": "0.5",
+			"color_del": "#4a69bd",
+			"color_dup": "#e55039",
+			"color_t2t": "#8e44ad",
+			"color_h2h": "#8e44ad",
+			"color_trans": "#27ae60",
+			"min_sv_height": 0.1
+		},
 		{
 			"type": "coverage",
 			"height": 25,
 			"margin_above": 1.5,
 			"bounding_box": false,
-			"fontscale": 1,
+			"fontscale": 2,
 			"label": "Coverage",
 			"label_rotate": false,
 			"file": "${bam}",
@@ -70,7 +81,7 @@ cat > "${output}.conf" <<EOF
 			"height": 50,
 			"margin_above": 1.5,
 			"bounding_box": false,
-			"fontscale": 1,
+			"fontscale": 2,
 			"file": "${bam}",
 			"label": "Split Reads",
 			"label_rotate": false,
@@ -87,44 +98,11 @@ cat > "${output}.conf" <<EOF
 			"color_by": "none"
 		},
 		{
-			"type": "alignments",
-			"height": 50,
-			"margin_above": 1.5,
-			"bounding_box": false,
-			"fontscale": 1,
-			"file": "${bam}",
-			"label": "All Reads",
-			"label_rotate": false,
-			"hgap_bp": 30,
-			"vgap_frac": 0.3,
-			"read_color": "#cccccc",
-			"link_splitreads": false,
-			"group_by": "none",
-			"color_by": "none"
-		},
-		{
-			"type": "sv",
-			"height": 15,
-			"margin_above": 1.5,
-			"bounding_box": true,
-			"fontscale": 1,
-			"label": "Structural Variants",
-			"label_rotate": false,
-			"file": "${vcf}",
-			"lw": "0.5",
-			"color_del": "#4a69bd",
-			"color_dup": "#e55039",
-			"color_t2t": "#8e44ad",
-			"color_h2h": "#8e44ad",
-			"color_trans": "#27ae60",
-			"min_sv_height": 0.1
-		},
-		{
 			"type": "genes",
 			"height": 15,
 			"margin_above": 1.5,
 			"bounding_box": false,
-			"fontscale": 1,
+			"fontscale": 2,
 			"label": "",
 			"label_rotate": false,
 			"style": "default",
@@ -139,7 +117,7 @@ cat > "${output}.conf" <<EOF
             "height": 10,
             "margin_above": 1.5,
             "bounding_box": false,
-            "fontscale": 1,
+            "fontscale": 2,
             "label": "",
             "label_rotate": false,
             "style": "arrow",

@@ -4,7 +4,7 @@
 #   ./multifuse.sh --type fusion fusion_list.txt input.bam input.vcf [--jobs N]
 #   ./multifuse.sh --type other_sv region_list.txt input.bam input.vcf
 
-set -euo pipefail
+set -eo pipefail
 
 # --- Default values ---
 jobs="--jobs 20"
@@ -77,6 +77,8 @@ while read -r line; do
     done
 
     quoted_regions=$(printf " '%s'" "${extra_regions[@]}")
+    echo "→ $GENERATOR_SCRIPT \"$name\" \"$bam\" \"$vcf\"${quoted_regions}"  
+    
     echo "\"$GENERATOR_SCRIPT\" \"$name\" \"$bam\" \"$vcf\" $quoted_regions" >> "$cmd_file"
 done < "$listfile"
 
