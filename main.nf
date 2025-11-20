@@ -1,6 +1,6 @@
 process FIGENO_SV_FIGURE {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/figeno:19aa9f62432a17c91152afc9a2f3df647884f214'
+    container 'ghcr.io/chusj-pigu/figeno:latest'
 
     tag "$meta.id"
     label 'local'
@@ -44,7 +44,7 @@ process FIGENO_SV_FIGURE {
 
 process FIGENO_CIRCOS {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/figeno:19aa9f62432a17c91152afc9a2f3df647884f214'
+    container 'ghcr.io/chusj-pigu/figeno:latest'
 
     tag "$meta.id"
     label 'local'
@@ -86,7 +86,7 @@ process FIGENO_CIRCOS {
 
 process FIGENO_PAN_CHR {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/figeno:19aa9f62432a17c91152afc9a2f3df647884f214'
+    container 'ghcr.io/chusj-pigu/figeno:latest'
 
     tag "$meta.id"
     label 'local'
