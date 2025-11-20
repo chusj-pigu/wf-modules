@@ -4,8 +4,8 @@
 
 set -euo pipefail
 
-if [[ $# -lt 4 ]]; then
-    echo "Usage: $0 <output_prefix> <input_vcf> <input_cnv> <input_cnv_ratio>"
+if [[ $# -lt 6 ]]; then
+    echo "Usage: $0 <output_prefix> <sv_vcf> <qdnaseq_cnv> <qdnaseq_ratio> <delly_cov> <delly_segs>"
     exit 1
 fi
 
@@ -13,6 +13,8 @@ output="$1"
 vcf="$2"
 cnv="$3"
 ratio="$4"
+cov="$5"
+bed="$6"
 shift 3
 
 cat > "${output}.conf" <<EOF
@@ -75,8 +77,8 @@ cat > "${output}.conf" <<EOF
                         "height": 30,
                         "margin_above": 0,
                         "bounding_box": true,
-                        "fontscale": 1,
-                        "label": "",
+                        "fontscale": 0.55,
+                        "label": "QDNAseq",
                         "label_rotate": false,
                         "freec_ratios": "${ratio}",
                         "freec_CNAs": "${cnv}",
@@ -92,6 +94,29 @@ cat > "${output}.conf" <<EOF
                         "color_loss": "#4a69bd",
                         "color_gain": "#e55039",
                         "color_cnloh": "#f6b93b"
+                },
+                {
+                        "type": "copynumber",
+                        "height": 50,
+                        "margin_above": 0,
+                        "bounding_box": true,
+                        "fontscale": 0.55,
+                        "label": "Delly",
+                        "label_rotate": false,
+                        "delly_cn": "${cov}",
+                        "delly_CNAs": "${bed}",
+                        "min_cn": "",
+                        "max_cn": 3.9,
+                        "grid": true,
+                        "marker_size": 5,
+                        "grid_major": false,
+                        "grid_minor": false,
+                        "grid_cn": true,
+                        "color_normal": "#000000",
+                        "color_loss": "#4a69bd",
+                        "color_gain": "#e55039",
+                        "color_cnloh": "#f6b93b",
+                        "genes": ""
                 },
                 {
                         "type": "chr_axis",
