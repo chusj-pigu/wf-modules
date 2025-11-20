@@ -38,7 +38,7 @@ cat > "${output}.conf" <<EOF
         "height": 100,
         "margin_above": 0,
         "bounding_box": true,
-        "fontscale": 1,
+        "fontscale": 5,
         "label": "",
         "label_rotate": false,
         "delly_cn": "${cov}",
@@ -58,16 +58,16 @@ cat > "${output}.conf" <<EOF
     },
     {
         "type": "chr_axis",
-        "height": 10,
+        "height": 40,
         "margin_above": 0,
         "bounding_box": false,
-        "fontscale": 1,
+        "fontscale": 5,
         "label": "",
         "label_rotate": false,
         "style": "default",
-        "unit": "kb",
+        "unit": "Mb",
         "ticklabels_pos": "below",
-        "ticks_interval": "auto"
+        "ticks_interval": "20000000"
     }
   ]
 }
