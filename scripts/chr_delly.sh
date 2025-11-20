@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-if [[ $# -ne 3 ]]; then
+if [[ $# -ne 4 ]]; then
     echo "Usage: $0 <prefix> <delly.cov> <delly_segs.bed> <chrN>"
     exit 1
 fi
