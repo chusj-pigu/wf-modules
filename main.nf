@@ -361,3 +361,44 @@ process BCFTOOLS_FILTER_ID {
     """
 }
 
+process BCFTOOLS_QUERY {
+    // TODO SET CONTAINER TO FIXED VERSION
+
+    container "ghcr.io/chusj-pigu/bcftools:latest"
+
+    label 'process_low'                    // nf-core labels
+    label "process_single_cpu"       // Label for mpgi drac cpu alloc
+    label "process_low_memory"
+    label "process_very_low_time"
+
+    tag "$meta.id"
+
+    input:
+    tuple val(meta),
+        path(bcf)
+
+    output:
+    tuple val(meta),
+        path("*seg.bed"),
+        emit: bed
+    path "versions.yml",
+        emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: "-f '%CHROM\\t%POS\\t%INFO/END\\t%ID[\\t%RDCN]\\n'"
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def threads = task.cpus
+    """
+    bcftools query \\
+        ${args} \\
+        ${bcf} > ${prefix}_seg.bed
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        bcftools: "\$(bcftools --version 2>&1 | awk '/bcftools/ {b=\$2} /htslib/ {h=\$3} END {printf \"bcftools %s, htslib %s\", b, h}')"
+    END_VERSIONS
+    """
+}
