@@ -54,9 +54,7 @@ process FIGENO_CIRCOS {
         path(sv_filt),
         path(vcfidx),
         path(cnv_file),
-        path(ratio_file),
-        path(delly_cov),
-        path(delly_bed)
+        path(ratio_file)
 
     output:
     tuple val(meta),
@@ -77,9 +75,7 @@ process FIGENO_CIRCOS {
         ${prefix} \\
         ${sv_filt} \\
         ${cnv_file} \\
-        ${ratio_file} \\
-        ${delly_cov} \\
-        ${delly_bed}
+        ${ratio_file}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
