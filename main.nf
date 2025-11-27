@@ -36,7 +36,7 @@ process ONTIME_RANGE_FILTER {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         ontime: \$(echo \$(ontime --version 2>&1) | sed 's/^.*ontime //; s/Using.*\$//')
-        END_VERSIONS
+    END_VERSIONS
     """
 }
 
