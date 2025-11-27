@@ -1,58 +1,106 @@
-# Use Debian as the base image
-FROM debian:latest
+FROM debian:bookworm-slim AS builder
 
-# Install dependencies
-RUN apt update && apt install -y \
+ENV DEBIAN_FRONTEND=noninteractive
+ARG INSTALL_PREFIX=/opt
+
+ENV PATH="${INSTALL_PREFIX}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" \
+    LD_LIBRARY_PATH="${INSTALL_PREFIX}/lib:/usr/local/lib:/usr/lib/x86_64-linux-gnu" \
+    PKG_CONFIG_PATH="${INSTALL_PREFIX}/lib/pkgconfig:/usr/lib/x86_64-linux-gnu/pkgconfig:/usr/share/pkgconfig"
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    autoconf \
+    automake \
     build-essential \
-    gcc g++ cmake \
-    zlib1g-dev bzip2 libbz2-dev \
-    liblzo2-dev liblz4-dev xz-utils liblzma-dev \
-    libzstd-dev e2fsprogs libattr1-dev \
-    libaio-dev libgcrypt-dev \
-    curl wget tar autoconf automake libtool \
-    git pkg-config \
-    gettext
+    bzip2 \
+    cmake \
+    doxygen \
+    curl \
+    e2fsprogs \
+    graphviz \
+    g++ \
+    gcc \
+    gettext \
+    git \
+    groff \
+    libaio-dev \
+    libattr1-dev \
+    libbz2-dev \
+    libcurl4-openssl-dev \
+    libext2fs-dev \
+    libgcrypt-dev \
+    librsync-dev \
+    liblzo2-dev \
+    liblz4-dev \
+    liblzma-dev \
+    libgpgme-dev \
+    libtool \
+    libzstd-dev \
+    pkg-config \
+    tar \
+    wget \
+    xz-utils \
+    zlib1g-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Set working directory
-WORKDIR /opt
+WORKDIR ${INSTALL_PREFIX}
 
-# Download and compile libthreadar
-RUN git clone https://github.com/Edrusb/libthreadar.git
+RUN set -eux \
+    && git clone https://github.com/Edrusb/libthreadar.git \
+    && cd libthreadar \
+    && misc/init \
+    && ./configure --prefix="${INSTALL_PREFIX}" \
+    && make -j"$(nproc)" \
+    && make install \
+    && echo "${INSTALL_PREFIX}/lib" > /etc/ld.so.conf.d/libthreadar.conf \
+    && ldconfig
 
-WORKDIR /opt/libthreadar
-RUN git checkout branch_1.5.x
-RUN misc/init
-RUN ./configure --prefix=/opt
-RUN make -j$(nproc) && make install
+RUN set -eux \
+    && git clone https://github.com/Edrusb/DAR.git \
+    && cd DAR \
+    && misc/init \
+    && LDFLAGS="-L${INSTALL_PREFIX}/lib" \
+    CPPFLAGS="-I${INSTALL_PREFIX}/include" \
+    PKG_CONFIG_PATH="${INSTALL_PREFIX}/lib/pkgconfig" \
+    ./configure \
+    --enable-threadar \
+    --enable-threads \
+    --prefix="${INSTALL_PREFIX}" \
+    && make -j"$(nproc)" \
+    && make install
 
-# Ensure the library path is known to the linker
-RUN echo "/opt/lib" > /etc/ld.so.conf.d/libthreadar.conf && ldconfig
+FROM debian:bookworm-slim AS runner
 
-# Set environment variables
-ENV LD_LIBRARY_PATH="/opt/lib:$LD_LIBRARY_PATH"
-ENV PKG_CONFIG_PATH="/opt/lib/pkgconfig:$PKG_CONFIG_PATH"
+ENV DEBIAN_FRONTEND=noninteractive
+ARG INSTALL_PREFIX=/opt
 
-# Set working directory
-WORKDIR /opt
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    bzip2 \
+    e2fsprogs \
+    graphviz \
+    libaio1 \
+    libattr1 \
+    libbz2-1.0 \
+    libcurl4 \
+    libext2fs2 \
+    libgcrypt20 \
+    librsync2 \
+    liblzo2-2 \
+    liblz4-1 \
+    liblzma5 \
+    libzstd1 \
+    xz-utils \
+    && rm -rf /var/lib/apt/lists/*
 
-# Download and compile DAR
-RUN git clone https://github.com/Edrusb/DAR.git
+COPY --from=builder ${INSTALL_PREFIX} ${INSTALL_PREFIX}
 
-WORKDIR /opt/DAR
-RUN git checkout branch_2.7.x
-RUN misc/init
+RUN echo "${INSTALL_PREFIX}/lib" > /etc/ld.so.conf.d/libthreadar.conf && ldconfig
 
-# Configure with multithreading and threadar support
-RUN ./configure --enable-threadar --enable-threads --prefix=/opt LDFLAGS="-L/opt/lib" CPPFLAGS="-I/opt/include"
+ENV LD_LIBRARY_PATH="${INSTALL_PREFIX}/lib" \
+    PKG_CONFIG_PATH="${INSTALL_PREFIX}/lib/pkgconfig" \
+    PATH="${INSTALL_PREFIX}/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
-# Compile and install DAR
-RUN make -j$(nproc) && make install
+WORKDIR ${INSTALL_PREFIX}
 
-# Add the binary path to the environment
-ENV PATH="/opt/bin:${PATH}"
-
-# Set working directory
-WORKDIR /opt
-
-# Set the default command
 CMD ["dar", "--help"]
