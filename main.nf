@@ -50,7 +50,8 @@ process DORADO_BASECALL {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        dorado: \$(echo \$(dorado --version 2>&1) | sed 's/^.*dorado //; s/Using.*\$//')    END_VERSIONS
+        dorado: \$(echo \$(dorado --version 2>&1) | sed 's/^.*dorado //; s/Using.*\$//')
+    END_VERSIONS
     """
 }
 
@@ -92,6 +93,7 @@ process DORADO_DEMULTIPLEX {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        dorado: \$(echo \$(dorado --version 2>&1) | sed 's/^.*dorado //; s/Using.*\$//')    END_VERSIONS
+        dorado: \$(echo \$(dorado --version 2>&1) | sed 's/^.*dorado //; s/Using.*\$//')
+    END_VERSIONS
     """
 }
