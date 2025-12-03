@@ -1,14 +1,17 @@
-rocess CLASSY_CLASSIFY {
+process CLASSY_CLASSIFY {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/classy:sha-4a9ff86'
+    container 'ghcr.io/chusj-pigu/classy:sha-3cc2b2f'
     label "process_low"                    // nf-core label
     label "process_medium_cpu"                 // Label for mpgi drac cpu alloc
     label "process_medium_low_memory"        // Label for mpgi drac memory alloc
     label "process_low_time"          // Label for mpgi drac time alloc
 
+    tag "$meta.id"
+
     input:
     tuple val(meta),
         path(bam),
+        path(bai),
         path(ref)
 
     output:
@@ -18,6 +21,9 @@ rocess CLASSY_CLASSIFY {
     tuple val(meta),
         path("*json"),
         emit:json
+    tuple val(meta),
+        path("*_class_pies.html"),
+        emit:html
     path "versions.yml",
         emit: versions
 
@@ -36,7 +42,7 @@ rocess CLASSY_CLASSIFY {
         --model /opt/classy/models/MARLIN/marlin_v1.model.hdf5 \\
         --annotations /opt/classy/models/MARLIN/marlin_v1.class_annotations.xlsx \\
         --resolution per-motif \\
-        --motif CpG \\
+        --motif CpG:CG \\
         --min-mapq 20 \\
         --use-pileup \\
         --pileup-threads ${threads} \\
