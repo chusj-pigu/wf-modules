@@ -5,6 +5,8 @@ process ONTIME_RANGE_FILTER {
     label "process_low_memory"       // Label for mpgi drac memory alloc
     label "process_medium_low_time"                // Label for mpgi drac time alloc
 
+    tag "$meta.id"
+
     input:
     tuple val(meta),
         path(bam),
