@@ -1,13 +1,13 @@
 process SUBCHROM_CALL_WGS {
 
     //TODO: SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/subchrom:latest'
+    container 'ghcr.io/chusj-pigu/subchrom:c44904fbee8490d0282d5b09956ed531bd57a6e9'
 
     label 'medium'
     label 'process_low'
     label 'process_single_cpu'
     label 'process_medium_mid_memory'
-    label 'process_low_time'
+    label 'process_medium_time'
 
     tag "$meta.id"
 
@@ -51,7 +51,7 @@ process SUBCHROM_CALL_WGS {
 process SUBCHROM_CALL_PANEL {
 
     //TODO: SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/subchrom:latest'
+    container 'ghcr.io/chusj-pigu/subchrom:c44904fbee8490d0282d5b09956ed531bd57a6e9'
 
     label 'medium'
     label 'process_low'
@@ -88,10 +88,10 @@ process SUBCHROM_CALL_PANEL {
     """
     # Create output directory
     mkdir -p "${prefix}.${data_type}.SubChrom"
-    
+
     # Copy VCF to output directory
     cp -P "${vcf}" "${prefix}.${data_type}.SubChrom/${prefix}.${data_type}.gatkHC.vcf.gz"
-    
+
     SubChrom.sh \\
         -s ${prefix} \\
         -i ${bam} \\
@@ -110,7 +110,7 @@ process SUBCHROM_CALL_PANEL {
 process SUBCHROM_PANEL_BIN {
 
     //TODO: SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/subchrom:latest'
+    container 'ghcr.io/chusj-pigu/subchrom:c44904fbee8490d0282d5b09956ed531bd57a6e9'
 
     label 'medium'
     label 'process_low'
