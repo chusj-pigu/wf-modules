@@ -7,7 +7,7 @@ process SUBCHROM_CALL_WGS {
     label 'process_low'
     label 'process_single_cpu'
     label 'process_medium_mid_memory'
-    label 'process_low_time'
+    label 'process_medium_time'
 
     tag "$meta.id"
 
