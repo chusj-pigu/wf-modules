@@ -1,56 +1,32 @@
-# Use the base Rocky Linux image
-FROM rockylinux/rockylinux:9
+# syntax=docker/dockerfile:1
 
-# Set some labels
-LABEL description="Samtools 1.18"
-LABEL version="1.0"
-LABEL maintainer="bwbioinfo"
-LABEL base_image="rockylinux/rockylinux:9"
+ARG BASE_IMAGE=rockylinux/rockylinux:9
+ARG BWA_MEM2_REPO=https://github.com/bwa-mem2/bwa-mem2.git
 
-# Set environment variables
-ENV SAMTOOLS_VERSION=1.21
+FROM ${BASE_IMAGE} AS build
+ARG BWA_MEM2_REPO
 
-# Install dependencies
-RUN dnf update -y
-RUN dnf install -y \
-    git \
-    gcc \
-    make \
-    zlib-devel \
-    bzip2 \
-    bzip2-devel \
-    xz \
-    xz-devel \
-    ncurses \
-    ncurses-devel \
-    libcurl-devel \
-    wget \ 
-    procps \
-    pigz \
-    zsh
+RUN dnf -y update && \
+    dnf -y install git gcc gcc-c++ make zlib-devel && \
+    dnf clean all && rm -rf /var/cache/dnf
 
+WORKDIR /src
+RUN git clone --depth 1 --recurse-submodules ${BWA_MEM2_REPO} bwa-mem2
 
-# Set the working directory
-WORKDIR /usr/local/src
+WORKDIR /src/bwa-mem2
+RUN make -j"$(nproc)"
 
-# Clone Samtools repository
-RUN wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2
-RUN tar -xvjf samtools-${SAMTOOLS_VERSION}.tar.bz2
+FROM ${BASE_IMAGE}
 
-# Change to the Samtools directory
-WORKDIR /usr/local/src/samtools-${SAMTOOLS_VERSION}
+LABEL description="bwa-mem2 latest"
 
-# Build and install Samtools
-RUN make
-RUN make install
+RUN dnf -y install --setopt=install_weak_deps=False \
+    zlib \
+    libgomp && \
+    dnf clean all && rm -rf /var/cache/dnf
 
-# Check the Samtools version
-RUN samtools --version
+COPY --from=build /src/bwa-mem2/bwa-mem2* /usr/local/bin/
 
-# Clean up
-RUN rm -rf /usr/local/src/samtools
-RUN dnf remove -y gcc make zlib-devel bzip2-devel xz-devel ncurses-devel libcurl-devel && \
-    dnf clean all
+WORKDIR /data
 
-# Set the default command to run Samtools
-CMD ["samtools"]
+CMD ["bwa-mem2"]
