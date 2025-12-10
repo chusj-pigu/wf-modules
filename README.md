@@ -20,3 +20,7 @@ In CWL or NextFlow, you can add the bwa-mem2 module as a submodule to your proje
 ```
 git submodule add -b bwa-mem2 https://github.com/chusj-pigu/wf-modules modules/local/bwa-mem2
 ```
+## CI/CD
+
+[![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3A)
+
