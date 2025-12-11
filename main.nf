@@ -6,7 +6,7 @@ process WHATSHAP_PHASE {
     label 'process_medium'                    // nf-core labels
     label "process_single_cpu"                 // Label for mpgi drac cpu alloc
     label "process_medium_mid_memory"         // Label for mpgi drac memory alloc
-    label "process_mid_time"
+    label "process_medium_time"
 
     tag "$meta.id"
 
@@ -108,10 +108,10 @@ process WHATSHAP_STATS {
 
     container "ghcr.io/chusj-pigu/whatshap:latest"
 
-    label 'process_medium'                    // nf-core labels
+    label 'process_low'                    // nf-core labels
     label "process_single_cpu"                 // Label for mpgi drac cpu alloc
-    label "process_medium_mid_memory"         // Label for mpgi drac memory alloc
-    label "process_mid_time"
+    label "process_very_low_memory"         // Label for mpgi drac memory alloc
+    label "process_very_low_time"
 
     tag "$meta.id"
 
