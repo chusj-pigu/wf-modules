@@ -58,7 +58,7 @@ process WHATSHAP_HAPLOTAG {
     label 'process_medium'                    // nf-core labels
     label "process_medium_low_cpu"                 // Label for mpgi drac cpu alloc
     label "process_medium_mid_memory"         // Label for mpgi drac memory alloc
-    label "process_mid_time"
+    label "process_medium_time"
 
     tag "$meta.id"
 
