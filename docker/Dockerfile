@@ -46,7 +46,8 @@ RUN wget https://gear-genomics.embl.de/data/delly/Homo_sapiens.GRCh38.dna.primar
 
 # Multi-stage build
 FROM alpine:latest
-RUN mkdir -p /opt/delly/bin
+RUN apk add --no-cache bash procps \
+    && mkdir -p /opt/delly/bin
 WORKDIR /opt/delly/bin
 COPY --from=0 /opt/delly/bin/delly .
 WORKDIR /opt/delly/data
