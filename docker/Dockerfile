@@ -52,7 +52,7 @@ RUN apk add --no-cache bash procps \
     && mkdir -p /opt/delly/bin
 WORKDIR /opt/delly/bin
 COPY --from=0 /opt/delly/bin/delly .
-WORKDIR /opt/delly/data
+WORKDIR /opt/data
 COPY --from=0 /opt/Homo_sapiens* .
 
 # Workdir
