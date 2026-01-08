@@ -110,7 +110,7 @@ process WHATSHAP_STATS {
 
     label 'process_low'                    // nf-core labels
     label "process_single_cpu"                 // Label for mpgi drac cpu alloc
-    label "process_very_low_memory"         // Label for mpgi drac memory alloc
+    label "process_low_memory"         // Label for mpgi drac memory alloc
     label "process_very_low_time"
 
     tag "$meta.id"
