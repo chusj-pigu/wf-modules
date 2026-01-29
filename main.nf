@@ -1,6 +1,6 @@
 process SAMTOOLS_QSFILTER {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/samtools:latest'
+    container 'ghcr.io/chusj-pigu/samtools:b195aca24376fa3482000f5bcdc804ac36d9da0b'
     label "process_small"                    // nf-core labels
     label "process_medium_low_cpu"          // Label for mpgi drac cpu alloc
     label "process_medium_low_memory"       // Label for mpgi drac memory alloc
@@ -52,7 +52,7 @@ process SAMTOOLS_QSFILTER {
 
 process SAMTOOLS_TOFASTQ {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/samtools:latest'
+    container 'ghcr.io/chusj-pigu/samtools:b195aca24376fa3482000f5bcdc804ac36d9da0b'
     label "process_medium"              // nf-core labels
     label "process_medium_low_cpu"          // Label for mpgi drac memory alloc
     label "process_low_memory"              // Label for mpgi drac memory alloc
@@ -94,7 +94,7 @@ process SAMTOOLS_TOFASTQ {
 
 process SAMTOOLS_TOBAM {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/samtools:latest'
+    container 'ghcr.io/chusj-pigu/samtools:b195aca24376fa3482000f5bcdc804ac36d9da0b'
     label "process_medium"          // nf-core labels
     label "process_medium_low_cpu"          // Label for mpgi drac memory alloc
     label "process_medium_low_memory"       // Label for mpgi drac memory alloc
@@ -136,7 +136,7 @@ process SAMTOOLS_TOBAM {
 
 process SAMTOOLS_SORT {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/samtools:latest'
+    container 'ghcr.io/chusj-pigu/samtools:b195aca24376fa3482000f5bcdc804ac36d9da0b'
 
     label "process_medium_cpu"              // Label for mpgi drac memory alloc
     label "process_medium_memory"           // Label for mpgi drac memory alloc
@@ -186,7 +186,7 @@ process SAMTOOLS_SORT {
 
 process SAMTOOLS_INDEX {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/samtools:latest'
+    container 'ghcr.io/chusj-pigu/samtools:b195aca24376fa3482000f5bcdc804ac36d9da0b'
 
     label "process_low"                     // nf-core labels
     label "process_low_cpu"              // Label for mpgi drac memory alloc
@@ -233,7 +233,7 @@ process SAMTOOLS_INDEX {
 
 process SAMTOOLS_FAIDX {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/samtools:latest'
+    container 'ghcr.io/chusj-pigu/samtools:b195aca24376fa3482000f5bcdc804ac36d9da0b'
 
     label "process_low"                     // nf-core labels
     label "process_low_cpu"              // Label for mpgi drac memory alloc
@@ -294,7 +294,7 @@ process SAMTOOLS_FAIDX {
 
 process SAMTOOLS_SPLIT_BY_BED {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/samtools:latest'
+    container 'ghcr.io/chusj-pigu/samtools:b195aca24376fa3482000f5bcdc804ac36d9da0b'
 
     label "process_low"                     // nf-core labels
     label "process_medium_cpu"         // Label for mpgi drac memory alloc
@@ -342,7 +342,7 @@ process SAMTOOLS_SPLIT_BY_BED {
 
 process SAMTOOLS_MERGE {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/samtools:latest'
+    container 'ghcr.io/chusj-pigu/samtools:b195aca24376fa3482000f5bcdc804ac36d9da0b'
     label "process_medium"          // nf-core labels
     label "process_medium_cpu"              // Label for mpgi drac memory alloc
     label "process_medium_memory"           // Label for mpgi drac memory alloc
