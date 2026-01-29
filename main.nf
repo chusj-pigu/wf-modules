@@ -201,7 +201,7 @@ process SAMTOOLS_INDEX {
 
     output:
     tuple val(meta),
-        path("*.indexed.bam"),
+        path("*.bam"),
         path("*.bai"),
         emit: bamfile_index
     path "versions.yml",
@@ -213,14 +213,16 @@ process SAMTOOLS_INDEX {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def new_name = in_bam.name == "${prefix}.indexed.bam" ? "${in_bam.baseName}.final.bam" : "${prefix}.indexed.bam"
     def threads = task.cpus
     """
-    cp ${in_bam} ${prefix}.indexed.bam
+    cp ${in_bam} ${new_name}
+
     samtools \\
         index \\
         -@ ${threads} \\
         ${args} \\
-        ${prefix}.indexed.bam
+        ${new_name}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
