@@ -90,6 +90,7 @@ process WHATSHAP_HAPLOTAG {
         haplotag \\
         -o ${prefix}_haplotagged.bam \\
         --output-threads ${threads} \\
+        --skip-missing-contigs
         --reference ${ref} \\
         ${args} \\
         --ignore-read-groups \\
