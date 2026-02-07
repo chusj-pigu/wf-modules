@@ -99,6 +99,15 @@ process QUARTO_TABLE {
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def col_names_render = col_names
+    if (col_names instanceof Boolean) {
+        col_names_render = col_names ? 'TRUE' : 'FALSE'
+    } else if (col_names instanceof String) {
+        def trimmed = col_names.trim()
+        if (trimmed.equalsIgnoreCase('true') || trimmed.equalsIgnoreCase('false')) {
+            col_names_render = trimmed.toUpperCase()
+        }
+    }
 
     """
     mkdir ${prefix}_${section}_${process}_inputs
@@ -113,7 +122,7 @@ process QUARTO_TABLE {
     library(vroom)
     library(knitr)
     library(kableExtra)
-    data <- vroom("${table_data}", col_names = ${col_names}, show_col_types = FALSE)
+    data <- vroom("${table_data}", col_names = ${col_names_render}, show_col_types = FALSE)
     data |>
     head(1000) |>
     kable()
@@ -247,8 +256,8 @@ process QUARTO_SECTION {
     input:
     tuple val(meta),
         val(section),
-        path(section_inputs)
-    val section_description
+        path(section_inputs),
+        val(section_description)
 
     output:
     tuple val(meta),
