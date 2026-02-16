@@ -25,20 +25,13 @@ ENV PATH=$CONDA_DIR/bin:$PATH
 RUN conda install -y -n base -c conda-forge mamba
 
 # Use mamba to install cuteSV and its dependecies in a clean env
-RUN mamba create -y -n cutesvenv -c bioconda -c conda-forge \
-    scipy \
-    pysam \
-    biopython \
-    numpy \
-    scikit-learn \
-    pyvcf3 \
-    cigar \
-    cutesv=2.1.2 \
+RUN mamba create -y -n bam2gff -c bioconda -c conda-forge \
+    spliced_bam2gff \
     && conda clean -afy
 
 # Activate env by default
 SHELL ["/bin/bash", "--login", "-c"]
-ENV CONDA_DEFAULT_ENV=cutesvenv
-ENV PATH=$CONDA_DIR/envs/cutesvenv/bin:$PATH
+ENV CONDA_DEFAULT_ENV=bam2gff
+ENV PATH=$CONDA_DIR/envs/bam2gff/bin:$PATH
 
 WORKDIR /opt/app
