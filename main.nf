@@ -6,7 +6,7 @@ process WHATSHAP_PHASE {
     label 'process_medium'                    // nf-core labels
     label "process_single_cpu"                 // Label for mpgi drac cpu alloc
     label "process_medium_mid_memory"         // Label for mpgi drac memory alloc
-    label "process_medium_time"
+    label "process_medium_high_time"
 
     tag "$meta.id"
 
