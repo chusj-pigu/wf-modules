@@ -46,6 +46,9 @@ process QUARTO_REPORT {
 
     cd ${prefix}_report_output
 
+    export QUARTO_CACHE_DIR="\${PWD}/.quarto_cache"
+    export XDG_CACHE_HOME="\${PWD}/.cache"
+
     quarto render ${prefix}.qmd --no-cache ${args} \
     -P report_title:"${report_title}" \
     -P report_description:"${report_description}" \
@@ -119,7 +122,7 @@ process QUARTO_TABLE {
     kable()
     \\`\\`\\`
 
-    END_REPORT
+END_REPORT
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -179,7 +182,7 @@ process QUARTO_TABLE_COLNAMES {
     kable()
     \\`\\`\\`
 
-    END_REPORT
+END_REPORT
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -225,7 +228,7 @@ process QUARTO_FIGURE {
     cat <<-END_REPORT > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
     ![${caption}](${figure_data})
 
-    END_REPORT
+END_REPORT
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -277,11 +280,10 @@ process QUARTO_SECTION {
     # Transform: uppercase and replace underscores with spaces
     formatted_section=\$(echo "${section}" | tr '_' ' ' | tr '[:lower:]' '[:upper:]')
 
-    cat <<-END_REPORT > ${prefix}_${section}_inputs/${prefix}-${section}.qmd
-    # \${formatted_section}
-    ${section_description}
-
-    END_REPORT
+    {
+        printf "# %s\n" "\${formatted_section}"
+        printf "%s\n\n" "${section_description}"
+    } > ${prefix}_${section}_inputs/${prefix}-${section}.qmd
 
     for file in ${section_inputs}; do
         cat \${file}/*.qmd >> ${prefix}_${section}_inputs/${prefix}-${section}.qmd
@@ -325,9 +327,6 @@ process QUARTO_TEXT {
     """
     mkdir ${prefix}_${section}_${process}_inputs
 
-    cat <<-END_REPORT > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
-    ${text_data}
-
-    END_REPORT
+    printf "%s\n" "${text_data}" > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
     """
 }
