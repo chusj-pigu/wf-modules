@@ -21,6 +21,9 @@ RUN curl -fsSL -o miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-la
 
 ENV PATH=$CONDA_DIR/bin:$PATH
 
+RUN conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main && \
+    conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
+
 # Install Mamba in base env
 RUN conda install -y -n base -c conda-forge mamba
 
