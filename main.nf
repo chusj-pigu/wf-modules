@@ -336,6 +336,53 @@ process QUARTO_TEXT {
     """
     mkdir ${prefix}_${section}_${process}_inputs
 
-    printf "%s\n" "${text_data}" > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
+    cat <<'END_REPORT' > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
+${text_data}
+END_REPORT
+    """
+}
+
+process QUARTO_CODE {
+    container 'ghcr.io/chusj-pigu/quarto:latest'
+
+    tag "$meta.id"
+    label 'process_low'
+    label 'process_single_cpu'
+    label 'process_very_low_memory'
+    label 'process_very_low_time'
+
+    input:
+    tuple val(meta),
+        path(command_file),
+        val(section),
+        val(process)
+
+    output:
+    tuple val(meta),
+        val(section),
+        path("*_inputs"),
+        emit: quarto_code
+    path "versions.yml",
+        emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    mkdir ${prefix}_${section}_${process}_inputs
+
+    {
+        echo '```bash'
+        cat ${command_file}
+        echo
+        echo '```'
+    } > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        quarto: \$( quarto --version )
+    END_VERSIONS
     """
 }
