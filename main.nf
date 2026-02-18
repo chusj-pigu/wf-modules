@@ -16,6 +16,9 @@ process MINIMAP2_ALIGN {
     tuple val(meta),
         path("*.sam"),
         emit: sam
+    tuple val(meta),
+        path("*.command.txt"),
+        emit: command
     path "versions.yml",
         emit: versions
 
@@ -31,6 +34,14 @@ process MINIMAP2_ALIGN {
         -t ${task.cpus} \\
         ${ref} \\
         ${reads} > ${prefix}.sam
+
+    cat <<-END_COMMAND > ${prefix}.command.txt
+    minimap2 \\
+        ${args} \\
+        -t ${task.cpus} \\
+        ${ref} \\
+        ${reads} > ${prefix}.sam
+    END_COMMAND
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
