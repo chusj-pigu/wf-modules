@@ -1,14 +1,15 @@
-FROM alpine:latest
+FROM ubuntu:latest
 
 # Install dependencies
-RUN apk add --no-cache \
-    bash \
-    curl \
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    procps \
     git
 
-# TODO: Install procps for NextFlow
+WORKDIR /opt/app
 
-# TODO: Make an alias to get version
+RUN git clone https://github.com/gpertea/gffread && \
+    cd gffread && \
+    make release
 
-# RUN $()
-# ENV version =
+ENV PATH="/opt/app/gffread:${PATH}"
