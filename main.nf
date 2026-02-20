@@ -41,7 +41,7 @@ process QUARTO_REPORT {
     echo "${report_section_split}"
     for section in ${report_section_split}; do
         echo "section: \${section}"
-        echo "{{< include \${section} >}}" >> ${prefix}_report_output/${prefix}.qmd
+        printf '\n{{< include %s >}}\n' "\${section}" >> ${prefix}_report_output/${prefix}.qmd
     done
 
     cd ${prefix}_report_output
@@ -132,6 +132,8 @@ process QUARTO_TABLE {
     \\`\\`\\`
 
 END_REPORT
+    # Remove template indentation so Quarto executes the R chunk instead of rendering it as literal code.
+    sed -i 's/^    //' ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -192,6 +194,8 @@ process QUARTO_TABLE_COLNAMES {
     \\`\\`\\`
 
 END_REPORT
+    # Remove template indentation so Quarto executes the R chunk instead of rendering it as literal code.
+    sed -i 's/^    //' ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
