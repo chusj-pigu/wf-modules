@@ -1,60 +1,117 @@
-process DELLY_CNV {
-    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/delly:latest'
+nextflow.enable.dsl=2
 
-    tag "$meta.id"
+process GFF_TO_GTF {
+    // TODO : UNCOMMENT WHEN GENEMANCER CONTAINER IS AVAILABLE
+    // container 'ghcr.io/chusj-pigu/genemancer:latest'
+
+    tag { gff3.baseName }
     label 'process_low'
     label 'process_medium_low_cpu'
     label 'process_medium_mid_memory'
     label 'process_low_time'
 
     input:
-    tuple val(meta),
-        path(bam),
-        path(bai),
-        val(ref_id),
-        path(ref)
+    path gff3
 
     output:
-    tuple val(meta),
-        path("*.cov.gz"),
-        emit: cov
-    tuple val(meta),
-        path("*.bcf"),
-        emit: bcf
-    tuple val(meta),
-        path("*.stats.gz"),
-        emit: stats
-    path "versions.yml",
-        emit: versions
-
-    when:
-    task.ext.when == null || task.ext.when
+    path "${gff3.simpleName}.gtf"
 
     script:
-    def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def map = ref_id in ["hg38", "GRCh38"] ?
-        "/opt/data/Homo_sapiens.GRCh38.dna.primary_assembly.fa.r101.s501.blacklist.gz" :
-        "/opt/data/Homo_sapiens.GRCh37.dna.primary_assembly.fa.r101.s501.blacklist.gz"
-    def window = params.delly_bin_size
     """
-    delly cnv \\
-        ${args} \\
-        -g ${ref} \\
-        -i ${window} \\
-        -w ${window} \\
-        -m ${map} \\
-        -c ${prefix}_delly_out.cov.gz \\
-        -o ${prefix}_delly.out.bcf  \\
-        -s ${prefix}_delly.stats.gz \\
-        ${bam}
+    genemancer gff-to-gtf \
+      -i ${gff3} \
+      -o ${gff3.simpleName}.gtf
+    """
+}
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        delly: \$( echo \$(delly -v) | awk 'NR==1 {print \$3}' )
-        Boost: \$( echo \$(delly -v) | awk 'NR==2 {print \$3}' )
-        HTSlib: \$( echo \$(delly -v) | awk 'NR==3 {print \$3}' )
-    END_VERSIONS
+process MERGE_BAM {
+    // TODO : UNCOMMENT WHEN GENEMANCER CONTAINER IS AVAILABLE
+    // container 'ghcr.io/chusj-pigu/genemancer:latest'
+
+    tag "merge"
+    label 'process_low'
+    label 'process_medium_low_cpu'
+    label 'process_medium_mid_memory'
+    label 'process_low_time'
+
+    input:
+    path bams
+
+    output:
+    path "merged.bam"
+    path "merged.bam.*", optional: true
+
+    script:
+    def inputArgs = bams.collect { "-i ${it}" }.join(' ')
+    """
+    genemancer merge-bam \
+      ${inputArgs} \
+      -o merged.bam \
+      --index
+    """
+}
+
+process CALL_TARGETS {
+    // TODO : UNCOMMENT WHEN GENEMANCER CONTAINER IS AVAILABLE
+    // container 'ghcr.io/chusj-pigu/genemancer:latest'
+
+    tag "call-targets"
+    label 'process_low'
+    label 'process_medium_low_cpu'
+    label 'process_medium_mid_memory'
+    label 'process_low_time'
+
+    input:
+    path bam
+    path reference
+    path targets
+    path rg_map, optional: true
+
+    output:
+    path "calls.vcf.gz"
+    path "calls.vcf.gz.*", optional: true
+
+    script:
+    def rgArg = rg_map ? "--rg-map ${rg_map}" : ""
+    """
+    genemancer call-targets \
+      -i ${bam} \
+      -r ${reference} \
+      -T ${targets} \
+      -o calls.vcf.gz \
+      ${rgArg}
+    """
+}
+
+process CALL_TARGETS_GPU {
+    // TODO : UNCOMMENT WHEN GENEMANCER CONTAINER IS AVAILABLE
+    // container 'ghcr.io/chusj-pigu/genemancer:latest'
+
+    tag "call-targets-gpu"
+    label 'process_low'
+    label 'process_medium_low_cpu'
+    label 'process_medium_mid_memory'
+    label 'process_low_time'
+
+    input:
+    path bam
+    path reference
+    path targets
+    path rg_map, optional: true
+
+    output:
+    path "calls.vcf.gz"
+    path "calls.vcf.gz.*", optional: true
+
+    script:
+    def rgArg = rg_map ? "--rg-map ${rg_map}" : ""
+    """
+    genemancer call-targets-gpu \
+      -i ${bam} \
+      -r ${reference} \
+      -T ${targets} \
+      -o calls.vcf.gz \
+      ${rgArg} \
+      --gpu-backend auto
     """
 }
