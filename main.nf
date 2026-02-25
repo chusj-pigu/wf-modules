@@ -51,6 +51,36 @@ process MERGE_BAM {
     """
 }
 
+process SPLIT_BAM {
+    // TODO : UNCOMMENT WHEN GENEMANCER CONTAINER IS AVAILABLE
+    // container 'ghcr.io/chusj-pigu/genemancer:latest'
+
+    tag { bam.baseName }
+    label 'process_low'
+    label 'process_medium_low_cpu'
+    label 'process_medium_mid_memory'
+    label 'process_low_time'
+
+    cpus 4
+
+    input:
+    path bam
+    path bed
+
+    output:
+    path "split_bam_out"
+
+    script:
+    def extraArgs = task.ext.args ?: ""
+    """
+    genemancer -t ${task.cpus} split-bam \
+      --input ${bam} \
+      --bed ${bed} \
+      --out-dir split_bam_out \
+      ${extraArgs}
+    """
+}
+
 process CALL_TARGETS {
     // TODO : UNCOMMENT WHEN GENEMANCER CONTAINER IS AVAILABLE
     // container 'ghcr.io/chusj-pigu/genemancer:latest'
@@ -113,5 +143,63 @@ process CALL_TARGETS_GPU {
       -o calls.vcf.gz \
       ${rgArg} \
       --gpu-backend auto
+    """
+}
+
+process NANOCOV {
+    // TODO : UNCOMMENT WHEN NANOCOV CONTAINER IS AVAILABLE
+    // container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+
+    tag { bam.baseName }
+    label 'process_low'
+    label 'process_medium_low_cpu'
+    label 'process_medium_mid_memory'
+    label 'process_low_time'
+
+    cpus 4
+
+    input:
+    path bam
+
+    output:
+    path "nanocov_out"
+
+    script:
+    def extraArgs = task.ext.args ?: ""
+    """
+    nanocov \
+      --input ${bam} \
+      --threads ${task.cpus} \
+      --output-dir nanocov_out \
+      ${extraArgs}
+    """
+}
+
+process NANOCOV_BATCH {
+    // TODO : UNCOMMENT WHEN NANOCOV CONTAINER IS AVAILABLE
+    // container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+
+    tag "nanocov-batch"
+    label 'process_low'
+    label 'process_medium_low_cpu'
+    label 'process_medium_mid_memory'
+    label 'process_low_time'
+
+    cpus 4
+
+    input:
+    path batch_tsv
+
+    output:
+    path "nanocov_out"
+
+    script:
+    def extraArgs = task.ext.args ?: ""
+    """
+    nanocov \
+      --batch-tsv ${batch_tsv} \
+      --threads ${task.cpus} \
+      --output-dir nanocov_out \
+      ${extraArgs}
     """
 }

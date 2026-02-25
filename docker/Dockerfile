@@ -25,7 +25,7 @@ RUN apk add --no-cache \
 ENV RUSTFLAGS="-C target-feature=-crt-static"
 
 # Planned deterministic installs when crates are available
-ARG GENEMANCER_VERSION=0.2.1
+ARG GENEMANCER_VERSION=0.2.2
 # ARG TRANCISTOR_VERSION=0.0.0
 ARG NANOCOV_VERSION=0.1.0
 RUN cargo install --locked --version ${GENEMANCER_VERSION} genemancer
