@@ -41,10 +41,13 @@ process QUARTO_REPORT {
     echo "${report_section_split}"
     for section in ${report_section_split}; do
         echo "section: \${section}"
-        echo "{{< include \${section} >}}" >> ${prefix}_report_output/${prefix}.qmd
+        printf '\n{{< include %s >}}\n' "\${section}" >> ${prefix}_report_output/${prefix}.qmd
     done
 
     cd ${prefix}_report_output
+
+    export QUARTO_CACHE_DIR="\${PWD}/.quarto_cache"
+    export XDG_CACHE_HOME="\${PWD}/.cache"
 
     quarto render ${prefix}.qmd --no-cache ${args} \
     -P report_title:"${report_title}" \
@@ -99,6 +102,15 @@ process QUARTO_TABLE {
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def col_names_render = col_names
+    if (col_names instanceof Boolean) {
+        col_names_render = col_names ? 'TRUE' : 'FALSE'
+    } else if (col_names instanceof String) {
+        def trimmed = col_names.trim()
+        if (trimmed.equalsIgnoreCase('true') || trimmed.equalsIgnoreCase('false')) {
+            col_names_render = trimmed.toUpperCase()
+        }
+    }
 
     """
     mkdir ${prefix}_${section}_${process}_inputs
@@ -113,13 +125,15 @@ process QUARTO_TABLE {
     library(vroom)
     library(knitr)
     library(kableExtra)
-    data <- vroom("${table_data}", col_names = ${col_names}, show_col_types = FALSE)
+    data <- vroom("${table_data}", col_names = ${col_names_render}, show_col_types = FALSE)
     data |>
     head(1000) |>
     kable()
     \\`\\`\\`
 
-    END_REPORT
+END_REPORT
+    # Remove template indentation so Quarto executes the R chunk instead of rendering it as literal code.
+    sed -i 's/^    //' ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -179,7 +193,9 @@ process QUARTO_TABLE_COLNAMES {
     kable()
     \\`\\`\\`
 
-    END_REPORT
+END_REPORT
+    # Remove template indentation so Quarto executes the R chunk instead of rendering it as literal code.
+    sed -i 's/^    //' ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -225,7 +241,7 @@ process QUARTO_FIGURE {
     cat <<-END_REPORT > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
     ![${caption}](${figure_data})
 
-    END_REPORT
+END_REPORT
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -247,8 +263,8 @@ process QUARTO_SECTION {
     input:
     tuple val(meta),
         val(section),
-        path(section_inputs)
-    val section_description
+        path(section_inputs),
+        val(section_description)
 
     output:
     tuple val(meta),
@@ -277,11 +293,10 @@ process QUARTO_SECTION {
     # Transform: uppercase and replace underscores with spaces
     formatted_section=\$(echo "${section}" | tr '_' ' ' | tr '[:lower:]' '[:upper:]')
 
-    cat <<-END_REPORT > ${prefix}_${section}_inputs/${prefix}-${section}.qmd
-    # \${formatted_section}
-    ${section_description}
-
-    END_REPORT
+    {
+        printf "# %s\n" "\${formatted_section}"
+        printf "%s\n\n" "${section_description}"
+    } > ${prefix}_${section}_inputs/${prefix}-${section}.qmd
 
     for file in ${section_inputs}; do
         cat \${file}/*.qmd >> ${prefix}_${section}_inputs/${prefix}-${section}.qmd
@@ -325,10 +340,54 @@ process QUARTO_TEXT {
     """
     mkdir ${prefix}_${section}_${process}_inputs
 
-    cat <<-END_REPORT > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
-    ${text_data}
+    cat <<'END_REPORT' > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
+${text_data}
+END_REPORT
+    """
+}
 
-    END_REPORT
+process QUARTO_CODE {
+    container 'ghcr.io/chusj-pigu/quarto:latest'
+
+    tag "$meta.id"
+    label 'process_low'
+    label 'process_single_cpu'
+    label 'process_very_low_memory'
+    label 'process_very_low_time'
+
+    input:
+    tuple val(meta),
+        path(command_file),
+        val(section),
+        val(process)
+
+    output:
+    tuple val(meta),
+        val(section),
+        path("*_inputs"),
+        emit: quarto_code
+    path "versions.yml",
+        emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    mkdir ${prefix}_${section}_${process}_inputs
+
+    {
+        echo '```bash'
+        cat ${command_file}
+        echo
+        echo '```'
+    } > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        quarto: \$( quarto --version )
+    END_VERSIONS
     """
 }
 
