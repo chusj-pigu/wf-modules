@@ -59,7 +59,7 @@ process QUARTO_REPORT {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         quarto: \$( quarto --version )
-    END_VERSIONS
+END_VERSIONS
     """
 
     stub:
@@ -67,7 +67,7 @@ process QUARTO_REPORT {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         quarto: \$( quarto --version )
-    END_VERSIONS
+END_VERSIONS
     """
 }
 
@@ -138,7 +138,7 @@ END_REPORT
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         quarto: \$( quarto --version )
-    END_VERSIONS
+END_VERSIONS
     """
 }
 
@@ -200,7 +200,7 @@ END_REPORT
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         quarto: \$( quarto --version )
-    END_VERSIONS
+END_VERSIONS
     """
 }
 
@@ -246,7 +246,7 @@ END_REPORT
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         quarto: \$( quarto --version )
-    END_VERSIONS
+END_VERSIONS
     """
 }
 
@@ -305,7 +305,7 @@ process QUARTO_SECTION {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         quarto: \$( quarto --version )
-    END_VERSIONS
+END_VERSIONS
     """
 }
 
@@ -387,7 +387,7 @@ process QUARTO_CODE {
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         quarto: \$( quarto --version )
-    END_VERSIONS
+END_VERSIONS
     """
 }
 
@@ -462,7 +462,7 @@ END_REPORT
     cat <<'END_VERSIONS' > versions.yml
     "${task.process}":
         quarto: \$(quarto --version)
-    END_VERSIONS
+END_VERSIONS
     """
 }
 
@@ -487,7 +487,7 @@ process QUARTO_FIGURE_TABS {
     tuple val(meta),
           val(section),
           path("*_inputs"),
-          emit: quarto_table
+          emit: quarto_figure
     path "versions.yml",
           emit: versions
 
@@ -526,6 +526,6 @@ END_REPORT
     cat <<'END_VERSIONS' > versions.yml
     "${task.process}":
         quarto: \$(quarto --version)
-    END_VERSIONS
+END_VERSIONS
     """
 }
