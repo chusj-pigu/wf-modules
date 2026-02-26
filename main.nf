@@ -331,3 +331,142 @@ process QUARTO_TEXT {
     END_REPORT
     """
 }
+
+process QUARTO_TABLE_TABS {
+    container 'ghcr.io/chusj-pigu/quarto:latest'
+
+    tag "$meta.id"
+    label 'process_low'
+    label 'process_single_cpu'
+    label 'process_very_low_memory'
+    label 'process_very_low_time'
+
+    input:
+    tuple val(meta),
+          val(section),
+          val(process),
+          val(tables),       // list of table file paths
+          val(tabs),         // list of tab names
+          val(captions),     // list of captions
+          val(colnames)      // list of comma-separated colnames
+
+    output:
+    tuple val(meta),
+          val(section),
+          path("*_inputs"),
+          emit: quarto_table
+    path "versions.yml",
+          emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def input_dir = "${prefix}_${section}_${process}_inputs"
+
+    // Build QMD content safely
+    def qmd_blocks = (0..<tables.size()).collect { i ->
+        [
+            "# ${tabs[i]}",
+            "```{r}",
+            "#| label: ${prefix}-${section}-${process}-${tabs[i]}",
+            "#| tbl-cap: ${captions[i]}",
+            "#| echo: false",
+            "#| tbl-cap-location: bottom",
+            "library(vroom)",
+            "library(knitr)",
+            "library(kableExtra)",
+            "data <- vroom(\"${tables[i]}\", col_names = trimws(strsplit(\"${colnames}\", \",\")[[1]]), show_col_types = FALSE)",
+            "data |> head(1000) |> kable()",
+            "```"
+        ].join("\n")
+    }.join("\n\n")
+
+    // Build copy commands
+    def cp_commands = tables.collect { "cp ${it} ${input_dir}/" }.join('\n')
+
+    """
+    mkdir -p ${input_dir}
+
+    # Copy table files
+    ${cp_commands}
+
+    # Write QMD file with literal here-doc
+    cat <<'END_REPORT' > ${input_dir}/${prefix}-${section}-${process}.qmd
+::: {.panel-tabset}
+${qmd_blocks}
+:::
+END_REPORT
+
+    # Record versions
+    cat <<'END_VERSIONS' > versions.yml
+    "${task.process}":
+        quarto: \$(quarto --version)
+    END_VERSIONS
+    """
+}
+
+process QUARTO_FIGURE_TABS {
+    container 'ghcr.io/chusj-pigu/quarto:latest'
+
+    tag "$meta.id"
+    label 'process_low'
+    label 'process_single_cpu'
+    label 'process_very_low_memory'
+    label 'process_very_low_time'
+
+    input:
+    tuple val(meta),
+        val(section),
+        val(process),
+        val(figures),       // list of figure file paths
+        val(tabs),         // list of tab names
+        val(captions)
+
+    output:
+    tuple val(meta),
+          val(section),
+          path("*_inputs"),
+          emit: quarto_table
+    path "versions.yml",
+          emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def input_dir = "${prefix}_${section}_${process}_inputs"
+
+    // Build QMD content safely
+    def qmd_blocks = (0..<figures.size()).collect { i ->
+        [
+            "# ${tabs[i]}",
+            "![${captions[i]}](${figures[i]})"
+        ].join("\n")
+    }.join("\n\n")
+
+    // Build copy commands
+    def cp_commands = figures.collect { "cp ${it} ${input_dir}/" }.join('\n')
+
+    """
+    mkdir -p ${input_dir}
+
+    # Copy figure files
+    ${cp_commands}
+
+    # Write QMD file with literal here-doc
+    cat <<'END_REPORT' > ${input_dir}/${prefix}-${section}-${process}.qmd
+::: {.panel-tabset}
+${qmd_blocks}
+:::
+END_REPORT
+
+    # Record versions
+    cat <<'END_VERSIONS' > versions.yml
+    "${task.process}":
+        quarto: \$(quarto --version)
+    END_VERSIONS
+    """
+}
