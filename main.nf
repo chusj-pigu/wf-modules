@@ -121,7 +121,20 @@ process SPLIT_BAM {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def writeIndicesArg = extraArgs.contains('--write-indices') ? '' : '--write-indices'
     """
-    input_args=\$(awk 'NF > 0 && \$1 !~ /^#/ { printf "-i %s ", \$1 }' ${bamlist})
+    input_args=""
+    while IFS= read -r bam; do
+      [ -z "\$bam" ] && continue
+      [[ "\$bam" =~ ^# ]] && continue
+      resolved_bam="\$bam"
+      if [[ "\$resolved_bam" != /* ]]; then
+        resolved_bam="${projectDir}/\$resolved_bam"
+      fi
+      if [ ! -f "\$resolved_bam" ]; then
+        echo "ERROR: Missing BAM: \$bam (resolved to: \$resolved_bam)" >&2
+        exit 1
+      fi
+      input_args="\${input_args}-i \${resolved_bam} "
+    done < ${bamlist}
     if [ -z "\${input_args}" ]; then
       echo "ERROR: BAM list is empty: ${bamlist}" >&2
       exit 1
@@ -135,7 +148,16 @@ process SPLIT_BAM {
       ${extraArgs}
 
     cat <<-'END_COMMAND' > ${prefix}.command.txt
-    input_args=\$(awk 'NF > 0 && \$1 !~ /^#/ { printf "-i %s ", \$1 }' ${bamlist})
+    input_args=""
+    while IFS= read -r bam; do
+      [ -z "\$bam" ] && continue
+      [[ "\$bam" =~ ^# ]] && continue
+      resolved_bam="\$bam"
+      if [[ "\$resolved_bam" != /* ]]; then
+        resolved_bam="${projectDir}/\$resolved_bam"
+      fi
+      input_args="\${input_args}-i \${resolved_bam} "
+    done < ${bamlist}
     genemancer -t ${task.cpus} split-bam \
       \${input_args} \
       --bed ${bed} \
@@ -184,7 +206,20 @@ process CALL_TARGETS {
     def extraArgs = task.ext.args ?: ""
     def indexTypeArg = extraArgs.contains('--index-type') ? '' : '--index-type tbi'
     """
-    input_args=\$(awk 'NF > 0 && \$1 !~ /^#/ { printf "-i %s ", \$1 }' ${bamlist})
+    input_args=""
+    while IFS= read -r bam; do
+      [ -z "\$bam" ] && continue
+      [[ "\$bam" =~ ^# ]] && continue
+      resolved_bam="\$bam"
+      if [[ "\$resolved_bam" != /* ]]; then
+        resolved_bam="${projectDir}/\$resolved_bam"
+      fi
+      if [ ! -f "\$resolved_bam" ]; then
+        echo "ERROR: Missing BAM: \$bam (resolved to: \$resolved_bam)" >&2
+        exit 1
+      fi
+      input_args="\${input_args}-i \${resolved_bam} "
+    done < ${bamlist}
     if [ -z "\${input_args}" ]; then
       echo "ERROR: BAM list is empty: ${bamlist}" >&2
       exit 1
@@ -200,7 +235,16 @@ process CALL_TARGETS {
       ${extraArgs}
 
     cat <<-'END_COMMAND' > ${prefix}.command.txt
-    input_args=\$(awk 'NF > 0 && \$1 !~ /^#/ { printf "-i %s ", \$1 }' ${bamlist})
+    input_args=""
+    while IFS= read -r bam; do
+      [ -z "\$bam" ] && continue
+      [[ "\$bam" =~ ^# ]] && continue
+      resolved_bam="\$bam"
+      if [[ "\$resolved_bam" != /* ]]; then
+        resolved_bam="${projectDir}/\$resolved_bam"
+      fi
+      input_args="\${input_args}-i \${resolved_bam} "
+    done < ${bamlist}
     genemancer call-targets \
       \${input_args} \
       -r ${reference} \
@@ -251,7 +295,20 @@ process CALL_TARGETS_GPU {
     def extraArgs = task.ext.args ?: ""
     def indexTypeArg = extraArgs.contains('--index-type') ? '' : '--index-type tbi'
     """
-    input_args=\$(awk 'NF > 0 && \$1 !~ /^#/ { printf "-i %s ", \$1 }' ${bamlist})
+    input_args=""
+    while IFS= read -r bam; do
+      [ -z "\$bam" ] && continue
+      [[ "\$bam" =~ ^# ]] && continue
+      resolved_bam="\$bam"
+      if [[ "\$resolved_bam" != /* ]]; then
+        resolved_bam="${projectDir}/\$resolved_bam"
+      fi
+      if [ ! -f "\$resolved_bam" ]; then
+        echo "ERROR: Missing BAM: \$bam (resolved to: \$resolved_bam)" >&2
+        exit 1
+      fi
+      input_args="\${input_args}-i \${resolved_bam} "
+    done < ${bamlist}
     if [ -z "\${input_args}" ]; then
       echo "ERROR: BAM list is empty: ${bamlist}" >&2
       exit 1
@@ -268,7 +325,16 @@ process CALL_TARGETS_GPU {
       ${extraArgs}
 
     cat <<-'END_COMMAND' > ${prefix}.command.txt
-    input_args=\$(awk 'NF > 0 && \$1 !~ /^#/ { printf "-i %s ", \$1 }' ${bamlist})
+    input_args=""
+    while IFS= read -r bam; do
+      [ -z "\$bam" ] && continue
+      [[ "\$bam" =~ ^# ]] && continue
+      resolved_bam="\$bam"
+      if [[ "\$resolved_bam" != /* ]]; then
+        resolved_bam="${projectDir}/\$resolved_bam"
+      fi
+      input_args="\${input_args}-i \${resolved_bam} "
+    done < ${bamlist}
     genemancer call-targets-gpu \
       \${input_args} \
       -r ${reference} \
