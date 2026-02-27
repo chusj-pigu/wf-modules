@@ -119,8 +119,7 @@ process QUARTO_TABLE {
 
     cat <<-END_REPORT > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
     \\`\\`\\`{r}
-    #| label: ${prefix}-${section}-${process}
-${chunkClasses}
+    #| label: ${prefix}-${section}-${process}${chunkClasses}
     #| tbl-cap: ${caption}
     #| echo: false
     #| tbl-cap-location: bottom
@@ -183,8 +182,7 @@ process QUARTO_TABLE_COLNAMES {
 
     cat <<-END_REPORT > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
     \\`\\`\\`{r}
-    #| label: ${prefix}-${section}-${process}
-${chunkClasses}
+    #| label: ${prefix}-${section}-${process}${chunkClasses}
     #| tbl-cap: ${caption}
     #| echo: false
     #| tbl-cap-location: bottom
