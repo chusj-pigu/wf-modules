@@ -104,7 +104,7 @@ process SPLIT_BAM {
 
     input:
     tuple val(meta),
-        path(bamlist),
+        path(bams),
         path(bed)
 
     output:
@@ -119,47 +119,24 @@ process SPLIT_BAM {
     script:
     def extraArgs = task.ext.args ?: ""
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def inputArgs = bams.collect { "-i ${it}" }.join(' ')
     def writeIndicesArg = extraArgs.contains('--write-indices') ? '' : '--write-indices'
     """
-    input_args=""
-    while IFS= read -r bam; do
-      [ -z "\$bam" ] && continue
-      [[ "\$bam" =~ ^# ]] && continue
-      resolved_bam="\$bam"
-      if [[ "\$resolved_bam" != /* ]]; then
-        resolved_bam="${projectDir}/\$resolved_bam"
-      fi
-      if [ ! -f "\$resolved_bam" ]; then
-        echo "ERROR: Missing BAM: \$bam (resolved to: \$resolved_bam)" >&2
-        exit 1
-      fi
-      input_args="\${input_args}-i \${resolved_bam} "
-    done < ${bamlist}
-    if [ -z "\${input_args}" ]; then
-      echo "ERROR: BAM list is empty: ${bamlist}" >&2
+    if [ -z "${inputArgs}" ]; then
+      echo "ERROR: BAM list is empty: ${meta.id}" >&2
       exit 1
     fi
 
     genemancer -t ${task.cpus} split-bam \
-      \${input_args} \
+      ${inputArgs} \
       --bed ${bed} \
       --out-dir ${prefix}_split_bam_out \
       ${writeIndicesArg} \
       ${extraArgs}
 
     cat <<-'END_COMMAND' > ${prefix}.command.txt
-    input_args=""
-    while IFS= read -r bam; do
-      [ -z "\$bam" ] && continue
-      [[ "\$bam" =~ ^# ]] && continue
-      resolved_bam="\$bam"
-      if [[ "\$resolved_bam" != /* ]]; then
-        resolved_bam="${projectDir}/\$resolved_bam"
-      fi
-      input_args="\${input_args}-i \${resolved_bam} "
-    done < ${bamlist}
     genemancer -t ${task.cpus} split-bam \
-      \${input_args} \
+      ${inputArgs} \
       --bed ${bed} \
       --out-dir ${prefix}_split_bam_out \
       ${writeIndicesArg} \
@@ -184,7 +161,7 @@ process CALL_TARGETS {
 
     input:
     tuple val(meta),
-        path(bamlist),
+        path(bams),
         path(reference),
         path(targets),
         path(rg_map)
@@ -204,29 +181,16 @@ process CALL_TARGETS {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     def extraArgs = task.ext.args ?: ""
+    def inputArgs = bams.collect { "-i ${it}" }.join(' ')
     def indexTypeArg = extraArgs.contains('--index-type') ? '' : '--index-type tbi'
     """
-    input_args=""
-    while IFS= read -r bam; do
-      [ -z "\$bam" ] && continue
-      [[ "\$bam" =~ ^# ]] && continue
-      resolved_bam="\$bam"
-      if [[ "\$resolved_bam" != /* ]]; then
-        resolved_bam="${projectDir}/\$resolved_bam"
-      fi
-      if [ ! -f "\$resolved_bam" ]; then
-        echo "ERROR: Missing BAM: \$bam (resolved to: \$resolved_bam)" >&2
-        exit 1
-      fi
-      input_args="\${input_args}-i \${resolved_bam} "
-    done < ${bamlist}
-    if [ -z "\${input_args}" ]; then
-      echo "ERROR: BAM list is empty: ${bamlist}" >&2
+    if [ -z "${inputArgs}" ]; then
+      echo "ERROR: BAM list is empty: ${meta.id}" >&2
       exit 1
     fi
 
     genemancer call-targets \
-      \${input_args} \
+      ${inputArgs} \
       -r ${reference} \
       -T ${targets} \
       --rg-map ${rg_map} \
@@ -235,18 +199,8 @@ process CALL_TARGETS {
       ${extraArgs}
 
     cat <<-'END_COMMAND' > ${prefix}.command.txt
-    input_args=""
-    while IFS= read -r bam; do
-      [ -z "\$bam" ] && continue
-      [[ "\$bam" =~ ^# ]] && continue
-      resolved_bam="\$bam"
-      if [[ "\$resolved_bam" != /* ]]; then
-        resolved_bam="${projectDir}/\$resolved_bam"
-      fi
-      input_args="\${input_args}-i \${resolved_bam} "
-    done < ${bamlist}
     genemancer call-targets \
-      \${input_args} \
+      ${inputArgs} \
       -r ${reference} \
       -T ${targets} \
       --rg-map ${rg_map} \
@@ -273,7 +227,7 @@ process CALL_TARGETS_GPU {
 
     input:
     tuple val(meta),
-        path(bamlist),
+        path(bams),
         path(reference),
         path(targets),
         path(rg_map)
@@ -293,29 +247,16 @@ process CALL_TARGETS_GPU {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     def extraArgs = task.ext.args ?: ""
+    def inputArgs = bams.collect { "-i ${it}" }.join(' ')
     def indexTypeArg = extraArgs.contains('--index-type') ? '' : '--index-type tbi'
     """
-    input_args=""
-    while IFS= read -r bam; do
-      [ -z "\$bam" ] && continue
-      [[ "\$bam" =~ ^# ]] && continue
-      resolved_bam="\$bam"
-      if [[ "\$resolved_bam" != /* ]]; then
-        resolved_bam="${projectDir}/\$resolved_bam"
-      fi
-      if [ ! -f "\$resolved_bam" ]; then
-        echo "ERROR: Missing BAM: \$bam (resolved to: \$resolved_bam)" >&2
-        exit 1
-      fi
-      input_args="\${input_args}-i \${resolved_bam} "
-    done < ${bamlist}
-    if [ -z "\${input_args}" ]; then
-      echo "ERROR: BAM list is empty: ${bamlist}" >&2
+    if [ -z "${inputArgs}" ]; then
+      echo "ERROR: BAM list is empty: ${meta.id}" >&2
       exit 1
     fi
 
     genemancer call-targets-gpu \
-      \${input_args} \
+      ${inputArgs} \
       -r ${reference} \
       -T ${targets} \
       --rg-map ${rg_map} \
@@ -325,18 +266,8 @@ process CALL_TARGETS_GPU {
       ${extraArgs}
 
     cat <<-'END_COMMAND' > ${prefix}.command.txt
-    input_args=""
-    while IFS= read -r bam; do
-      [ -z "\$bam" ] && continue
-      [[ "\$bam" =~ ^# ]] && continue
-      resolved_bam="\$bam"
-      if [[ "\$resolved_bam" != /* ]]; then
-        resolved_bam="${projectDir}/\$resolved_bam"
-      fi
-      input_args="\${input_args}-i \${resolved_bam} "
-    done < ${bamlist}
     genemancer call-targets-gpu \
-      \${input_args} \
+      ${inputArgs} \
       -r ${reference} \
       -T ${targets} \
       --rg-map ${rg_map} \
