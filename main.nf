@@ -224,6 +224,7 @@ process CALL_TARGETS_GPU {
     label 'process_medium_low_cpu'
     label 'process_medium_mid_memory'
     label 'process_low_time'
+    label 'process_gpu'
 
     input:
     tuple val(meta),
