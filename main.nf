@@ -224,7 +224,7 @@ process CALL_TARGETS_GPU {
     label 'process_medium_low_cpu'
     label 'process_medium_mid_memory'
     label 'process_low_time'
-    label 'process_gpu'
+    label 'process_single_gpu'
 
     input:
     tuple val(meta),
@@ -256,7 +256,7 @@ process CALL_TARGETS_GPU {
       exit 1
     fi
 
-    genemancer call-targets-gpu \
+    genemancer -v call-targets-gpu \
       ${inputArgs} \
       -r ${reference} \
       -T ${targets} \
@@ -264,6 +264,7 @@ process CALL_TARGETS_GPU {
       ${indexTypeArg} \
       -o calls.vcf.gz \
       --gpu-backend auto \
+      --force-gpu \
       ${extraArgs}
 
     cat <<-'END_COMMAND' > ${prefix}.command.txt
