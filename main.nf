@@ -264,11 +264,11 @@ process CALL_TARGETS_GPU {
       ${indexTypeArg} \
       -o calls.vcf.gz \
       --gpu-backend auto \
-      --force-gpu \
+      --require-gpu \
       ${extraArgs}
 
     cat <<-'END_COMMAND' > ${prefix}.command.txt
-    genemancer call-targets-gpu \
+    genemancer -v call-targets-gpu \
       ${inputArgs} \
       -r ${reference} \
       -T ${targets} \
@@ -276,6 +276,7 @@ process CALL_TARGETS_GPU {
       ${indexTypeArg} \
       -o calls.vcf.gz \
       --gpu-backend auto \
+      --require-gpu \
       ${extraArgs}
     END_COMMAND
 
