@@ -1,27 +1,34 @@
-# wf-modules (`mpgi-rusttools` branch)
+# wf-modules (`qsv` branch)
 
-Reusable Nextflow DSL2 module processes for Rust-based genomics tools.
+Reusable Nextflow DSL2 module processes for qsv tools.
 
 ## Available Processes
 
-- `GFF_TO_GTF`: Convert GFF3 annotations to GTF via `genemancer gff-to-gtf`.
-- `MERGE_BAM`: Merge multiple sorted BAMs and write an index via `genemancer merge-bam --index`.
-- `SPLIT_BAM`: Split a BAM into BED-defined regional BAM outputs via `genemancer split-bam`.
-- `CALL_TARGETS`: Call SNVs on target regions via `genemancer call-targets`.
-- `CALL_TARGETS_GPU`: GPU-enabled `call-targets` path with automatic backend selection.
-- `NANOCOV`: Single-sample coverage metrics and plots from one BAM via `nanocov --input`.
-- `NANOCOV_BATCH`: Batch coverage processing via `nanocov --batch-tsv`.
+- `QSV_INPUT`
+- `QSV_SELECT`
+- `QSV_RENAME`
+- `QSV_SEARCH`
+- `QSV_DEDUP`
+- `QSV_SORT`
+- `QSV_SLICE`
+- `QSV_JOIN`
+- `QSV_CAT`
+- `QSV_STATS`
+- `QSV_FREQUENCY`
+- `QSV_HEADERS`
+- `QSV_COUNT`
+- `QSV_TOJSONL`
+- `QSV_JSONL`
+- `QSV_JSON`
+- `QSV_SCHEMA`
+- `QSV_VALIDATE`
+- `QSV_SPLIT`
+- `QSV_PARTITION`
 
 ## Container Tooling
 
-Current Docker build installs:
+[Current Docker build installs:
 
-- `genemancer` `0.2.2`
-- `nanocov` `0.1.0`
-
-Dockerfile: [`docker/Dockerfile`](docker/Dockerfile)
-Pipeline modules: [`main.nf`](main.nf)
+- qsv (https://github.com/dathere/qsv)
 
 ## CI/CD
-
-[![Build Status](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml/badge.svg?branch=mpgi-rusttools)](https://github.com/chusj-pigu/wf-modules/actions/workflows/build-and-push.yml?query=branch%3Ampgi-rusttools)

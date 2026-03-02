@@ -1,45 +1,52 @@
-# Build stage (pinned, Alpine-based to match runtime libc)
-FROM rust:1.93.1-alpine3.21 AS build
+# syntax=docker/dockerfile:1
 
-# Needed for building Rust crates with native deps (e.g. fontconfig via pkg-config)
+############################
+# 1) Builder (Alpine + Rust)
+############################
+FROM rust:1.93.1-alpine3.21 AS builder
+
+# Optional: choose qsv source and feature set at build time
+ARG QSV_GIT_URL=https://github.com/dathere/qsv.git
+ARG QSV_GIT_REF=45710000513e667c9a3e8c569693d04c74523a75
+ARG QSV_FEATURES=feature_capable
+
+# Build deps. Keep them only in builder stage.
+# - build-base: gcc/make/etc
+# - pkgconfig + openssl-dev: common native deps for crates that do TLS, etc.
+# - git: to clone repo
 RUN apk add --no-cache \
     build-base \
-    musl-dev \
-    pkgconf \
-    fontconfig-dev \
-    freetype-dev \
-    fontconfig-static \
-    freetype-static \
-    expat-dev \
-    expat-static \
-    libpng-dev \
-    libpng-static \
-    zlib-dev \
-    zlib-static \
-    brotli-dev \
-    brotli-static \
-    bzip2-dev \
-    bzip2-static
+    pkgconfig \
+    openssl-dev \
+    git
 
-# Avoid static musl linking for crates that depend on system C libraries.
-ENV RUSTFLAGS="-C target-feature=-crt-static"
+WORKDIR /src
 
-# Planned deterministic installs when crates are available
-ARG GENEMANCER_VERSION=0.2.2
-# ARG TRANCISTOR_VERSION=0.0.0
-ARG NANOCOV_VERSION=0.1.0
-RUN cargo install --locked --version ${GENEMANCER_VERSION} genemancer
-# RUN cargo install --locked --version ${TRANCISTOR_VERSION} trancistor
-RUN cargo install --locked --version ${NANOCOV_VERSION} nanocov
+# Install qsv to a deterministic path so runtime COPY is stable.
+RUN set -eux; \
+    ref_args=""; \
+    if [ -n "${QSV_GIT_REF}" ]; then \
+      ref_args="--rev ${QSV_GIT_REF}"; \
+    fi; \
+    cargo install \
+      --root /opt/qsv-install \
+      --git "${QSV_GIT_URL}" \
+      ${ref_args} \
+      --features "${QSV_FEATURES}" \
+      --bin qsv \
+      qsv
 
-# Runtime stage (pinned, same distro family)
+############################
+# 2) Runtime (minimal Alpine)
+############################
 FROM alpine:3.21
-RUN apk add --no-cache bash libgcc libstdc++ fontconfig
 
-# Install binaries built in previous stage
-COPY --from=build /usr/local/cargo/bin/ /usr/local/bin/
+# CA certs are useful for any HTTPS-enabled commands (e.g. fetch-like features).
+RUN apk add --no-cache ca-certificates \
+    && adduser -D -u 10001 qsv
 
-WORKDIR /root/
-ENV PATH="/usr/local/bin:${PATH}"
+COPY --from=builder /opt/qsv-install/bin/qsv /usr/local/bin/qsv
 
-CMD ["/bin/sh"]
+USER qsv
+ENTRYPOINT ["qsv"]
+CMD ["--help"]
