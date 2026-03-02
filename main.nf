@@ -151,7 +151,7 @@ process SPLIT_BAM {
 }
 
 process CALL_TARGETS {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/mpgi-rusttools:9fa86da30c0138ee6871910c16c26859326dcba3'
 
     tag "$meta.id"
     label 'process_low'
@@ -217,14 +217,14 @@ process CALL_TARGETS {
 }
 
 process CALL_TARGETS_GPU {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/mpgi-rusttools:9fa86da30c0138ee6871910c16c26859326dcba3'
 
     tag "$meta.id"
     label 'process_low'
     label 'process_medium_low_cpu'
     label 'process_medium_mid_memory'
     label 'process_low_time'
-    label 'process_single_gpu'
+    label 'process_gpu'
 
     input:
     tuple val(meta),
@@ -263,7 +263,7 @@ process CALL_TARGETS_GPU {
       --rg-map ${rg_map} \
       ${indexTypeArg} \
       -o calls.vcf.gz \
-      --gpu-backend auto \
+      --gpu-backend cuda \
       --require-gpu \
       ${extraArgs}
 
