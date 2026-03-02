@@ -1,61 +1,100 @@
 nextflow.enable.dsl=2
 
 process GFF_TO_GTF {
-    // TODO : UNCOMMENT WHEN GENEMANCER CONTAINER IS AVAILABLE
-    // container 'ghcr.io/chusj-pigu/genemancer:latest'
+    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
 
-    tag { gff3.baseName }
+    tag "$meta.id"
     label 'process_low'
     label 'process_medium_low_cpu'
     label 'process_medium_mid_memory'
     label 'process_low_time'
 
     input:
-    path gff3
+    tuple val(meta),
+        path(gff3)
 
     output:
-    path "${gff3.simpleName}.gtf"
+    tuple val(meta),
+        path("${gff3.simpleName}.gtf"),
+        emit: gtf
+    tuple val(meta),
+        path("*.command.txt"),
+        emit: command
+    path "versions.yml", emit: versions
 
     script:
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     genemancer gff-to-gtf \
       -i ${gff3} \
       -o ${gff3.simpleName}.gtf
+
+    cat <<-'END_COMMAND' > ${prefix}.command.txt
+    genemancer gff-to-gtf \
+      -i ${gff3} \
+      -o ${gff3.simpleName}.gtf
+    END_COMMAND
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        genemancer: "\$(genemancer --version 2>&1 | head -n 1)"
+    END_VERSIONS
     """
 }
 
 process MERGE_BAM {
-    // TODO : UNCOMMENT WHEN GENEMANCER CONTAINER IS AVAILABLE
-    // container 'ghcr.io/chusj-pigu/genemancer:latest'
+    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
 
-    tag "merge"
+    tag "$meta.id"
     label 'process_low'
     label 'process_medium_low_cpu'
     label 'process_medium_mid_memory'
     label 'process_low_time'
 
     input:
-    path bams
+    tuple val(meta),
+        path(bams)
 
     output:
-    path "merged.bam"
-    path "merged.bam.*", optional: true
+    tuple val(meta),
+        path("merged.bam"),
+        emit: bam
+    tuple val(meta),
+        path("merged.bam.*"),
+        emit: index,
+        optional: true
+    tuple val(meta),
+        path("*.command.txt"),
+        emit: command
+    path "versions.yml", emit: versions
 
     script:
     def inputArgs = bams.collect { "-i ${it}" }.join(' ')
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     genemancer merge-bam \
       ${inputArgs} \
       -o merged.bam \
       --index
+
+    cat <<-'END_COMMAND' > ${prefix}.command.txt
+    genemancer merge-bam \
+      ${inputArgs} \
+      -o merged.bam \
+      --index
+    END_COMMAND
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        genemancer: "\$(genemancer --version 2>&1 | head -n 1)"
+    END_VERSIONS
     """
 }
 
 process SPLIT_BAM {
-    // TODO : UNCOMMENT WHEN GENEMANCER CONTAINER IS AVAILABLE
-    // container 'ghcr.io/chusj-pigu/genemancer:latest'
+    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
 
-    tag { bam.baseName }
+    tag "$meta.id"
     label 'process_low'
     label 'process_medium_low_cpu'
     label 'process_medium_mid_memory'
@@ -64,93 +103,194 @@ process SPLIT_BAM {
     cpus 4
 
     input:
-    path bam
-    path bed
+    tuple val(meta),
+        path(bams),
+        path(bed)
 
     output:
-    path "split_bam_out"
+    tuple val(meta),
+        path("*_split_bam_out"),
+        emit: outdir
+    tuple val(meta),
+        path("*.command.txt"),
+        emit: command
+    path "versions.yml", emit: versions
 
     script:
     def extraArgs = task.ext.args ?: ""
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def inputArgs = bams.collect { "-i ${it}" }.join(' ')
+    def writeIndicesArg = extraArgs.contains('--write-indices') ? '' : '--write-indices'
     """
+    if [ -z "${inputArgs}" ]; then
+      echo "ERROR: BAM list is empty: ${meta.id}" >&2
+      exit 1
+    fi
+
     genemancer -t ${task.cpus} split-bam \
-      --input ${bam} \
+      ${inputArgs} \
       --bed ${bed} \
-      --out-dir split_bam_out \
+      --out-dir ${prefix}_split_bam_out \
+      ${writeIndicesArg} \
       ${extraArgs}
+
+    cat <<-'END_COMMAND' > ${prefix}.command.txt
+    genemancer -t ${task.cpus} split-bam \
+      ${inputArgs} \
+      --bed ${bed} \
+      --out-dir ${prefix}_split_bam_out \
+      ${writeIndicesArg} \
+      ${extraArgs}
+    END_COMMAND
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        genemancer: "\$(genemancer --version 2>&1 | head -n 1)"
+    END_VERSIONS
     """
 }
 
 process CALL_TARGETS {
-    // TODO : UNCOMMENT WHEN GENEMANCER CONTAINER IS AVAILABLE
-    // container 'ghcr.io/chusj-pigu/genemancer:latest'
+    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
 
-    tag "call-targets"
+    tag "$meta.id"
     label 'process_low'
     label 'process_medium_low_cpu'
     label 'process_medium_mid_memory'
     label 'process_low_time'
 
     input:
-    path bam
-    path reference
-    path targets
-    path rg_map, optional: true
+    tuple val(meta),
+        path(bams),
+        path(reference),
+        path(targets),
+        path(rg_map)
 
     output:
-    path "calls.vcf.gz"
-    path "calls.vcf.gz.*", optional: true
+    tuple val(meta),
+        path("calls.vcf.gz"),
+        emit: vcf
+    tuple val(meta),
+        path("calls.vcf.gz.{tbi,csi}"),
+        emit: index
+    tuple val(meta),
+        path("*.command.txt"),
+        emit: command
+    path "versions.yml", emit: versions
 
     script:
-    def rgArg = rg_map ? "--rg-map ${rg_map}" : ""
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def extraArgs = task.ext.args ?: ""
+    def inputArgs = bams.collect { "-i ${it}" }.join(' ')
+    def indexTypeArg = extraArgs.contains('--index-type') ? '' : '--index-type tbi'
     """
+    if [ -z "${inputArgs}" ]; then
+      echo "ERROR: BAM list is empty: ${meta.id}" >&2
+      exit 1
+    fi
+
     genemancer call-targets \
-      -i ${bam} \
+      ${inputArgs} \
       -r ${reference} \
       -T ${targets} \
+      --rg-map ${rg_map} \
+      ${indexTypeArg} \
       -o calls.vcf.gz \
-      ${rgArg}
+      ${extraArgs}
+
+    cat <<-'END_COMMAND' > ${prefix}.command.txt
+    genemancer call-targets \
+      ${inputArgs} \
+      -r ${reference} \
+      -T ${targets} \
+      --rg-map ${rg_map} \
+      ${indexTypeArg} \
+      -o calls.vcf.gz \
+      ${extraArgs}
+    END_COMMAND
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        genemancer: "\$(genemancer --version 2>&1 | head -n 1)"
+    END_VERSIONS
     """
 }
 
 process CALL_TARGETS_GPU {
-    // TODO : UNCOMMENT WHEN GENEMANCER CONTAINER IS AVAILABLE
-    // container 'ghcr.io/chusj-pigu/genemancer:latest'
+    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
 
-    tag "call-targets-gpu"
+    tag "$meta.id"
     label 'process_low'
     label 'process_medium_low_cpu'
     label 'process_medium_mid_memory'
     label 'process_low_time'
+    label 'process_single_gpu'
 
     input:
-    path bam
-    path reference
-    path targets
-    path rg_map, optional: true
+    tuple val(meta),
+        path(bams),
+        path(reference),
+        path(targets),
+        path(rg_map)
 
     output:
-    path "calls.vcf.gz"
-    path "calls.vcf.gz.*", optional: true
+    tuple val(meta),
+        path("calls.vcf.gz"),
+        emit: vcf
+    tuple val(meta),
+        path("calls.vcf.gz.{tbi,csi}"),
+        emit: index
+    tuple val(meta),
+        path("*.command.txt"),
+        emit: command
+    path "versions.yml", emit: versions
 
     script:
-    def rgArg = rg_map ? "--rg-map ${rg_map}" : ""
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def extraArgs = task.ext.args ?: ""
+    def inputArgs = bams.collect { "-i ${it}" }.join(' ')
+    def indexTypeArg = extraArgs.contains('--index-type') ? '' : '--index-type tbi'
     """
-    genemancer call-targets-gpu \
-      -i ${bam} \
+    if [ -z "${inputArgs}" ]; then
+      echo "ERROR: BAM list is empty: ${meta.id}" >&2
+      exit 1
+    fi
+
+    genemancer -v call-targets-gpu \
+      ${inputArgs} \
       -r ${reference} \
       -T ${targets} \
+      --rg-map ${rg_map} \
+      ${indexTypeArg} \
       -o calls.vcf.gz \
-      ${rgArg} \
-      --gpu-backend auto
+      --gpu-backend auto \
+      --require-gpu \
+      ${extraArgs}
+
+    cat <<-'END_COMMAND' > ${prefix}.command.txt
+    genemancer -v call-targets-gpu \
+      ${inputArgs} \
+      -r ${reference} \
+      -T ${targets} \
+      --rg-map ${rg_map} \
+      ${indexTypeArg} \
+      -o calls.vcf.gz \
+      --gpu-backend auto \
+      --require-gpu \
+      ${extraArgs}
+    END_COMMAND
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        genemancer: "\$(genemancer --version 2>&1 | head -n 1)"
+    END_VERSIONS
     """
 }
 
 process NANOCOV {
-    // TODO : UNCOMMENT WHEN NANOCOV CONTAINER IS AVAILABLE
-    // container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
 
-    tag { bam.baseName }
+    tag "$meta.id"
     label 'process_low'
     label 'process_medium_low_cpu'
     label 'process_medium_mid_memory'
@@ -159,27 +299,47 @@ process NANOCOV {
     cpus 4
 
     input:
-    path bam
+    tuple val(meta),
+        path(bam)
 
     output:
-    path "nanocov_out"
+    tuple val(meta),
+        path("nanocov_out"),
+        emit: outdir
+    tuple val(meta),
+        path("*.command.txt"),
+        emit: command
+    path "versions.yml", emit: versions
 
     script:
     def extraArgs = task.ext.args ?: ""
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     nanocov \
       --input ${bam} \
       --threads ${task.cpus} \
       --output-dir nanocov_out \
       ${extraArgs}
+
+    cat <<-'END_COMMAND' > ${prefix}.command.txt
+    nanocov \
+      --input ${bam} \
+      --threads ${task.cpus} \
+      --output-dir nanocov_out \
+      ${extraArgs}
+    END_COMMAND
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        nanocov: "\$(nanocov --version 2>&1 | head -n 1)"
+    END_VERSIONS
     """
 }
 
 process NANOCOV_BATCH {
-    // TODO : UNCOMMENT WHEN NANOCOV CONTAINER IS AVAILABLE
-    // container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
 
-    tag "nanocov-batch"
+    tag "$meta.id"
     label 'process_low'
     label 'process_medium_low_cpu'
     label 'process_medium_mid_memory'
@@ -188,18 +348,39 @@ process NANOCOV_BATCH {
     cpus 4
 
     input:
-    path batch_tsv
+    tuple val(meta),
+        path(batch_tsv)
 
     output:
-    path "nanocov_out"
+    tuple val(meta),
+        path("nanocov_out"),
+        emit: outdir
+    tuple val(meta),
+        path("*.command.txt"),
+        emit: command
+    path "versions.yml", emit: versions
 
     script:
     def extraArgs = task.ext.args ?: ""
+    def prefix = task.ext.prefix ?: "${meta.id}"
     """
     nanocov \
       --batch-tsv ${batch_tsv} \
       --threads ${task.cpus} \
       --output-dir nanocov_out \
       ${extraArgs}
+
+    cat <<-'END_COMMAND' > ${prefix}.command.txt
+    nanocov \
+      --batch-tsv ${batch_tsv} \
+      --threads ${task.cpus} \
+      --output-dir nanocov_out \
+      ${extraArgs}
+    END_COMMAND
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        nanocov: "\$(nanocov --version 2>&1 | head -n 1)"
+    END_VERSIONS
     """
 }
