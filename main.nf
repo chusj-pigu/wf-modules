@@ -588,3 +588,33 @@ process QSV_PARTITION {
     END_VERSIONS
     """
 }
+
+process QSV_SQLP {
+    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    tag "$meta.id"
+    label 'process_low'
+
+    input:
+    tuple val(meta), path(inputs), path(sql)
+
+    output:
+    tuple val(meta), path("${meta.id}.sqlp.csv"), emit: csv
+    tuple val(meta), path("${meta.id}.sqlp.command.txt"), emit: command
+    path "versions.yml", emit: versions
+
+    script:
+    args = task.ext.args ?: ''
+    sqlp_inputs = (inputs instanceof List ? inputs : [inputs]).collect { csv_file -> "\"${csv_file}\"" }.join(' ')
+    """
+    qsv sqlp ${args} ${sqlp_inputs} "${sql}" > "${meta.id}.sqlp.csv"
+
+    cat <<-'END_COMMAND' > "${meta.id}.sqlp.command.txt"
+    qsv sqlp ${args} ${sqlp_inputs} "${sql}" > "${meta.id}.sqlp.csv"
+    END_COMMAND
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        qsv: "\$(qsv --version 2>&1 | head -n 1)"
+    END_VERSIONS
+    """
+}
