@@ -3,9 +3,9 @@ process CHROMPLOTTER {
     container 'ghcr.io/chusj-pigu/rs-chromplotter:latest'
 
     tag "$meta.id"
-    label 'process_cpu_med'
-    label 'process_memory_med'
-    label 'process_time_med'
+    label 'process_medium_cpu'
+    label 'process_medium_memory'
+    label 'process_medium_time'
 
     input:
     tuple val(meta),
