@@ -102,6 +102,7 @@ process QUARTO_TABLE {
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def chunkClasses = section == 'target_calls' ? "\n    #| classes: target-calls-wide" : ""
     def col_names_render = col_names
     if (col_names instanceof Boolean) {
         col_names_render = col_names ? 'TRUE' : 'FALSE'
@@ -118,7 +119,7 @@ process QUARTO_TABLE {
 
     cat <<-END_REPORT > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
     \\`\\`\\`{r}
-    #| label: ${prefix}-${section}-${process}
+    #| label: ${prefix}-${section}-${process}${chunkClasses}
     #| tbl-cap: ${caption}
     #| echo: false
     #| tbl-cap-location: bottom
@@ -173,6 +174,7 @@ process QUARTO_TABLE_COLNAMES {
 
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
+    def chunkClasses = section == 'target_calls' ? "\n    #| classes: target-calls-wide" : ""
 
     """
     mkdir ${prefix}_${section}_${process}_inputs
@@ -180,7 +182,7 @@ process QUARTO_TABLE_COLNAMES {
 
     cat <<-END_REPORT > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
     \\`\\`\\`{r}
-    #| label: ${prefix}-${section}-${process}
+    #| label: ${prefix}-${section}-${process}${chunkClasses}
     #| tbl-cap: ${caption}
     #| echo: false
     #| tbl-cap-location: bottom
