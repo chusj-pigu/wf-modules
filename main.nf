@@ -404,7 +404,7 @@ process QUARTO_TABLE_TABS {
     tuple val(meta),
           val(section),
           val(process),
-          val(tables),       // list of table file paths
+          path(tables),       // list of table file paths
           val(tabs),         // list of tab names
           val(captions),     // list of captions
           val(colnames)      // list of comma-separated colnames
@@ -479,7 +479,7 @@ process QUARTO_FIGURE_TABS {
     tuple val(meta),
         val(section),
         val(process),
-        val(figures),       // list of figure file paths
+        path(figures),       // list of figure file paths
         val(tabs),         // list of tab names
         val(captions)
 
