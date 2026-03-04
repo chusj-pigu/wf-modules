@@ -1,6 +1,6 @@
 process MODKIT_PILEUP {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/modkit:latest'
+    container 'ghcr.io/chusj-pigu/modkit:ebb82340018d54345084a8dfd0bdd373c7dabfeb'
 
     tag "$meta.id"
     label 'process_medium_high_cpu'
@@ -10,7 +10,8 @@ process MODKIT_PILEUP {
     input:
     tuple val(meta),
         path(in_bam),
-        path(bam_index)
+        path(bam_index),
+        path(ref)
 
     output:
     tuple val(meta),
@@ -30,9 +31,10 @@ process MODKIT_PILEUP {
     modkit \\
         pileup \\
         -t ${threads} \\
-        ${args} \\
         ${in_bam} \\
-        ${prefix}.bed
+        ${prefix}.bed \\
+        ${args} \\
+        --reference ${ref}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
