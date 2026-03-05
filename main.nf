@@ -27,7 +27,6 @@ process MODKIT_PILEUP {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus * 2
     """
-    #!/usr/bin/env sh
     modkit \\
         pileup \\
         -t ${threads} \\
@@ -69,7 +68,6 @@ process MODKIT_SUMMARY {
     def threads = task.cpus
 
     """
-    #!/usr/bin/env sh
     modkit \\
         summary \\
         ${in_bam} \\
@@ -126,7 +124,6 @@ process MODKIT_DMR_PAIR {
     def dmr_out = "${prefix}-${suffix}_dmr_results.txt"
     def dmr_log = "${prefix}-${suffix}-dmr.log"
     """
-    #!/usr/bin/env sh
     case "${ref}" in
         *.gz|*.bgz|*.bgzf)
             pigz -dkc ${ref} > ${ref_fasta}
@@ -207,7 +204,6 @@ process MODKIT_EXTRACT_FULL {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
     """
-    #!/usr/bin/env sh
     modkit extract full \
         ${bam} \
         ${prefix}-read-modifications.txt \
@@ -251,7 +247,6 @@ process MODKIT_SUMMARY_PER_FEATURE {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    #!/usr/bin/env sh
     modkit stats \
         ${args} \
         --regions ${slim_features_bed} \
@@ -292,7 +287,6 @@ process MODKIT_ADJUST {
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
-    #!/usr/bin/env sh
     modkit \\
         adjust-mods \\
         ${args} \\

@@ -23,12 +23,12 @@ RUN cargo install \
     --rev 481e3c9e7930f3f499eadf1ef441606f33e6881c
 
 # --- runtime stage -----------------------------------------------------------
-# We can’t use scratch because you asked for pigz in the runtime.
 FROM alpine:3.21 AS runtime
 
 RUN apk add --no-cache \
     ca-certificates \
-    pigz
+    pigz \
+    bash
 
 # Copy the modkit binary built by cargo install
 COPY --from=builder /usr/local/cargo/bin/modkit /usr/local/bin/modkit
