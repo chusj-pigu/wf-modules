@@ -22,6 +22,7 @@ process QSV_INPUT {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     qsv input ${args} "${input_file}" > "${meta.id}.input.csv"
 
     cat <<-'END_COMMAND' > "${meta.id}.input.command.txt"
@@ -51,6 +52,7 @@ process QSV_SELECT {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     qsv select ${args} "${csv}" > "${meta.id}.select.csv"
 
     cat <<-'END_COMMAND' > "${meta.id}.select.command.txt"
@@ -80,6 +82,7 @@ process QSV_RENAME {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     qsv rename ${args} "${csv}" > "${meta.id}.rename.csv"
 
     cat <<-'END_COMMAND' > "${meta.id}.rename.command.txt"
@@ -109,6 +112,7 @@ process QSV_SEARCH {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     qsv search ${args} "${csv}" > "${meta.id}.search.csv"
 
     cat <<-'END_COMMAND' > "${meta.id}.search.command.txt"
@@ -138,6 +142,7 @@ process QSV_DEDUP {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     qsv dedup ${args} "${csv}" > "${meta.id}.dedup.csv"
 
     cat <<-'END_COMMAND' > "${meta.id}.dedup.command.txt"
@@ -167,6 +172,7 @@ process QSV_SORT {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     qsv sort ${args} "${csv}" > "${meta.id}.sort.csv"
 
     cat <<-'END_COMMAND' > "${meta.id}.sort.command.txt"
@@ -196,6 +202,7 @@ process QSV_SLICE {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     qsv slice ${args} "${csv}" > "${meta.id}.slice.csv"
 
     cat <<-'END_COMMAND' > "${meta.id}.slice.command.txt"
@@ -225,6 +232,7 @@ process QSV_JOIN {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     qsv join ${args} "${left_csv}" "${right_csv}" > "${meta.id}.join.csv"
 
     cat <<-'END_COMMAND' > "${meta.id}.join.command.txt"
@@ -255,6 +263,7 @@ process QSV_CAT {
     args = task.ext.args ?: ''
     cat_inputs = (csvs instanceof List ? csvs : [csvs]).collect { csv_file -> "\"${csv_file}\"" }.join(' ')
     """
+    #!/usr/bin/env sh
     qsv cat ${args} ${cat_inputs} > "${meta.id}.cat.csv"
 
     cat <<-'END_COMMAND' > "${meta.id}.cat.command.txt"
@@ -284,6 +293,7 @@ process QSV_STATS {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     qsv stats ${args} "${csv}" > "${meta.id}.stats.csv"
 
     cat <<-'END_COMMAND' > "${meta.id}.stats.command.txt"
@@ -313,6 +323,7 @@ process QSV_FREQUENCY {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     qsv frequency ${args} "${csv}" > "${meta.id}.frequency.csv"
 
     cat <<-'END_COMMAND' > "${meta.id}.frequency.command.txt"
@@ -342,6 +353,7 @@ process QSV_HEADERS {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     qsv headers ${args} "${csv}" > "${meta.id}.headers.txt"
 
     cat <<-'END_COMMAND' > "${meta.id}.headers.command.txt"
@@ -371,6 +383,7 @@ process QSV_COUNT {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     qsv count ${args} "${csv}" > "${meta.id}.count.txt"
 
     cat <<-'END_COMMAND' > "${meta.id}.count.command.txt"
@@ -400,6 +413,7 @@ process QSV_TOJSONL {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     qsv tojsonl ${args} "${csv}" > "${meta.id}.tojsonl.jsonl"
 
     cat <<-'END_COMMAND' > "${meta.id}.tojsonl.command.txt"
@@ -429,6 +443,7 @@ process QSV_JSONL {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     qsv jsonl ${args} "${jsonl}" > "${meta.id}.jsonl.csv"
 
     cat <<-'END_COMMAND' > "${meta.id}.jsonl.command.txt"
@@ -458,6 +473,7 @@ process QSV_JSON {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     qsv json ${args} "${json}" > "${meta.id}.json.csv"
 
     cat <<-'END_COMMAND' > "${meta.id}.json.command.txt"
@@ -487,6 +503,7 @@ process QSV_SCHEMA {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     qsv schema ${args} "${csv}" > "${meta.id}.schema.json"
 
     cat <<-'END_COMMAND' > "${meta.id}.schema.command.txt"
@@ -516,6 +533,7 @@ process QSV_VALIDATE {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     qsv validate ${args} "${csv}" > "${meta.id}.validate.report.txt"
 
     cat <<-'END_COMMAND' > "${meta.id}.validate.command.txt"
@@ -545,6 +563,7 @@ process QSV_SPLIT {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     mkdir -p "${meta.id}.split.out"
     qsv split ${args} --output "${meta.id}.split.out" "${csv}"
 
@@ -575,6 +594,7 @@ process QSV_PARTITION {
     script:
     args = task.ext.args ?: ''
     """
+    #!/usr/bin/env sh
     mkdir -p "${meta.id}.partition.out"
     qsv partition ${args} --output "${meta.id}.partition.out" "${csv}"
 
@@ -595,7 +615,7 @@ process QSV_SQLP {
     label 'process_low'
 
     input:
-    tuple val(meta), path(inputs), path(sql)
+    tuple val(meta), path(inputs, stageAs: 'sqlp_input?.csv'), path(sql)
 
     output:
     tuple val(meta), path("${meta.id}.sqlp.csv"), emit: csv
@@ -606,6 +626,7 @@ process QSV_SQLP {
     args = task.ext.args ?: ''
     sqlp_inputs = (inputs instanceof List ? inputs : [inputs]).collect { csv_file -> "\"${csv_file}\"" }.join(' ')
     """
+    #!/usr/bin/env sh
     qsv sqlp ${args} ${sqlp_inputs} "${sql}" > "${meta.id}.sqlp.csv"
 
     cat <<-'END_COMMAND' > "${meta.id}.sqlp.command.txt"
