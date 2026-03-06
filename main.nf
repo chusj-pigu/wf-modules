@@ -1,6 +1,6 @@
 process MODKIT_PILEUP {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/modkit:7b9a3a39ba843b45cb2256f0e821929446e618b9'
+    container 'ghcr.io/chusj-pigu/modkit:213674e9f7163c1f4845ccd37f3b4eb537a88c7d'
 
     tag "$meta.id"
     label 'process_medium_high_cpu'
@@ -43,7 +43,7 @@ process MODKIT_PILEUP {
 
 process MODKIT_SUMMARY {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/modkit:7b9a3a39ba843b45cb2256f0e821929446e618b9'
+    container 'ghcr.io/chusj-pigu/modkit:213674e9f7163c1f4845ccd37f3b4eb537a88c7d'
 
     tag "$meta.id"
     label 'process_low'
@@ -84,7 +84,7 @@ process MODKIT_SUMMARY {
 
 process MODKIT_DMR_PAIR {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/modkit:7b9a3a39ba843b45cb2256f0e821929446e618b9'
+    container 'ghcr.io/chusj-pigu/modkit:213674e9f7163c1f4845ccd37f3b4eb537a88c7d'
 
     tag "$meta.id"
     label 'process_low_medium_memory'
@@ -177,7 +177,7 @@ process MODKIT_DMR_PAIR {
 
 process MODKIT_EXTRACT_FULL {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/modkit:7b9a3a39ba843b45cb2256f0e821929446e618b9'
+    container 'ghcr.io/chusj-pigu/modkit:213674e9f7163c1f4845ccd37f3b4eb537a88c7d'
 
     tag "$meta.id"
     label 'process_medium_cpu'
@@ -222,7 +222,7 @@ process MODKIT_EXTRACT_FULL {
 
 process MODKIT_SUMMARY_PER_FEATURE {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/modkit:7b9a3a39ba843b45cb2256f0e821929446e618b9'
+    container 'ghcr.io/chusj-pigu/modkit:213674e9f7163c1f4845ccd37f3b4eb537a88c7d'
 
     tag "$meta.id"
     label 'process_low'
@@ -262,7 +262,7 @@ process MODKIT_SUMMARY_PER_FEATURE {
 
 process MODKIT_ADJUST {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/modkit:7b9a3a39ba843b45cb2256f0e821929446e618b9'
+    container 'ghcr.io/chusj-pigu/modkit:213674e9f7163c1f4845ccd37f3b4eb537a88c7d'
 
     tag "$meta.id"
     label 'process_low'
