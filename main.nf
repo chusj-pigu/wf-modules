@@ -1,6 +1,6 @@
 process GXF_TO_BED {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/gxf2bed:latest'
+    container 'ghcr.io/chusj-pigu/gxf2bed:af1fca1093e952443be424fca6d3382f13f79d46'
 
     label 'process_medium'
 
