@@ -5,7 +5,7 @@ process SQANTI3_QC {
     label "process_low_memory"         // Label for mpgi drac memory alloc
     label "process_low_time"
 
-    container "ghcr.io/chusj-pigu/sqanti3:63f2175e0ebff2c8a17fda1417f6cc21d06cf328"
+    container "ghcr.io/chusj-pigu/sqanti3:af1fca1093e952443be424fca6d3382f13f79d46"
 
     input:
     tuple val(meta),
@@ -30,7 +30,7 @@ process SQANTI3_QC {
     def args = task.ext.args ?: '--force_id_ignore --skipORF'
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    python3 /opt/app/sqanti3/sqanti3_qc.py \\
+    python3 /opt/app/SQANTI3/sqanti3_qc.py \\
         ${args} \\
         -t ${task.cpus} \\
         -o ${prefix} \\
