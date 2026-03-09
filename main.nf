@@ -30,21 +30,19 @@ process SQANTI3_QC {
     def args = task.ext.args ?: '--force_id_ignore --skipORF'
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    /opt/app/sqanti3/sqanti3_qc.py \\
+    python3 /opt/app/sqanti3/sqanti3_qc.py \\
         ${args} \\
         -t ${task.cpus} \\
-        --aligner_choice minimap2 \\
         -o ${prefix} \\
         -d ${prefix}_sqanti3 \\
         --report skip \\
-        --fasta \\
         --isoforms ${fasta} \\
         --refGTF ${ref_gtf} \\
         --refFasta ${ref_fa}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        sqanti3: 5.5.4
+        sqanti3: 5.5.4 (fork https://github.com/charlenelawdes/SQANTI3)
     END_VERSIONS
     """
 }
