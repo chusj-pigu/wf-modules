@@ -9,8 +9,10 @@ process GXF_TO_BED {
     val(feature)
 
     output:
-    path("*.bed.gz"),
+    path("*.bed"),
         emit: bed
+    path("*.gxf2bed.command.txt"),
+        emit: command
     path "versions.yml",
         emit: versions
 
@@ -20,13 +22,19 @@ process GXF_TO_BED {
     script:
     def args = task.ext.args ?: ''
     def threads = task.cpus
+    def prefix = gxf.simpleName
     """
+    #!/usr/bin/env sh
     gxf2bed \
         --input ${gxf} \
-        --output ${gxf.simpleName}.bed.gz \
-        --feature ${feature} \
+        --output ${prefix}.bed \
+        --parent-feature ${feature} \
         --threads ${threads} \
         ${args}
+
+    cat <<-'END_COMMAND' > ${prefix}.gxf2bed.command.txt
+    gxf2bed --input ${gxf} --output ${prefix}.bed --parent-feature ${feature} --threads ${threads} ${args}
+    END_COMMAND
 
 
     cat <<-END_VERSIONS > versions.yml
