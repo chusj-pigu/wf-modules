@@ -1,30 +1,28 @@
 # --- build stage -------------------------------------------------------------
-FROM rust:alpine AS builder
+FROM rust:1.87-alpine3.21 AS builder
 
-# Build dependencies
+ARG GXF2BED_VERSION=0.3.2
+
 RUN apk add --no-cache \
     musl-dev \
     bash
 
-# Create a dummy workdir to keep things tidy
 WORKDIR /build
 
-# Install the Rust binary
-RUN cargo install --locked --root /opt/gxf2bed gxf2bed
+RUN cargo install \
+    --locked \
+    --root /opt/gxf2bed \
+    --version ${GXF2BED_VERSION} \
+    gxf2bed
 
 # --- runtime stage -----------------------------------------------------------
-FROM alpine:latest AS runtime
+FROM alpine:3.21 AS runtime
 
-# Runtime utilities
 RUN apk add --no-cache \
     bash \
     procps
 
-# Copy the compiled binary from the builder image
 COPY --from=builder /opt/gxf2bed/bin/gxf2bed /usr/local/bin/gxf2bed
-
-# Default shell
-SHELL ["/bin/bash", "-lc"]
 
 ENTRYPOINT ["gxf2bed"]
 CMD ["--help"]
