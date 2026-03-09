@@ -6,7 +6,7 @@ ENV CONDA_DIR=/opt/conda
 # Basic system dependencies
 RUN apt-get update && apt-get install -y \
     curl \
-    wget \
+    git \
     unzip \
     procps \
     build-essential \
@@ -29,12 +29,10 @@ RUN conda update -n base -c defaults conda -y && \
 
 # Install SQANTI3
 WORKDIR /opt/app
-RUN wget https://github.com/ConesaLab/SQANTI3/releases/download/v5.5.4/SQANTI3_v5.5.4.zip && \
-    unzip SQANTI3_v5.5.4.zip -d sqanti3 && \
-    rm SQANTI3_v5.5.4.zip
+RUN git clone https://github.com/charlenelawdes/SQANTI3
 
 # Create squanti3 environment
-RUN mamba env create -f sqanti3/SQANTI3.conda_env.yml && \
+RUN mamba env create -f SQANTI3/SQANTI3.conda_env.yml && \
     conda clean -afy
 
 # Make squanti3 default environment
@@ -42,4 +40,4 @@ SHELL ["/bin/bash", "--login", "-c"]
 ENV CONDA_DEFAULT_ENV=sqanti3
 ENV PATH=$CONDA_DIR/envs/sqanti3/bin:$PATH
 
-WORKDIR /opt/app/sqanti3
+WORKDIR /opt/app/SQANTI3
