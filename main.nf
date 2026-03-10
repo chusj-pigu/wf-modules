@@ -7,7 +7,7 @@ nextflow.enable.dsl=2
  */
 
 process QSV_INPUT {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -36,7 +36,7 @@ process QSV_INPUT {
 }
 
 process QSV_SELECT {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -65,7 +65,7 @@ process QSV_SELECT {
 }
 
 process QSV_RENAME {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -94,7 +94,7 @@ process QSV_RENAME {
 }
 
 process QSV_SEARCH {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -123,7 +123,7 @@ process QSV_SEARCH {
 }
 
 process QSV_DEDUP {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -152,7 +152,7 @@ process QSV_DEDUP {
 }
 
 process QSV_SORT {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -181,7 +181,7 @@ process QSV_SORT {
 }
 
 process QSV_SLICE {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -210,7 +210,7 @@ process QSV_SLICE {
 }
 
 process QSV_JOIN {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -239,7 +239,7 @@ process QSV_JOIN {
 }
 
 process QSV_CAT {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -269,7 +269,7 @@ process QSV_CAT {
 }
 
 process QSV_STATS {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -298,7 +298,7 @@ process QSV_STATS {
 }
 
 process QSV_FREQUENCY {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -327,7 +327,7 @@ process QSV_FREQUENCY {
 }
 
 process QSV_HEADERS {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -356,7 +356,7 @@ process QSV_HEADERS {
 }
 
 process QSV_COUNT {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -385,7 +385,7 @@ process QSV_COUNT {
 }
 
 process QSV_TOJSONL {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -414,7 +414,7 @@ process QSV_TOJSONL {
 }
 
 process QSV_JSONL {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -443,7 +443,7 @@ process QSV_JSONL {
 }
 
 process QSV_JSON {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -472,7 +472,7 @@ process QSV_JSON {
 }
 
 process QSV_SCHEMA {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -501,7 +501,7 @@ process QSV_SCHEMA {
 }
 
 process QSV_VALIDATE {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -530,7 +530,7 @@ process QSV_VALIDATE {
 }
 
 process QSV_SPLIT {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -561,7 +561,7 @@ process QSV_SPLIT {
 }
 
 process QSV_PARTITION {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -591,7 +591,7 @@ process QSV_PARTITION {
 }
 
 process QSV_SQLP {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
@@ -622,7 +622,7 @@ process QSV_SQLP {
 }
 
 process QSV_SLIM_FEATURES {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     label 'process_low'
 
     input:
@@ -661,7 +661,7 @@ process QSV_SLIM_FEATURES {
 }
 
 process QSV_COMBINE_TABLES {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container 'ghcr.io/chusj-pigu/qsv:4ea2948e07d0c35c84da238debb236f8ce36deba'
     tag "$meta.id"
     label 'process_low'
 
