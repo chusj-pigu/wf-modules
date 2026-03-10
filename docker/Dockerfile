@@ -41,8 +41,10 @@ RUN set -eux; \
 ############################
 FROM alpine:3.21
 
-# CA certs are useful for any HTTPS-enabled commands (e.g. fetch-like features).
-RUN apk add --no-cache ca-certificates \
+# Add bash to the runtime image.
+RUN apk add --no-cache \
+      bash \
+      ca-certificates \
     && adduser -D -u 10001 qsv
 
 COPY --from=builder /opt/qsv-install/bin/qsv /usr/local/bin/qsv
