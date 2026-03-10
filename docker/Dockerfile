@@ -7,7 +7,7 @@ FROM rust:1.94.0-alpine3.23 AS builder
 
 ARG QSV_GIT_URL=https://github.com/dathere/qsv.git
 ARG QSV_GIT_REF=908b7aae10db1991e8b149d27ace9bafd23e0ccc
-ARG QSV_FEATURES=feature_capable
+ARG QSV_FEATURES=all_features
 
 RUN apk add --no-cache \
     bash \
