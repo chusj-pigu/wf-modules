@@ -5,7 +5,7 @@ process SQANTI3_QC {
     label "process_low_memory"         // Label for mpgi drac memory alloc
     label "process_low_time"
 
-    container "ghcr.io/chusj-pigu/sqanti3:af1fca1093e952443be424fca6d3382f13f79d46"
+    container "ghcr.io/chusj-pigu/sqanti3:7d6264ade1bcaa7f29b3974470f20b91e97dc5fd"
 
     input:
     tuple val(meta),
