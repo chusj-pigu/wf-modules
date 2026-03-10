@@ -425,27 +425,36 @@ process QUARTO_TABLE_TABS {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     def input_dir = "${prefix}_${section}_${process}_inputs"
+    def table_list = (tables instanceof List ? tables : [tables])
+    def tab_list = (tabs instanceof List ? tabs : [tabs])
+    def caption_list = (captions instanceof List ? captions : [captions])
+    def colname_list = (colnames instanceof List ? colnames : [colnames])
+
+    assert tab_list.size() == table_list.size() : "tabs/tables size mismatch for ${meta.id}: ${tab_list.size()} vs ${table_list.size()}"
+    assert caption_list.size() == table_list.size() : "captions/tables size mismatch for ${meta.id}: ${caption_list.size()} vs ${table_list.size()}"
+    assert (colname_list.size() == 1 || colname_list.size() == table_list.size()) : "colnames must have size 1 or match tables for ${meta.id}"
 
     // Build QMD content safely
-    def qmd_blocks = (0..<tables.size()).collect { i ->
+    def qmd_blocks = (0..<table_list.size()).collect { i ->
+        def colname_value = colname_list.size() == 1 ? colname_list[0] : colname_list[i]
         [
-            "# ${tabs[i]}",
+            "# ${tab_list[i]}",
             "```{r}",
-            "#| label: ${prefix}-${section}-${process}-${tabs[i]}",
-            "#| tbl-cap: ${captions[i]}",
+            "#| label: ${prefix}-${section}-${process}-${tab_list[i]}",
+            "#| tbl-cap: ${caption_list[i]}",
             "#| echo: false",
             "#| tbl-cap-location: bottom",
             "library(vroom)",
             "library(knitr)",
             "library(kableExtra)",
-            "data <- vroom(\"${tables[i]}\", col_names = trimws(strsplit(\"${colnames}\", \",\")[[1]]), show_col_types = FALSE)",
+            "data <- vroom(\"${table_list[i]}\", col_names = trimws(strsplit(\"${colname_value}\", \",\")[[1]]), show_col_types = FALSE)",
             "data |> head(1000) |> kable()",
             "```"
         ].join("\n")
     }.join("\n\n")
 
     // Build copy commands
-    def cp_commands = tables.collect { "cp ${it} ${input_dir}/" }.join('\n')
+    def cp_commands = table_list.collect { "cp ${it} ${input_dir}/" }.join('\n')
 
     """
     mkdir -p ${input_dir}
@@ -499,17 +508,23 @@ process QUARTO_FIGURE_TABS {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     def input_dir = "${prefix}_${section}_${process}_inputs"
+    def figure_list = (figures instanceof List ? figures : [figures])
+    def tab_list = (tabs instanceof List ? tabs : [tabs])
+    def caption_list = (captions instanceof List ? captions : [captions])
+
+    assert tab_list.size() == figure_list.size() : "tabs/figures size mismatch for ${meta.id}: ${tab_list.size()} vs ${figure_list.size()}"
+    assert caption_list.size() == figure_list.size() : "captions/figures size mismatch for ${meta.id}: ${caption_list.size()} vs ${figure_list.size()}"
 
     // Build QMD content safely
-    def qmd_blocks = (0..<figures.size()).collect { i ->
+    def qmd_blocks = (0..<figure_list.size()).collect { i ->
         [
-            "# ${tabs[i]}",
-            "![${captions[i]}](${figures[i]})"
+            "# ${tab_list[i]}",
+            "![${caption_list[i]}](${figure_list[i]})"
         ].join("\n")
     }.join("\n\n")
 
     // Build copy commands
-    def cp_commands = figures.collect { "cp ${it} ${input_dir}/" }.join('\n')
+    def cp_commands = figure_list.collect { "cp ${it} ${input_dir}/" }.join('\n')
 
     """
     mkdir -p ${input_dir}
