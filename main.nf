@@ -1,6 +1,6 @@
 process MODKIT_PILEUP {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/modkit:ebb82340018d54345084a8dfd0bdd373c7dabfeb'
+    container 'ghcr.io/chusj-pigu/modkit:213674e9f7163c1f4845ccd37f3b4eb537a88c7d'
 
     tag "$meta.id"
     label 'process_medium_high_cpu'
@@ -45,7 +45,7 @@ process MODKIT_PILEUP {
 
 process MODKIT_SUMMARY {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/modkit:latest'
+    container 'ghcr.io/chusj-pigu/modkit:213674e9f7163c1f4845ccd37f3b4eb537a88c7d'
 
     tag "$meta.id"
     label 'process_low'
@@ -86,7 +86,7 @@ process MODKIT_SUMMARY {
 
 process MODKIT_DMR_PAIR {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/modkit:latest'
+    container 'ghcr.io/chusj-pigu/modkit:213674e9f7163c1f4845ccd37f3b4eb537a88c7d'
 
     tag "$meta.id"
     label 'process_low_medium_memory'
@@ -107,6 +107,7 @@ process MODKIT_DMR_PAIR {
     tuple val(meta),
         path("*.txt"),
         val(exp_id),
+        optional: true,
         emit: modkit_dmr
     path "*.log",
         emit: log
@@ -120,20 +121,53 @@ process MODKIT_DMR_PAIR {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def suffix = task.ext.suffix ?: "${exp_id.id}"
+    def ref_fasta = "reference.fa"
     def threads = task.cpus * 2
+    def dmr_out = "${prefix}-${suffix}_dmr_results.txt"
+    def dmr_log = "${prefix}-${suffix}-dmr.log"
     """
-    pigz -dkc ${ref} > ${ref.baseName}
+    case "${ref}" in
+        *.gz|*.bgz|*.bgzf)
+            pigz -dkc ${ref} > ${ref_fasta}
+            ;;
+        *)
+            cp ${ref} ${ref_fasta}
+            ;;
+    esac
 
-    modkit dmr pair \
-        -a ${ctl_pileup} \
-        -b ${exp_pileup} \
-        ${args} \
-        -o ${prefix}-${suffix}_dmr_results.txt \
-        --ref ${ref.baseName} \
-        --base ${base} \
-        --threads ${threads} \
-        --header \
-        --log-filepath ${prefix}-${suffix}-dmr.log
+    ctl_records=\$(pigz -dc ${ctl_pileup} | wc -l)
+    exp_records=\$(pigz -dc ${exp_pileup} | wc -l)
+
+    if [ "\${ctl_records}" -eq 0 ] || [ "\${exp_records}" -eq 0 ]; then
+        {
+            echo "Skipping modkit dmr pair due to empty bedmethyl input."
+            echo "control_records=\${ctl_records}"
+            echo "experimental_records=\${exp_records}"
+        } > ${dmr_log}
+    else
+        if modkit dmr pair \
+            -a ${ctl_pileup} \
+            -b ${exp_pileup} \
+            ${args} \
+            -o ${dmr_out} \
+            --ref ${ref_fasta} \
+            --base ${base} \
+            --threads ${threads} \
+            --header \
+            --log-filepath ${dmr_log}; then
+            true
+        else
+            if grep -q "zero sequences in reference with records in samples" "${dmr_log}"; then
+                rm -f ${dmr_out}
+                {
+                    echo "Skipping modkit dmr pair due to contig mismatch."
+                    echo "No common sequences between reference and bedmethyl files."
+                } >> ${dmr_log}
+            else
+                exit 1
+            fi
+        fi
+    fi
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -145,7 +179,7 @@ process MODKIT_DMR_PAIR {
 
 process MODKIT_EXTRACT_FULL {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/modkit:latest'
+    container 'ghcr.io/chusj-pigu/modkit:213674e9f7163c1f4845ccd37f3b4eb537a88c7d'
 
     tag "$meta.id"
     label 'process_medium_cpu'
@@ -190,7 +224,7 @@ process MODKIT_EXTRACT_FULL {
 
 process MODKIT_SUMMARY_PER_FEATURE {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/modkit:latest'
+    container 'ghcr.io/chusj-pigu/modkit:213674e9f7163c1f4845ccd37f3b4eb537a88c7d'
 
     tag "$meta.id"
     label 'process_low'
@@ -230,7 +264,7 @@ process MODKIT_SUMMARY_PER_FEATURE {
 
 process MODKIT_ADJUST {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/modkit:latest'
+    container 'ghcr.io/chusj-pigu/modkit:213674e9f7163c1f4845ccd37f3b4eb537a88c7d'
 
     tag "$meta.id"
     label 'process_low'
