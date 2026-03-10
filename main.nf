@@ -4,8 +4,8 @@ process MODKIT_PILEUP {
 
     tag "$meta.id"
     label 'process_medium_high_cpu'
-    label 'process_low_memory'
-    label 'process_low_time'
+    label 'process_medium_memory'
+    label 'process_medium_low_time'
 
     input:
     tuple val(meta),
