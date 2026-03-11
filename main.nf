@@ -1,7 +1,10 @@
 nextflow.enable.dsl=2
 
+def MPGIRUSTTOOLS_CONTAINER = 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+def MPGIRUSTTOOLS_CALL_TARGETS_CONTAINER = 'ghcr.io/chusj-pigu/mpgi-rusttools:9fa86da30c0138ee6871910c16c26859326dcba3'
+
 process GFF_TO_GTF {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container MPGIRUSTTOOLS_CONTAINER
 
     tag "$meta.id"
     label 'process_low'
@@ -42,8 +45,50 @@ process GFF_TO_GTF {
     """
 }
 
+process GTF_TO_INTRONS {
+    container MPGIRUSTTOOLS_CONTAINER
+
+    tag "$meta.id"
+    label 'process_low'
+    label 'process_medium_low_cpu'
+    label 'process_medium_mid_memory'
+    label 'process_low_time'
+
+    input:
+    tuple val(meta),
+        path(gtf)
+
+    output:
+    tuple val(meta),
+        path("${gtf.simpleName}.introns.gff3"),
+        emit: gff3
+    tuple val(meta),
+        path("*.command.txt"),
+        emit: command
+    path "versions.yml", emit: versions
+
+    script:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    genemancer gtf-to-introns \
+      ${gtf} \
+      -o ${gtf.simpleName}.introns.gff3
+
+    cat <<-'END_COMMAND' > ${prefix}.command.txt
+    genemancer gtf-to-introns \
+      ${gtf} \
+      -o ${gtf.simpleName}.introns.gff3
+    END_COMMAND
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        genemancer: "\$(genemancer --version 2>&1 | head -n 1)"
+    END_VERSIONS
+    """
+}
+
 process MERGE_BAM {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container MPGIRUSTTOOLS_CONTAINER
 
     tag "$meta.id"
     label 'process_low'
@@ -92,7 +137,7 @@ process MERGE_BAM {
 }
 
 process SPLIT_BAM {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container MPGIRUSTTOOLS_CONTAINER
 
     tag "$meta.id"
     label 'process_low'
@@ -151,7 +196,7 @@ process SPLIT_BAM {
 }
 
 process CALL_TARGETS {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:9fa86da30c0138ee6871910c16c26859326dcba3'
+    container MPGIRUSTTOOLS_CALL_TARGETS_CONTAINER
 
     tag "$meta.id"
     label 'process_low'
@@ -217,7 +262,7 @@ process CALL_TARGETS {
 }
 
 process CALL_TARGETS_GPU {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:9fa86da30c0138ee6871910c16c26859326dcba3'
+    container MPGIRUSTTOOLS_CALL_TARGETS_CONTAINER
 
     tag "$meta.id"
     label 'process_low'
@@ -275,7 +320,7 @@ process CALL_TARGETS_GPU {
       --rg-map ${rg_map} \
       ${indexTypeArg} \
       -o calls.vcf.gz \
-      --gpu-backend auto \
+      --gpu-backend cuda \
       --require-gpu \
       ${extraArgs}
     END_COMMAND
@@ -288,7 +333,7 @@ process CALL_TARGETS_GPU {
 }
 
 process NANOCOV {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container MPGIRUSTTOOLS_CONTAINER
 
     tag "$meta.id"
     label 'process_low'
@@ -337,7 +382,7 @@ process NANOCOV {
 }
 
 process NANOCOV_BATCH {
-    container 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
+    container MPGIRUSTTOOLS_CONTAINER
 
     tag "$meta.id"
     label 'process_low'
