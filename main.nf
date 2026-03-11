@@ -1,5 +1,4 @@
 process DORADO_BASECALL {
-    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/dorado:851b0a37ecbff6b3b952c811b31dad48ca6bf995'
     label "process_high"            // nf-core label
     label "process_medium_low_cpu"             // Label for mpgi drac cpu alloc
@@ -56,7 +55,6 @@ process DORADO_BASECALL {
 }
 
 process DORADO_DEMULTIPLEX {
-    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/dorado:851b0a37ecbff6b3b952c811b31dad48ca6bf995'
     label "process_high"                    // nf-core label
     label "process_high_cpu"                 // Label for mpgi drac cpu alloc
@@ -90,6 +88,48 @@ process DORADO_DEMULTIPLEX {
         --kit-name ${kit} \\
         --output-dir $prefix \\
         $bam
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        dorado: \$(echo \$(dorado --version 2>&1) | sed 's/^.*dorado //; s/Using.*\$//')
+    END_VERSIONS
+    """
+}
+
+process DORADO_TRIM {
+    container 'ghcr.io/chusj-pigu/dorado:851b0a37ecbff6b3b952c811b31dad48ca6bf995'
+    label "process_high"                    // nf-core label
+    label "process_high_cpu"                 // Label for mpgi drac cpu alloc
+    label "process_medium_low_memory"        // Label for mpgi drac memory alloc
+    label "process_medium_low_time"          // Label for mpgi drac time alloc
+
+    tag "$meta.id"
+
+    input:
+    tuple val(meta),
+        val(kit),
+        path(bam)
+
+    output:
+    tuple val(meta),
+        path("*.bam"),
+        emit: bam
+    path "versions.yml",
+        emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def threads = task.cpus
+    """
+    dorado \\
+        trim \\
+        $args \\
+        -t ${threads} \\
+        -k ${kit} > ${prefix}_trimmed.bam
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
