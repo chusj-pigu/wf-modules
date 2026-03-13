@@ -1,7 +1,6 @@
 nextflow.enable.dsl=2
 
-def MPGIRUSTTOOLS_CONTAINER = 'ghcr.io/chusj-pigu/mpgi-rusttools:latest'
-def MPGIRUSTTOOLS_CALL_TARGETS_CONTAINER = 'ghcr.io/chusj-pigu/mpgi-rusttools:a43cec04792d678c68285545c952a93f4857a751'
+def MPGIRUSTTOOLS_CONTAINER = 'ghcr.io/chusj-pigu/mpgi-rusttools:a43cec04792d678c68285545c952a93f4857a751'
 
 process GFF_TO_GTF {
     container MPGIRUSTTOOLS_CONTAINER
@@ -196,7 +195,7 @@ process SPLIT_BAM {
 }
 
 process CALL_TARGETS {
-    container MPGIRUSTTOOLS_CALL_TARGETS_CONTAINER
+    container MPGIRUSTTOOLS_CONTAINER
 
     tag "$meta.id"
     label 'process_low'
@@ -262,7 +261,7 @@ process CALL_TARGETS {
 }
 
 process CALL_TARGETS_GPU {
-    container MPGIRUSTTOOLS_CALL_TARGETS_CONTAINER
+    container MPGIRUSTTOOLS_CONTAINER
 
     tag "$meta.id"
     label 'process_low'
