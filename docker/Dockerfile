@@ -2,11 +2,13 @@
 FROM rust:1.93.1-slim-bullseye AS build
 
 ENV DEBIAN_FRONTEND=noninteractive
+ENV RUSTFLAGS="-C strip=symbols"
 
 # Needed for building Rust crates with native deps.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     pkg-config \
+    binutils \
     libfontconfig1-dev \
     libfreetype6-dev \
     libexpat1-dev \
@@ -25,6 +27,7 @@ ARG NANOCOV_VERSION=0.1.0
 RUN cargo install --locked --version ${GENEMANCER_VERSION} --features cuda genemancer
 # RUN cargo install --locked --version ${TRANCISTOR_VERSION} trancistor
 RUN cargo install --locked --version ${NANOCOV_VERSION} nanocov
+RUN strip /usr/local/cargo/bin/genemancer /usr/local/cargo/bin/nanocov || true
 
 # Runtime stage (minimal CUDA runtime on Ubuntu 22.04)
 FROM nvidia/cuda:12.8.0-runtime-ubuntu22.04
@@ -32,7 +35,6 @@ FROM nvidia/cuda:12.8.0-runtime-ubuntu22.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    bash \
     ca-certificates \
     libstdc++6 \
     libfontconfig1 \
@@ -45,9 +47,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Install binaries built in previous stage
-COPY --from=build /usr/local/cargo/bin/ /usr/local/bin/
+COPY --from=build /usr/local/cargo/bin/genemancer /usr/local/bin/genemancer
+COPY --from=build /usr/local/cargo/bin/nanocov /usr/local/bin/nanocov
 
-WORKDIR /root/
 ENV PATH="/usr/local/bin:${PATH}"
 
-CMD ["/bin/sh"]
+CMD ["genemancer", "--help"]

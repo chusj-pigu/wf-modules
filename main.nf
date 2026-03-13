@@ -275,7 +275,7 @@ process CALL_TARGETS_GPU {
       --rg-map ${rg_map} \
       ${indexTypeArg} \
       -o calls.vcf.gz \
-      --gpu-backend auto \
+      --gpu-backend cuda \
       --require-gpu \
       ${extraArgs}
     END_COMMAND
