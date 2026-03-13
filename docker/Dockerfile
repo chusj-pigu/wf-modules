@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Planned deterministic installs when crates are available
-ARG GENEMANCER_VERSION=0.2.4
+ARG GENEMANCER_VERSION=0.2.5
 # ARG TRANCISTOR_VERSION=0.0.0
 ARG NANOCOV_VERSION=0.1.0
 RUN cargo install --locked --version ${GENEMANCER_VERSION} --features cuda genemancer
