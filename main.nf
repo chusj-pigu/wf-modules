@@ -138,7 +138,9 @@ process SEQKIT_SEQUENCE_COUNTS {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
     container 'ghcr.io/chusj-pigu/seqkit:latest'
 
-    label 'process_low'
+    label 'process_low_medium_cpu'
+    label 'process_low_memory'
+    label 'process_medium_low_time'
 
     input:
     path(bed)
