@@ -127,7 +127,8 @@ process DORADO_TRIM {
     """
     dorado \\
         trim \\
-        $args \\
+        ${args} \\
+        ${bam} \\
         -t ${threads} \\
         -k ${kit} > ${prefix}_trimmed.bam
 
