@@ -1,8 +1,8 @@
 process SQANTI3_QC {
     tag "$meta.id"
     label 'process_low'                    // nf-core labels
-    label "process_low_cpu"       // Label for mpgi drac cpu alloc
-    label "process_low_memory"         // Label for mpgi drac memory alloc
+    label "process_medium_cpu"       // Label for mpgi drac cpu alloc
+    label "process_higher_memory"         // Label for mpgi drac memory alloc
     label "process_low_time"
 
     container "ghcr.io/chusj-pigu/sqanti3:7d6264ade1bcaa7f29b3974470f20b91e97dc5fd"
