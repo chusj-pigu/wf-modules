@@ -241,7 +241,7 @@ process QUARTO_FIGURE {
     cp ${figure_data} ${prefix}_${section}_${process}_inputs/${figure_data}
 
     cat <<-END_REPORT > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
-    ![${caption}](${figure_data})
+![${caption}](${figure_data})
 
 END_REPORT
 
