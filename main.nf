@@ -10,31 +10,29 @@ process CREATE_ANNOTATION {
 
     input:
     tuple val(meta),
-        path(gtf),
-        val(organism)
+        path(gtf)
 
     output:
     tuple val(meta),
-        path("*.csv"),
+        path("*df.csv"),
         emit: anno
+    tuple val(meta),
+        path("*gene.csv"),
+        emit: gene_anno
     path "versions.yml",
         emit: versions
 
     script:
     """
     create_annotation.R \\
-        -g ${gtf} \\
-        -o "${organism}"
+        -g ${gtf}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         R: \$(R --version | head -1)
-        AnnotationDbi: "\$(echo 'cat(as.character(packageVersion(\"AnnotationDbi\")))' | R --vanilla --slave)"
-        bambu: "\$(echo 'cat(as.character(packageVersion(\"bambu\")))' | R --vanilla --slave)"
+        rtracklayer: "\$(echo 'cat(as.character(packageVersion(\"AnnotationDbi\")))' | R --vanilla --slave)"
         dplyr: "\$(echo 'cat(as.character(packageVersion(\"dplyr\")))' | R --vanilla --slave)"
         optparse: "\$(echo 'cat(as.character(packageVersion(\"optparse\")))' | R --vanilla --slave)"
-        RMariaDB: "\$(echo 'cat(as.character(packageVersion(\"RMariaDB\")))' | R --vanilla --slave)"
-        txdbmaker: "\$(echo 'cat(as.character(packageVersion(\"txdbmaker\")))' | R --vanilla --slave)"
 
     END_VERSIONS
     """
