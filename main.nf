@@ -16,7 +16,7 @@ process FIGENO_SV_FIGURE {
     output:
     tuple val(meta),
         path("*.png"),
-        emit: figure
+        emit: figure, optional: true
     path "versions.yml",
         emit: versions
 
