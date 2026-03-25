@@ -1,23 +1,21 @@
-FROM debian:bullseye
+FROM python:3.11-slim
 
 RUN apt-get update && apt-get install -y \
     git \
-    python3.9 \
-    python3-pip \
-    python3.9-venv \
     procps \
-    wget
+    wget \
+    zip \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/UMCUGenetics/sturgeon
-WORKDIR /sturgeon
+RUN git clone https://github.com/UMCUGenetics/tucan.git
+WORKDIR /tucan
 
-RUN python3.9 -m venv venv
-RUN ./venv/bin/pip install --upgrade pip
-RUN ./venv/bin/pip install .
+RUN python -m venv venv
+ENV PATH="/tucan/venv/bin:${PATH}"
 
-# Install the model to call it by name
-RUN wget https://www.dropbox.com/s/yzca4exl40x9ukw/general.zip?dl=0 -O general.zip
+RUN pip install --upgrade pip
+RUN pip install . huggingface_hub
 
-RUN mv *.zip sturgeon/include/models
+RUN python -c "from src.tucan.download_model import get_model; print(get_model())"
 
-ENV PATH="/sturgeon/venv/bin:${PATH}"
+RUN cd models && zip -r model.zip model && rm -r model
