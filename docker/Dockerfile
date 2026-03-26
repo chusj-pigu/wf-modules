@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /opt/app
 
-ENV VERSION=1.21
+ENV VERSION=1.23.1
 
 RUN git clone --recurse-submodules https://github.com/samtools/htslib.git
 RUN git clone https://github.com/samtools/bcftools.git --branch ${VERSION}
