@@ -21,6 +21,7 @@ process DORADO_BASECALL {
     tuple val(meta),
         path(pod5),
         path(ubam),
+        path(dir),
         val(model),
         val(model_mh)
 
@@ -38,21 +39,9 @@ process DORADO_BASECALL {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def device = params.device != null ? "-x $params.device" : ""
-    def modelValue = model.toString()
-    def localModel = modelValue.contains('/') || modelValue.startsWith('.')
-    def modelFile = (params.basecall_offline || localModel)
-        ? file(modelValue)
-        : null
-    def modelArg = localModel ? modelFile.name : modelValue
-    def modelsDirectoryArg = modelFile
-        ? "--models-directory ${modelFile.parent}"
+    def mod = params.m_bases
+        ? "--modified-bases-models ${model_mh}"
         : ""
-    def useLocalModels = params.basecall_offline || localModel
-    def mod = (useLocalModels && model_mh != 'none')
-        ? "--modified-bases-models ${modelFile.parent}/${model_mh}"
-        : ((model_mh != 'none' && !params.basecall_offline)
-            ? "--modified-bases ${model_mh}"
-            : "")
     def multi = params.demux ? "--no-trim" : ""
     def resume = ubam.name != 'NOFILE'
         ? "--resume-from $ubam > ${prefix}_unaligned_final.bam"
@@ -61,10 +50,10 @@ process DORADO_BASECALL {
     dorado basecaller \\
         $args \\
         $device \\
-        $modelsDirectoryArg \\
-        $modelArg \\
-        $pod5 \\
+        --models-directory ${dir} \\
+        $model \\
         $mod \\
+        $pod5 \\
         $multi \\
         $resume
 
@@ -123,28 +112,22 @@ process DORADO_DEMULTIPLEX {
     """
 }
 
-process DORADO_DOWNLOAD_MODEL {
+process DORADO_DOWNLOAD_LIST {
     container DORADO_CONTAINER
 
     // nf-core resource label
     label "process_low"
+
+    label "local"
 
     // MPGI DRAC resource labels
     label "process_single_cpu"
     label "process_very_low_memory"
     label "process_very_low_time"
 
-    tag "${meta.id}:${model_name}"
-
-    input:
-    tuple val(meta),
-        val(model_name),
-        val(models_directory)
-
     output:
-    tuple val(meta),
-        path("${model_name}"),
-        emit: model
+    path("*.json"),
+        emit: list
     path "versions.yml",
         emit: versions
 
@@ -154,32 +137,47 @@ process DORADO_DOWNLOAD_MODEL {
     script:
     def args = task.ext.args ?: ''
     """
-    alias_path="${models_directory}/${model_name}"
+    dorado download --list-structured > model_list.json
 
-    mkdir -p "${models_directory}"
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        dorado: \$(echo \$(dorado --version 2>&1) | \
+            sed 's/^.*dorado //; s/Using.*\$//')
+    END_VERSIONS
+    """
+}
 
-    if [ ! -e "\${alias_path}" ]; then
-        dorado download \\
-            $args \\
-            --model "${model_name}" \\
-            --models-directory "${models_directory}"
+process DORADO_DOWNLOAD_MODEL {
+    container DORADO_CONTAINER
 
-        if [ ! -e "\${alias_path}" ]; then
-            model_path=\$(find "${models_directory}" -mindepth 1 -maxdepth 1 \
-                -type d -printf '%T@ %p\\n' | sort -n | tail -n 1 | \
-                cut -d' ' -f2-)
+    // nf-core resource label
+    label "process_low"
 
-            if [ -z "\${model_path}" ]; then
-                echo "No Dorado model was downloaded into ${models_directory}" \
-                    >&2
-                exit 1
-            fi
+    label "local"
 
-            ln -sfn "\${model_path}" "\${alias_path}"
-        fi
-    fi
+    // MPGI DRAC resource labels
+    label "process_single_cpu"
+    label "process_very_low_memory"
+    label "process_very_low_time"
 
-    ln -sfn "\${alias_path}" "${model_name}"
+    tag "$model"
+
+    input:
+    val(model)
+
+    output:
+    path("dna_*"),
+        emit:model
+    path "versions.yml",
+        emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: ''
+    """
+    dorado download --model ${model}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
