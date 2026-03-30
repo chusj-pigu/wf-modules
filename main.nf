@@ -220,7 +220,48 @@ process MODKIT_EXTRACT_FULL {
     """
 }
 
+process MODKIT_EXTRACT_CALLS {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/modkit:213674e9f7163c1f4845ccd37f3b4eb537a88c7d'
 
+    tag "$meta.id"
+    label 'process_medium_cpu'
+    label 'process_medium_high_memory'
+    label 'process_low_time'
+
+    input:
+    tuple val(meta),
+        path(bam),
+        path(bam_index)
+
+    output:
+    tuple val(meta),
+        path("*.tsv"),
+        emit: modkit_read_mods
+    path "versions.yml",
+        emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def threads = task.cpus
+    """
+    modkit extract calls \
+        ${bam} \
+        ${prefix}-calls-extracted.tsv \
+        --threads ${threads} \
+        --queue-size 5000 \
+        ${args}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        modkit: \$( modkit --version | sed 's/^.*mod_kit //; s/Using.*\$//')
+    END_VERSIONS
+    """
+}
 
 process MODKIT_SUMMARY_PER_FEATURE {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
