@@ -21,9 +21,8 @@ process DORADO_BASECALL {
     tuple val(meta),
         path(pod5),
         path(ubam),
-        path(dir),
-        val(model),
-        val(model_mh)
+        path(model),
+        path(model_mh)
 
     output:
     tuple val(meta),
@@ -39,7 +38,7 @@ process DORADO_BASECALL {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def device = params.device != null ? "-x $params.device" : ""
-    def mod = params.m_bases
+    def mod = model_mh.name != "NOMOD"
         ? "--modified-bases-models ${model_mh}"
         : ""
     def multi = params.demux ? "--no-trim" : ""
@@ -50,7 +49,6 @@ process DORADO_BASECALL {
     dorado basecaller \\
         $args \\
         $device \\
-        --models-directory ${dir} \\
         $model \\
         $mod \\
         $pod5 \\
@@ -163,10 +161,13 @@ process DORADO_DOWNLOAD_MODEL {
     tag "$model"
 
     input:
-    val(model)
+    tuple val(type),
+        val(model),
+        path(dir)
 
     output:
-    path("dna_*"),
+    tuple val(type),
+        path("${dir}/dorado_models/${model}"),
         emit:model
     path "versions.yml",
         emit: versions
@@ -177,7 +178,8 @@ process DORADO_DOWNLOAD_MODEL {
     script:
     def args = task.ext.args ?: ''
     """
-    dorado download --model ${model}
+    mkdir -p ${dir}/dorado_models
+    dorado download --model ${model} --models-directory ${dir}/dorado_models
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
