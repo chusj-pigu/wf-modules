@@ -33,7 +33,6 @@ RUN R -e 'install.packages("tidyverse")'
 # Install data.table
 RUN R -e 'install.packages("data.table")'
 
-# Verify installation
-RUN R -e 'library(tidyverse)'
+# Install hexbin
+RUN R -e 'install.packages("hexbin")'
 
-WORKDIR /opt/
