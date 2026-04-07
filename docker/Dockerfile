@@ -1,7 +1,8 @@
-FROM rust:latest
+FROM rust:1.90
 
 ## Install Dependencies
 RUN apt-get update && apt-get install -y \
+    clang \
     libssl-dev \
     procps \
     pkg-config \
@@ -9,6 +10,6 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /opt
 
-RUN cargo install oarfish
+RUN cargo install rustqc
 
-RUN oarfish -h
+RUN rustqc -h
