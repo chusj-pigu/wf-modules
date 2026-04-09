@@ -13,3 +13,4 @@ tests2
 .beads
 .agents
 work
+singularity/*.img
