@@ -1,7 +1,5 @@
-process OARFISH_QUANTIFY_FQ {
-    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/oarfish:latest'
-    // TODO : SET LEVEL OF RESSOURCES
+process SQANTIRUST {
+    container 'ghcr.io/chusj-pigu/sqantirust:sha256-75dfd3d433fa8e01d60bdfd9faa92b4854510ef8fcffa08a35874f71fda649f3.sig'
     tag "$meta.id"
     label 'process_medium'
     label 'process_medium_high_cpu'
@@ -10,87 +8,28 @@ process OARFISH_QUANTIFY_FQ {
 
     input:
     tuple val(meta),
-        path(reads),
-        path(ref)
+        path(ref_gtf),
+        path(gff)
 
     output:
     tuple val(meta),
-        path("*.quant"),
-        emit: quant
-    tuple val(meta),
         path("*.tsv"),
-        emit: ambig
-    tuple val(meta),
-        path("*.json"),
-        emit: meta_info
+        emit: table
     path "versions.yml",
         emit: versions
 
     script:
-    def args = task.ext?.args ?: ''
+    //def args = task.ext.args ?: ''
     def prefix = task.ext?.prefix ?: "${meta.id}"
-    def threads = task.cpus
+    //def threads = task.cpus
     """
-    oarfish \\
-        -j ${threads} \\
-        ${args} \\
-        --reads ${reads} \\
-        --reference ${ref} \\
-        --seq-tech ont-cdna \\
-        -o ${prefix} \\
-        --filter-group no-filters \\
-        --model-coverage
+    sqantirust \\
+        --ref-gtf ${ref_gtf} \\
+        --query ${gff} > ${prefix}.tsv
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        oarfish: \$(echo \$(oarfish --version 2>&1) | sed 's/^.*oarfish //; s/Using.*\$//')
-    END_VERSIONS
-    """
-}
-
-process OARFISH_QUANTIFY_BAM {
-    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/oarfish:latest'
-    // TODO : SET LEVEL OF RESSOURCES
-    tag "$meta.id"
-    label 'process_medium'
-    label 'process_medium_high_cpu'
-    label 'process_low_memory'
-    label 'process_low_time'
-
-    input:
-    tuple val(meta),
-        path(bam)
-
-    output:
-    tuple val(meta),
-        path("*.quant"),
-        emit: quant
-    tuple val(meta),
-        path("*.tsv"),
-        emit: ambig
-    tuple val(meta),
-        path("*.json"),
-        emit: meta_info
-    path "versions.yml",
-        emit: versions
-
-    script:
-    def args = task.ext?.args ?: ''
-    def prefix = task.ext?.prefix ?: "${meta.id}"
-    def threads = task.cpus
-    """
-    oarfish \\
-        -j ${threads} \\
-        $args \\
-        -a ${bam} \\
-        -o ${prefix} \\
-        --filter-group no-filters \\
-        --model-coverage
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        oarfish: \$(echo \$(oarfish --version 2>&1) | sed 's/^.*oarfish //; s/Using.*\$//')
+        sqantirust: 0.1.0
     END_VERSIONS
     """
 }
