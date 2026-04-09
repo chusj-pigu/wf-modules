@@ -6,3 +6,10 @@ references/.*
 .dolt/
 *.db
 .beads-credential-key
+tests2
+.nextflow*
+.gitmodules
+.codex
+.beads
+.agents
+work

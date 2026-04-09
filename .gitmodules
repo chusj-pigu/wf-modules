@@ -1,0 +1,3 @@
+[submodule ".agents/skill-packs/skill_nextflow"]
+	path = .agents/skill-packs/skill_nextflow
+	url = git@github.com:bwbioinfo/skill_nextflow.git
