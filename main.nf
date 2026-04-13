@@ -395,7 +395,6 @@ END_VERSIONS
 
 process QUARTO_TABLE_TABS {
     container 'ghcr.io/chusj-pigu/quarto:latest'
-
     tag "$meta.id"
     label 'process_low'
     label 'process_single_cpu'
@@ -406,10 +405,10 @@ process QUARTO_TABLE_TABS {
     tuple val(meta),
           val(section),
           val(process),
-          path(tables),       // list of table file paths
-          val(tabs),         // list of tab names
-          val(captions),     // list of captions
-          val(colnames)      // list of comma-separated colnames
+          path(tables),
+          val(tabs),
+          val(captions),
+          val(colnames)
 
     output:
     tuple val(meta),
@@ -423,53 +422,66 @@ process QUARTO_TABLE_TABS {
     task.ext.when == null || task.ext.when
 
     script:
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def input_dir = "${prefix}_${section}_${process}_inputs"
-    def table_list = (tables instanceof List ? tables : [tables])
-    def tab_list = (tabs instanceof List ? tabs : [tabs])
+    def prefix       = task.ext.prefix ?: "${meta.id}"
+    def input_dir    = "${prefix}_${section}_${process}_inputs"
+    def table_list   = (tables   instanceof List ? tables   : [tables])
+    def tab_list     = (tabs     instanceof List ? tabs     : [tabs])
     def caption_list = (captions instanceof List ? captions : [captions])
     def colname_list = (colnames instanceof List ? colnames : [colnames])
 
-    assert tab_list.size() == table_list.size() : "tabs/tables size mismatch for ${meta.id}: ${tab_list.size()} vs ${table_list.size()}"
-    assert caption_list.size() == table_list.size() : "captions/tables size mismatch for ${meta.id}: ${caption_list.size()} vs ${table_list.size()}"
-    assert (colname_list.size() == 1 || colname_list.size() == table_list.size()) : "colnames must have size 1 or match tables for ${meta.id}"
+    assert (colname_list.size() == 1 || colname_list.size() == table_list.size()) : \
+        "colnames must have size 1 or match tables for ${meta.id}"
 
-    // Build QMD content safely
+    // Build setup chunk once
+    def setup_chunk = [
+        "```{r setup-${prefix}-${section}, include=FALSE}",
+        "library(vroom)",
+        "library(knitr)",
+        "library(kableExtra)",
+        "```"
+    ].join("\n")
+
+    // Build per-tab chunks
     def qmd_blocks = (0..<table_list.size()).collect { i ->
         def colname_value = colname_list.size() == 1 ? colname_list[0] : colname_list[i]
+        def col_vector    = "c(" + colname_value.split(",").collect { '"' + it.trim() + '"' }.join(", ") + ")"
+        def safe_label    = "${prefix}-${section}-${tab_list[i]}".replaceAll(/\s+/, '-')
+
         [
             "# ${tab_list[i]}",
             "```{r}",
-            "#| label: ${prefix}-${section}-${process}-${tab_list[i]}",
-            "#| tbl-cap: ${caption_list[i]}",
+            "#| label: ${safe_label}",
+            "#| tbl-cap: \"${caption_list[i]}\"",
             "#| echo: false",
-            "#| tbl-cap-location: bottom",
-            "library(vroom)",
-            "library(knitr)",
-            "library(kableExtra)",
-            "data <- vroom(\"${table_list[i]}\", col_names = trimws(strsplit(\"${colname_value}\", \",\")[[1]]), show_col_types = FALSE)",
-            "data |> head(1000) |> kable()",
+            "vroom(\"${table_list[i]}\", col_names = ${col_vector}, show_col_types = FALSE) |>",
+            "  head(1000) |>",
+            "  kable(format = \"html\", escape = FALSE) |>",
+            "  kable_styling(",
+            "    bootstrap_options = c(\"striped\", \"hover\", \"condensed\", \"responsive\"),",
+            "    full_width = TRUE,",
+            "    fixed_thead = TRUE",
+            "  )",
             "```"
         ].join("\n")
     }.join("\n\n")
 
-    // Build copy commands
     def cp_commands = table_list.collect { "cp ${it} ${input_dir}/" }.join('\n')
 
     """
     mkdir -p ${input_dir}
 
-    # Copy table files
     ${cp_commands}
 
-    # Write QMD file with literal here-doc
     cat <<'END_REPORT' > ${input_dir}/${prefix}-${section}-${process}.qmd
+${setup_chunk}
+
 ::: {.panel-tabset}
+
 ${qmd_blocks}
+
 :::
 END_REPORT
 
-    # Record versions
     cat <<'END_VERSIONS' > versions.yml
     "${task.process}":
         quarto: \$(quarto --version)
@@ -479,7 +491,6 @@ END_VERSIONS
 
 process QUARTO_FIGURE_TABS {
     container 'ghcr.io/chusj-pigu/quarto:latest'
-
     tag "$meta.id"
     label 'process_low'
     label 'process_single_cpu'
@@ -488,11 +499,11 @@ process QUARTO_FIGURE_TABS {
 
     input:
     tuple val(meta),
-        val(section),
-        val(process),
-        path(figures),       // list of figure file paths
-        val(tabs),         // list of tab names
-        val(captions)
+          val(section),
+          val(process),
+          path(figures),
+          val(tabs),
+          val(captions)
 
     output:
     tuple val(meta),
@@ -506,40 +517,42 @@ process QUARTO_FIGURE_TABS {
     task.ext.when == null || task.ext.when
 
     script:
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def input_dir = "${prefix}_${section}_${process}_inputs"
-    def figure_list = (figures instanceof List ? figures : [figures])
-    def tab_list = (tabs instanceof List ? tabs : [tabs])
+    def prefix       = task.ext.prefix ?: "${meta.id}"
+    def input_dir    = "${prefix}_${section}_${process}_inputs"
+    def figure_list  = (figures  instanceof List ? figures  : [figures])
+    def tab_list     = (tabs     instanceof List ? tabs     : [tabs])
     def caption_list = (captions instanceof List ? captions : [captions])
 
-    assert tab_list.size() == figure_list.size() : "tabs/figures size mismatch for ${meta.id}: ${tab_list.size()} vs ${figure_list.size()}"
-    assert caption_list.size() == figure_list.size() : "captions/figures size mismatch for ${meta.id}: ${caption_list.size()} vs ${figure_list.size()}"
+    assert tab_list.size() == figure_list.size() : \
+        "tabs/figures size mismatch for ${meta.id}: ${tab_list.size()} vs ${figure_list.size()}"
+    assert caption_list.size() == figure_list.size() : \
+        "captions/figures size mismatch for ${meta.id}: ${caption_list.size()} vs ${figure_list.size()}"
 
-    // Build QMD content safely
     def qmd_blocks = (0..<figure_list.size()).collect { i ->
+        def fname = figure_list[i].getName()
         [
             "# ${tab_list[i]}",
-            "![${caption_list[i]}](${figure_list[i]})"
+            "",
+            "![${caption_list[i]}](${fname}){fig-alt=\"${caption_list[i]}\"}",
+            ""
         ].join("\n")
-    }.join("\n\n")
+    }.join("\n")
 
-    // Build copy commands
-    def cp_commands = figure_list.collect { "cp ${it} ${input_dir}/" }.join('\n')
+    def cp_commands = figure_list.collect { "cp -L ${it} ${input_dir}/" }.join('\n')
 
     """
     mkdir -p ${input_dir}
 
-    # Copy figure files
     ${cp_commands}
 
-    # Write QMD file with literal here-doc
     cat <<'END_REPORT' > ${input_dir}/${prefix}-${section}-${process}.qmd
+
 ::: {.panel-tabset}
+
 ${qmd_blocks}
 :::
 END_REPORT
 
-    # Record versions
     cat <<'END_VERSIONS' > versions.yml
     "${task.process}":
         quarto: \$(quarto --version)
