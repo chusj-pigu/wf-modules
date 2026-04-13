@@ -1,6 +1,6 @@
 process MODKIT_PILEUP {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/modkit:213674e9f7163c1f4845ccd37f3b4eb537a88c7d'
+    container 'ghcr.io/chusj-pigu/modkit:c851062cc76ec69921ff6013884349fd7182cd22 '
 
     tag "$meta.id"
     label 'process_medium_high_cpu'
@@ -10,8 +10,7 @@ process MODKIT_PILEUP {
     input:
     tuple val(meta),
         path(in_bam),
-        path(bam_index),
-        path(ref)
+        path(bam_index)
 
     output:
     tuple val(meta),
@@ -33,8 +32,7 @@ process MODKIT_PILEUP {
         -t ${threads} \\
         ${in_bam} \\
         ${prefix}.bed \\
-        ${args} \\
-        --reference ${ref}
+        ${args}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -305,7 +303,7 @@ process MODKIT_SUMMARY_PER_FEATURE {
 
 process MODKIT_ADJUST {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/modkit:213674e9f7163c1f4845ccd37f3b4eb537a88c7d'
+    container 'ghcr.io/chusj-pigu/modkit:c851062cc76ec69921ff6013884349fd7182cd22'
 
     tag "$meta.id"
     label 'process_low'
