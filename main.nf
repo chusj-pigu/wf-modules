@@ -1,6 +1,6 @@
-process OARFISH_QUANTIFY_FQ {
+process RUSTQC_RNA {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/oarfish:latest'
+    container 'ghcr.io/chusj-pigu/rustqc:latest'
     // TODO : SET LEVEL OF RESSOURCES
     tag "$meta.id"
     label 'process_medium'
@@ -10,87 +10,53 @@ process OARFISH_QUANTIFY_FQ {
 
     input:
     tuple val(meta),
-        path(reads),
-        path(ref)
+        path(bam),
+        path(bai),
+        path(gtf)
 
     output:
     tuple val(meta),
-        path("*.quant"),
-        emit: quant
+        path("${meta.id}/featurecounts/${meta.id}.biotype_counts_rrna_mqc.tsv"),
+        emit: rrna_perc
     tuple val(meta),
-        path("*.tsv"),
-        emit: ambig
+        path("${meta.id}/featurecounts/${meta.id}.biotype_counts.tsv"),
+        emit: biotype_counts
     tuple val(meta),
-        path("*.json"),
-        emit: meta_info
+        path("${meta.id}/preseq/${meta.id}.lc_extrap.txt"),
+        emit: complexity_curve
+    tuple val(meta),
+        path("${meta.id}/qualimap/rnaseq_qc_results.txt"),
+        emit: qualimap
+    tuple val(meta),
+        path("${meta.id}/rseqc/junction_annotation/${meta.id}.junction_annotation.txt"),
+        emit: junctions
+    tuple val(meta),
+        path("${meta.id}/rseqc/tin/${meta.id}.summary.txt"),
+        emit: tin
+    tuple val(meta),
+        path("${meta.id}/qualimap/images_qualimapReport/Transcript coverage histogram.svg"),
+        emit: cov_hist_plot
+    tuple val(meta),
+        path("${meta.id}/qualimap/*"),
+        emit: qualimap_dir
     path "versions.yml",
         emit: versions
 
     script:
-    def args = task.ext?.args ?: ''
-    def prefix = task.ext?.prefix ?: "${meta.id}"
+    def args = task.ext.args ?: ''
+    def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
     """
-    oarfish \\
-        -j ${threads} \\
+    rustqc rna ${bam} \\
+        --gtf ${gtf} \\
+        --sample-name ${prefix} \\
+        -t ${threads} \\
         ${args} \\
-        --reads ${reads} \\
-        --reference ${ref} \\
-        --seq-tech ont-cdna \\
-        -o ${prefix} \\
-        --filter-group no-filters \\
-        --model-coverage
+        -o ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        oarfish: \$(echo \$(oarfish --version 2>&1) | sed 's/^.*oarfish //; s/Using.*\$//')
-    END_VERSIONS
-    """
-}
-
-process OARFISH_QUANTIFY_BAM {
-    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/oarfish:latest'
-    // TODO : SET LEVEL OF RESSOURCES
-    tag "$meta.id"
-    label 'process_medium'
-    label 'process_medium_high_cpu'
-    label 'process_low_memory'
-    label 'process_low_time'
-
-    input:
-    tuple val(meta),
-        path(bam)
-
-    output:
-    tuple val(meta),
-        path("*.quant"),
-        emit: quant
-    tuple val(meta),
-        path("*.tsv"),
-        emit: ambig
-    tuple val(meta),
-        path("*.json"),
-        emit: meta_info
-    path "versions.yml",
-        emit: versions
-
-    script:
-    def args = task.ext?.args ?: ''
-    def prefix = task.ext?.prefix ?: "${meta.id}"
-    def threads = task.cpus
-    """
-    oarfish \\
-        -j ${threads} \\
-        $args \\
-        -a ${bam} \\
-        -o ${prefix} \\
-        --filter-group no-filters \\
-        --model-coverage
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        oarfish: \$(echo \$(oarfish --version 2>&1) | sed 's/^.*oarfish //; s/Using.*\$//')
+        rustqc: \$(echo \$(rustqc -V 2>&1) | sed 's/^.*rustqc //; s/Using.*\$//')
     END_VERSIONS
     """
 }
