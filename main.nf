@@ -1,5 +1,5 @@
 process SQANTIRUST {
-    container 'ghcr.io/chusj-pigu/sqantirust:sha256-75dfd3d433fa8e01d60bdfd9faa92b4854510ef8fcffa08a35874f71fda649f3.sig'
+    container 'ghcr.io/chusj-pigu/sqantirust:sha-16aec7e'
     tag "$meta.id"
     label 'process_medium'
     label 'process_medium_high_cpu'
@@ -13,8 +13,11 @@ process SQANTIRUST {
 
     output:
     tuple val(meta),
-        path("*.tsv"),
-        emit: table
+        path("*summary.tsv"),
+        emit: summary
+    tuple val(meta),
+        path("*classification.tsv"),
+        emit: classification
     path "versions.yml",
         emit: versions
 
@@ -25,7 +28,8 @@ process SQANTIRUST {
     """
     sqantirust \\
         --ref-gtf ${ref_gtf} \\
-        --query ${gff} > ${prefix}.tsv
+        --query ${gff} \\
+        --output ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
