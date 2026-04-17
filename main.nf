@@ -28,11 +28,11 @@ process ONTIME_RANGE_FILTER {
     def args = task.ext.args ?: ''
     def prefix = "${meta.id}"
     """
-    ontime \
-        --from ${from}h \
-        --to ${to}h \
-        ${args} \
-        ${bam} \
+    ontime \\
+        --from ${from}h \\
+        --to ${to}h \\
+        ${args} \\
+        ${bam} \\
         -o ${prefix}-time-${from}h-${to}h.bam
 
     cat <<-END_VERSIONS > versions.yml
@@ -71,12 +71,51 @@ process ONTIME_RANGE_FILTER_FASTQ {
     def args = task.ext.args ?: ''
     def prefix = "${meta.id}"
     """
-    ontime \
-        --from ${from}h \
-        --to ${to}h \
-        ${args} \
-        ${fastq} \
+    ontime \\
+        --from ${from}h \\
+        --to ${to}h \\
+        ${args} \\
+        ${fastq} \\
         -o ${prefix}-time-${from}h-${to}h.fastq
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        ontime: \$(echo \$(ontime --version 2>&1) | sed 's/^.*ontime //; s/Using.*\$//')
+    END_VERSIONS
+    """
+}
+
+process ONTIME_TIME_RANGE {
+    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
+    container 'ghcr.io/chusj-pigu/ontime:latest'
+    label "process_single_cpu"          // Label for mpgi drac cpu alloc
+    label "process_low_memory"       // Label for mpgi drac memory alloc
+    label "process_medium_low_time"                // Label for mpgi drac time alloc
+
+    tag "$meta.id"
+
+    input:
+    tuple val(meta),
+        path(bam),
+        path(bai)
+
+    output:
+    tuple val(meta),
+        path("*.txt"),
+        emit: txt
+    path "versions.yml",
+        emit: versions
+
+    when:
+    task.ext.when == null || task.ext.when
+
+    script:
+    def args = task.ext.args ?: ''
+    def prefix = "${meta.id}"
+    """
+    ontime \\
+        --show \\
+        ${bam} > ${prefix}_time_range.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
