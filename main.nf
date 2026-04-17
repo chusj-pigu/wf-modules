@@ -4,9 +4,9 @@ process RUSTQC_RNA {
     // TODO : SET LEVEL OF RESSOURCES
     tag "$meta.id"
     label 'process_medium'
-    label 'process_medium_high_cpu'
-    label 'process_low_memory'
-    label 'process_low_time'
+    label 'process_medium_low_cpu'
+    label 'process_medium_mid_memory'
+    label 'process_medium_low_time'
 
     input:
     tuple val(meta),
