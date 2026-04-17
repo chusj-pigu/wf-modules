@@ -5,8 +5,8 @@ process RUSTQC_RNA {
     tag "$meta.id"
     label 'process_medium'
     label 'process_medium_high_cpu'
-    label 'process_low_memory'
-    label 'process_low_time'
+    label 'process_medium_mid_memory'
+    label 'process_medium_low_time'
 
     input:
     tuple val(meta),
