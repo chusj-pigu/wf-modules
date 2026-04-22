@@ -96,8 +96,7 @@ process ONTIME_TIME_RANGE {
 
     input:
     tuple val(meta),
-        path(bam),
-        path(bai)
+        path(input)
 
     output:
     tuple val(meta),
@@ -115,7 +114,7 @@ process ONTIME_TIME_RANGE {
     """
     ontime \\
         --show \\
-        ${bam} > ${prefix}_time_range.txt
+        ${input} > ${prefix}_time_range.txt
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
