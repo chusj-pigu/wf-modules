@@ -58,6 +58,7 @@ def liftoverChainPath(inputGenome, targetGenome) {
 
 process CLASSY_MARLIN {
     container "${CLASSY_CONTAINER}"
+    label "classy"
     label "process_low"                    // nf-core label
     label "process_medium_cpu"                 // Label for mpgi drac cpu alloc
     label "process_medium_low_memory"        // Label for mpgi drac memory alloc
@@ -136,6 +137,7 @@ process CLASSY_MARLIN {
 
 process CLASSY_TUCAN {
     container "${CLASSY_CONTAINER}"
+    label "classy"
     label "process_low"                    // nf-core label
     label "process_medium_cpu"                 // Label for mpgi drac cpu alloc
     label "process_medium_low_memory"        // Label for mpgi drac memory alloc
@@ -219,6 +221,7 @@ process CLASSY_TUCAN {
 
 process CLASSY_STURGEON_GENERAL {
     container "${CLASSY_CONTAINER}"
+    label "classy"
     label "process_low"                    // nf-core label
     label "process_medium_cpu"                 // Label for mpgi drac cpu alloc
     label "process_medium_low_memory"        // Label for mpgi drac memory alloc
@@ -300,6 +303,7 @@ process CLASSY_STURGEON_GENERAL {
 
 process CLASSY_STURGEON_BRAINSTEM {
     container "${CLASSY_CONTAINER}"
+    label "classy"
     label "process_low"                    // nf-core label
     label "process_medium_cpu"                 // Label for mpgi drac cpu alloc
     label "process_medium_low_memory"        // Label for mpgi drac memory alloc
@@ -380,6 +384,7 @@ process CLASSY_STURGEON_BRAINSTEM {
 
 process CLASSY_CROSSNN_CAPER {
     container "${CLASSY_CONTAINER}"
+    label "classy"
     label "process_low"                    // nf-core label
     label "process_medium_cpu"                 // Label for mpgi drac cpu alloc
     label "process_medium_low_memory"        // Label for mpgi drac memory alloc
@@ -473,6 +478,7 @@ process CLASSY_CROSSNN_CAPER {
 
 process CLASSY_CROSSNN_PANCAN {
     container "${CLASSY_CONTAINER}"
+    label "classy"
     label "process_low"                    // nf-core label
     label "process_medium_cpu"                 // Label for mpgi drac cpu alloc
     label "process_medium_low_memory"        // Label for mpgi drac memory alloc
@@ -561,6 +567,7 @@ process CLASSY_CROSSNN_PANCAN {
 
 process CLASSY_MARLIN_PILEUP {
     container "${CLASSY_CONTAINER}"
+    label "classy"
     label "process_low"
     label "process_medium_cpu"
     label "process_medium_low_memory"
@@ -625,6 +632,7 @@ process CLASSY_MARLIN_PILEUP {
 
 process CLASSY_TUCAN_PILEUP {
     container "${CLASSY_CONTAINER}"
+    label "classy"
     label "process_low"
     label "process_medium_cpu"
     label "process_medium_low_memory"
@@ -693,6 +701,7 @@ process CLASSY_TUCAN_PILEUP {
 
 process CLASSY_STURGEON_GENERAL_PILEUP {
     container "${CLASSY_CONTAINER}"
+    label "classy"
     label "process_low"
     label "process_medium_cpu"
     label "process_medium_low_memory"
@@ -759,6 +768,7 @@ process CLASSY_STURGEON_GENERAL_PILEUP {
 
 process CLASSY_STURGEON_BRAINSTEM_PILEUP {
     container "${CLASSY_CONTAINER}"
+    label "classy"
     label "process_low"
     label "process_medium_cpu"
     label "process_medium_low_memory"
@@ -825,6 +835,7 @@ process CLASSY_STURGEON_BRAINSTEM_PILEUP {
 
 process CLASSY_CROSSNN_CAPER_PILEUP {
     container "${CLASSY_CONTAINER}"
+    label "classy"
     label "process_low"
     label "process_medium_cpu"
     label "process_medium_low_memory"
@@ -900,6 +911,7 @@ process CLASSY_CROSSNN_CAPER_PILEUP {
 
 process CLASSY_CROSSNN_PANCAN_PILEUP {
     container "${CLASSY_CONTAINER}"
+    label "classy"
     label "process_low"
     label "process_medium_cpu"
     label "process_medium_low_memory"
