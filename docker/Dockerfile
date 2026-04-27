@@ -22,7 +22,8 @@ RUN apt update && apt install -y \
 
 # Install pipx packages
 RUN pip install jupyter && \
-    pip install papermill
+    pip install papermill && \
+    pip install beautifulsoup4
 
 ENV R_LIBS_USER=/usr/local/lib/R/site-library
 RUN mkdir -p ${R_LIBS_USER}
