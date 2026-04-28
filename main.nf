@@ -248,48 +248,32 @@ process SAMTOOLS_FAIDX {
 
     output:
     tuple val(meta),
-        path('*.fai'), emit: fasta_index
-    path "versions.yml"           , emit: versions
+        path("*.{fa,fasta,fa.gz}"),
+        path('*.fai'),
+        emit: fasta_index
+    path "versions.yml",
+    emit: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
-    // def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${in_fa.simpleName}"
+    def extension = in_fa.extension == "gz" ? 'fa.gz' : in_fa.extension
+    def genome_name = in_fa.name.contains('_genome') ? in_fa.simpleName.replace('_genome', '') : "${prefix}_genome"
     def threads = task.cpus
-    if (in_fa.name.endsWith('.gz')) {
     """
-    pigz \\
-        -d \\
-        -p ${threads} \\
-        -c ${in_fa} > ${in_fa.name - '.gz'}
-    samtools \\
-        faidx \\
-        -@ ${threads} \\
-        ${args} \\
-        ${in_fa.name - '.gz'}
+    ## copy genome to output without symlinks
+
+    cp ${in_fa} ${genome_name}.${extension}
+    samtools faidx ${genome_name}.${extension} -o ${genome_name}.${extension}.fai
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
     END_VERSIONS
     """
-    } else {
-    """
-    samtools \\
-        faidx \\
-        -@ ${threads} \\
-        ${args} \\
-        ${in_fa}
-
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        samtools: \$(echo \$(samtools --version 2>&1) | sed 's/^.*samtools //; s/Using.*\$//')
-    END_VERSIONS
-    """
-    }
-
 }
 
 process SAMTOOLS_SPLIT_BY_BED {
