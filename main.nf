@@ -1,7 +1,7 @@
 process CLAIRS_TO_CALL {
     // TODO SET CONTAINER TO FIXED VERSION
 
-    container "ghcr.io/chusj-pigu/clairsto:latest"
+    container "ghcr.io/chusj-pigu/clairsto:1b888e3807d4bbe9b26ed26c9a9ff82619bbc6ef"
 
     label 'process_high'                    // nf-core labels
     label "process_high_cpu"       // Label for mpgi drac cpu alloc
@@ -49,7 +49,7 @@ process CLAIRS_TO_CALL {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        ClairS-TO: "0.3.1"
+        ClairS-TO: \$(echo \$(run_clairs_to -v 2>&1) | awk '{ print \$2}')
     END_VERSIONS
     """
 }
