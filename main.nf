@@ -448,3 +448,38 @@ process BCFTOOLS_QUERY {
     END_VERSIONS
     """
 }
+
+process BGZIP_RECOMPRESS {
+
+    container "ghcr.io/chusj-pigu/bcftools:latest"
+    label "process_low"                     // nf-core labels
+    label "process_low_cpu"              // Label for mpgi drac memory alloc
+    label "process_low_memory"           // Label for mpgi drac memory alloc
+    label "process_low_time"            // Label for mpgi drac time alloc
+
+    tag "${meta.id}"
+
+    input:
+    tuple val(meta),
+        path(fasta)
+
+    output:
+    tuple val(meta),
+        path("*.fa.gz"),
+        emit: file
+    path "versions.yml",
+        emit: versions
+
+    script:
+    def prefix = "${fasta.simpleName}"
+    def output = "${prefix}_genome.fa.gz"
+    def unzip  = fasta.extension.contains('gz') ? "zcat ${fasta} | " : ''
+    """
+    ${unzip}bgzip -c > ${output}
+
+    cat <<-END_VERSIONS > versions.yml
+    "${task.process}":
+        bgzip: "\$(bgzip --version 2>&1 | head -1 | awk '{print \$NF}')"
+    END_VERSIONS
+    """
+}
