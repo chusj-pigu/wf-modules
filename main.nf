@@ -404,7 +404,7 @@ process CLASSY_CROSSNN_CAPER {
         path("*pies.svg"),
         emit:svg
     tuple val(meta),
-        path("*json"),
+        path("*classification.json"),
         emit:json
     tuple val(meta),
         path("*.html"),
@@ -498,7 +498,7 @@ process CLASSY_CROSSNN_PANCAN {
         path("*pies.svg"),
         emit:svg
     tuple val(meta),
-        path("*json"),
+        path("*classification.json"),
         emit:json
     tuple val(meta),
         path("*.html"),
