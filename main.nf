@@ -4,7 +4,7 @@ process CLAIRS_TO_CALL {
     container "ghcr.io/chusj-pigu/clairsto:1b888e3807d4bbe9b26ed26c9a9ff82619bbc6ef"
 
     label 'process_high'                    // nf-core labels
-    label "process_high_cpu"       // Label for mpgi drac cpu alloc
+    label "process_medium_high_cpu"       // Label for mpgi drac cpu alloc
     label "process_higher_memory"         // Label for mpgi drac memory alloc
     label "process_medium_low_time"
     label "singleton" // This process is a singleton, so it will not run in parallel
