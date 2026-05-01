@@ -133,7 +133,7 @@ process BEDTOOLS_LEFTOUTER {
 
 process BEDTOOLS_SUBTRACT {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/bedtools:latest'
+    container 'ghcr.io/chusj-pigu/bedtools:10eb68af7050c7e56f5e5114ec4dad1ba4f84a83'
 
     tag "$meta.id"
     label 'process_low'
@@ -164,7 +164,7 @@ process BEDTOOLS_SUBTRACT {
     """
     bedtools subtract \\
         ${args} \\
-        -a ${chrom_bed} \\
+        -a /opt/data/${ref_id}_chrom.bed \\
         -b ${bed_panel} \\
         > ${prefix}_background.bed
 
