@@ -57,6 +57,7 @@ WORKDIR /opt/delly/bin
 COPY --from=0 /opt/delly/bin/delly .
 WORKDIR /opt/data
 COPY --from=0 /opt/Homo_sapiens* .
+COPY --from=0 /opt/T2T* .
 
 # Workdir
 WORKDIR /root/

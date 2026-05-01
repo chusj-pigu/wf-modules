@@ -1,6 +1,6 @@
 process DELLY_CNV {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/delly:latest'
+    container 'ghcr.io/chusj-pigu/delly:4c07465cd477798fc6fe0b06d941dbe8acdba7bb'
 
     tag "$meta.id"
     label 'process_low'
