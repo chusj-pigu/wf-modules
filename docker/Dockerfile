@@ -21,6 +21,7 @@ RUN apt-get update && apt-get install -y \
     libhdf5-dev \
     libncurses-dev \
     liblzma-dev \
+    procps \
     pkg-config \
     zlib1g-dev \
     wget \
@@ -34,11 +35,13 @@ WORKDIR /opt
 
 # install delly
 RUN git clone --recursive https://github.com/dellytools/delly.git \
-    && cd /opt/delly/ \
+    && cd delly/ \
     && make STATIC=1 PARALLEL=1 all \
     && make install
 
 # Add blacklists to container
+WORKDIR /opt/data
+
 RUN wget https://gear-genomics.embl.de/data/delly/Homo_sapiens.GRCh38.dna.primary_assembly.fa.r101.s501.blacklist.gz && \
     wget https://gear-genomics.embl.de/data/delly/Homo_sapiens.GRCh38.dna.primary_assembly.fa.r101.s501.blacklist.gz.fai && \
     wget https://gear-genomics.embl.de/data/delly/Homo_sapiens.GRCh38.dna.primary_assembly.fa.r101.s501.blacklist.gz.gzi && \
@@ -49,24 +52,11 @@ RUN wget https://gear-genomics.embl.de/data/delly/Homo_sapiens.GRCh38.dna.primar
     wget https://gear-genomics.embl.de/data/delly/T2T-CHM13v1.1.fa.r101.s501.gz.fai && \
     wget https://gear-genomics.embl.de/data/delly/T2T-CHM13v1.1.fa.r101.s501.gz.gzi
 
-# Multi-stage build
-FROM alpine:latest
-RUN apk add --no-cache bash procps \
-    && mkdir -p /opt/delly/bin
-WORKDIR /opt/delly/bin
-COPY --from=0 /opt/delly/bin/delly .
-WORKDIR /opt/data
-COPY --from=0 /opt/Homo_sapiens* .
-COPY --from=0 /opt/T2T* .
-
-# Workdir
-WORKDIR /root/
-
 # Add Delly to PATH
 ENV PATH="/opt/delly/bin:${PATH}"
+
+WORKDIR /opt
 
 # Set OpenMP threads
 ENV OMP_NUM_THREADS=10
 
-# by default /bin/sh is executed
-CMD ["/bin/sh"]
