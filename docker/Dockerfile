@@ -44,7 +44,10 @@ RUN wget https://gear-genomics.embl.de/data/delly/Homo_sapiens.GRCh38.dna.primar
     wget https://gear-genomics.embl.de/data/delly/Homo_sapiens.GRCh38.dna.primary_assembly.fa.r101.s501.blacklist.gz.gzi && \
     wget https://gear-genomics.embl.de/data/delly/Homo_sapiens.GRCh37.dna.primary_assembly.fa.r101.s501.blacklist.gz && \
     wget https://gear-genomics.embl.de/data/delly/Homo_sapiens.GRCh37.dna.primary_assembly.fa.r101.s501.blacklist.gz.fai && \
-    wget https://gear-genomics.embl.de/data/delly/Homo_sapiens.GRCh38.dna.primary_assembly.fa.r101.s501.blacklist.gz.gzi
+    wget https://gear-genomics.embl.de/data/delly/Homo_sapiens.GRCh38.dna.primary_assembly.fa.r101.s501.blacklist.gz.gzi && \
+    wget https://gear-genomics.embl.de/data/delly/T2T-CHM13v1.1.fa.r101.s501.gz && \
+    wget https://gear-genomics.embl.de/data/delly/T2T-CHM13v1.1.fa.r101.s501.gz.fai && \
+    wget https://gear-genomics.embl.de/data/delly/T2T-CHM13v1.1.fa.r101.s501.gz.gzi
 
 # Multi-stage build
 FROM alpine:latest

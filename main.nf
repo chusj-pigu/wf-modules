@@ -36,7 +36,8 @@ process DELLY_CNV {
     def prefix = task.ext.prefix ?: "${meta.id}"
     def map = ref_id in ["hg38", "GRCh38"] ?
         "/opt/data/Homo_sapiens.GRCh38.dna.primary_assembly.fa.r101.s501.blacklist.gz" :
-        "/opt/data/Homo_sapiens.GRCh37.dna.primary_assembly.fa.r101.s501.blacklist.gz"
+        (ref_id in ["hg19", "GRCh37"] ? "/opt/data/Homo_sapiens.GRCh37.dna.primary_assembly.fa.r101.s501.blacklist.gz" :
+        "/opt/data/T2T-CHM13v1.1.fa.r101.s501.gz")
     def window = params.delly_bin_size
     """
     delly cnv \\
