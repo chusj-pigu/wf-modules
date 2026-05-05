@@ -1,5 +1,5 @@
 process QUARTO_REPORT {
-    container 'ghcr.io/chusj-pigu/quarto:latest'
+    container 'ghcr.io/chusj-pigu/quarto:1aae9c5de71b00a19debb6db4067e5eb67301126'
 
     tag "$meta.id"
     label 'process_low'
@@ -72,7 +72,7 @@ END_VERSIONS
 }
 
 process QUARTO_TABLE {
-    container 'ghcr.io/chusj-pigu/quarto:latest'
+    container 'ghcr.io/chusj-pigu/quarto:1aae9c5de71b00a19debb6db4067e5eb67301126'
 
     tag "$meta.id"
     label 'process_low'
@@ -144,7 +144,7 @@ END_VERSIONS
 }
 
 process QUARTO_TABLE_COLNAMES {
-    container 'ghcr.io/chusj-pigu/quarto:latest'
+    container 'ghcr.io/chusj-pigu/quarto:1aae9c5de71b00a19debb6db4067e5eb67301126'
 
     tag "$meta.id"
     label 'process_low'
@@ -207,7 +207,7 @@ END_VERSIONS
 }
 
 process QUARTO_FIGURE {
-    container 'ghcr.io/chusj-pigu/quarto:latest'
+    container 'ghcr.io/chusj-pigu/quarto:1aae9c5de71b00a19debb6db4067e5eb67301126'
 
     tag "$meta.id"
     label 'process_low'
@@ -254,7 +254,7 @@ END_VERSIONS
 
 
 process QUARTO_SECTION {
-    container 'ghcr.io/chusj-pigu/quarto:latest'
+    container 'ghcr.io/chusj-pigu/quarto:1aae9c5de71b00a19debb6db4067e5eb67301126'
 
     tag "$meta.id"
     label 'process_low'
@@ -313,7 +313,7 @@ END_VERSIONS
 
 
 process QUARTO_TEXT {
-    container 'ghcr.io/chusj-pigu/quarto:latest'
+    container 'ghcr.io/chusj-pigu/quarto:1aae9c5de71b00a19debb6db4067e5eb67301126'
 
     tag "$meta.id"
     label 'process_low'
@@ -349,7 +349,7 @@ END_REPORT
 }
 
 process QUARTO_CODE {
-    container 'ghcr.io/chusj-pigu/quarto:latest'
+    container 'ghcr.io/chusj-pigu/quarto:1aae9c5de71b00a19debb6db4067e5eb67301126'
 
     tag "$meta.id"
     label 'process_low'
@@ -394,7 +394,7 @@ END_VERSIONS
 }
 
 process QUARTO_TABLE_TABS {
-    container 'ghcr.io/chusj-pigu/quarto:latest'
+    container 'ghcr.io/chusj-pigu/quarto:1aae9c5de71b00a19debb6db4067e5eb67301126'
     tag "$meta.id"
     label 'process_low'
     label 'process_single_cpu'
@@ -490,7 +490,7 @@ END_VERSIONS
 }
 
 process QUARTO_FIGURE_TABS {
-    container 'ghcr.io/chusj-pigu/quarto:latest'
+    container 'ghcr.io/chusj-pigu/quarto:1aae9c5de71b00a19debb6db4067e5eb67301126'
     tag "$meta.id"
     label 'process_low'
     label 'process_single_cpu'
