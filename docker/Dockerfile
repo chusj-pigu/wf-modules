@@ -1,4 +1,4 @@
-FROM hkubal/clair3:latest
+FROM hkubal/clair3:v2.0.1_gpu
 
 WORKDIR /opt/bin
 # Install dependencies

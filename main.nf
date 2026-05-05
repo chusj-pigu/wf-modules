@@ -3,6 +3,7 @@ process CLAIR3_CALL {
 
     container "ghcr.io/chusj-pigu/clair3:latest"
 
+    label "process_gpu"
     label 'process_high'                    // nf-core labels
     label "process_high_cpu"       // Label for mpgi drac cpu alloc
     label "process_higher_memory"         // Label for mpgi drac memory alloc
@@ -33,7 +34,7 @@ process CLAIR3_CALL {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def bed_in = params.realtime >= 1 && params.realtime <= 72 ? "--bed_fn=${bed}" : ""
+    def bed_in = params.realtime >= 1 && params.realtime <= 72 ? "--bed_fn=${bed} --enable_dwell_time" : ""
     """
     ## Run Clair3
     run_clair3.sh \\
@@ -45,6 +46,7 @@ process CLAIR3_CALL {
         --model_path="/opt/models/${model}" \\
         --bam_fn=${bam} \\
         --ref_fn=${ref} \\
+        --use_gpu \\
         -o ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
