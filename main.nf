@@ -1,7 +1,7 @@
 process CLAIR3_CALL {
     // TODO SET CONTAINER TO FIXED VERSION
 
-    container "ghcr.io/chusj-pigu/clair3:latest"
+    container "ghcr.io/chusj-pigu/clair3:5c1b224addf317c2cfe5ab5e03f6cdb23da13303"
 
     label "process_gpu"
     label 'process_high'                    // nf-core labels
@@ -34,7 +34,7 @@ process CLAIR3_CALL {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def bed_in = params.realtime >= 1 && params.realtime <= 72 ? "--bed_fn=${bed} --enable_dwell_time" : ""
+    def bed_in = params.realtime >= 1 && params.realtime <= 72 ? "--bed_fn=${bed}" : ""
     """
     ## Run Clair3
     run_clair3.sh \\
