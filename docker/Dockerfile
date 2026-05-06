@@ -1,22 +1,47 @@
-FROM python:3.10.15
+# syntax=docker/dockerfile:1.7
 
-# Install dependencies
-RUN apt update && apt install -y \
-    procps \
+############################
+# Builder stage
+############################
+FROM rust:1.95-slim-trixie AS builder
+
+WORKDIR /app
+
+# Install build dependencies.
+# Add extra libs here if your crate needs them, e.g. libssl-dev, pkg-config, clang.
+RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
-    && apt-get clean
+    pkg-config \
+    ca-certificates \
+    build-essential \
+    clang \
+    make \
+    cmake \
+    perl \
+    autoconf \
+    automake \
+    libtool \
+    && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /opt/app
 
-RUN pip3 install pysam>=0.21.0 \
-     edlib>=1.3.9 \
-     psutil>=5.9.4 \
-     sniffles
+RUN git clone https://github.com/jwanglab/nasvar
+WORKDIR /app/nasvar
+RUN cargo build --release
 
-ENV PATH=/opt/app/:$PATH
+############################
+# Runtime stage
+############################
+FROM debian:trixie-slim AS runtime
 
-RUN git clone https://github.com/fritzsedlazeck/Sniffles && \
-    mv Sniffles/annotations/*.bed /opt/app && \
-    rm -r Sniffles
+WORKDIR /app
 
-CMD ["bash"]
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Change this to your binary name
+ARG BIN_NAME=nasvar
+
+COPY --from=builder /app/nasvar/target/release/${BIN_NAME} /usr/local/bin/${BIN_NAME}
+
+ENTRYPOINT ["/usr/local/bin/${BIN_NAME}"]

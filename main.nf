@@ -1,4 +1,4 @@
-process SNIFFLES_CALL {
+process NASVAR_PIPELINE {
     // TODO SET CONTAINER TO FIXED VERSION
 
     container "ghcr.io/chusj-pigu/sniffles:latest"
@@ -16,11 +16,18 @@ process SNIFFLES_CALL {
         path(bai),
         val(ref_type),
         path(ref_fasta),
-        path(ref_fai)
+        path(ref_fai),
+        path(repeats_bed),
+        path(enriched_bed),
+        path(maf_sites),
+        path(targets_bed),
+        path(genes_gff3),
+        path(pipeline_config),
+        path(reference_json)
 
     output:
     tuple val(meta),
-        path("*.vcf.gz"),
+        path("output/*.vcf.gz"),
         emit: vcf
     path "versions.yml",
         emit: versions
@@ -29,29 +36,27 @@ process SNIFFLES_CALL {
     task.ext.when == null || task.ext.when
 
     script:
-    def isPhased = bam.baseName.contains('phased')
-    def argsPhased = isPhased ? '--phase' : ''
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def threads = task.cpus
-    def tr_bed = ref_type in ["hg38", "GRCh38"] \
-        ? "--tandem-repeats /opt/app/human_GRCh38_no_alt_analysis_set.trf.bed" \
-        : ref_type in ["hg19", "GRCh37"] \
-        ? "--tandem-repeats /opt/app/human_hs37d5.trf.bed" \
-        : ""
     """
-    sniffles \\
-        --input ${bam} \\
-        --reference ${ref_fasta} \\
-        ${tr_bed} \\
-        ${args} \\
-        ${argsPhased} \\
-        -t ${threads} \\
-        --vcf ${prefix}_sv.vcf.gz
+    mkdir -p output
+
+    nasvar pipeline \\
+        ${bam} \\
+        ${repeats_bed} \\
+        ${enriched_bed} \\
+        ${maf_sites} \\
+        ${targets_bed} \\
+        ${ref_fasta} \\
+        ${genes_gff3} \\
+        output/${prefix} \\
+        --config ${pipeline_config} \\
+        --reference ${reference_json} \\
+        ${args}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        Sniffles2: \$(echo \$(sniffles --version 2>&1) | awk '{print \$NF}' )
+        nasvar: \$(echo \$(nasvar --version 2>&1) | awk '{print \$NF}' )
     END_VERSIONS
     """
 }
