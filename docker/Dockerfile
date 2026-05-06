@@ -4,7 +4,7 @@ FROM python:3.10.15
 RUN apt update && apt install -y \
     procps \
     git \
-    && apt-get clean 
+    && apt-get clean
 
 WORKDIR /opt/app
 
@@ -13,7 +13,7 @@ RUN pip3 install pysam>=0.21.0 \
      psutil>=5.9.4 \
      sniffles
 
-ENV PATH /opt/app/:$PATH
+ENV PATH=/opt/app/:$PATH
 
 RUN git clone https://github.com/fritzsedlazeck/Sniffles && \
     mv Sniffles/annotations/*.bed /opt/app && \
