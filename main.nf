@@ -1,7 +1,7 @@
 process CLAIRS_TO_CALL {
     // TODO SET CONTAINER TO FIXED VERSION
 
-    container "ghcr.io/chusj-pigu/clairsto:1b888e3807d4bbe9b26ed26c9a9ff82619bbc6ef"
+    container "ghcr.io/chusj-pigu/clairsto:6309989ff6aa9f0c69c89238835d094a198ccad1"
 
     label 'process_high'                    // nf-core labels
     label "process_medium_high_cpu"       // Label for mpgi drac cpu alloc
