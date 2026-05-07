@@ -43,7 +43,7 @@ RUN rm gatk-4.1.8.0.zip
 
 # Install SubChrom
 WORKDIR /opt/
-RUN git clone https://github.com/Shaohua-Lei/SubChrom.git
+RUN git clone https://github.com/charlenelawdes/SubChrom.git
 
 ENV PATH="/opt/gatk:/opt/SubChrom/scripts:${PATH}"
 
