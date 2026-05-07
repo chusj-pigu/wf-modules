@@ -22,7 +22,8 @@ RUN apt update && apt install -y \
 
 # Install pipx packages
 RUN pip install jupyter && \
-    pip install papermill
+    pip install papermill && \
+    pip install beautifulsoup4
 
 ENV R_LIBS_USER=/usr/local/lib/R/site-library
 RUN mkdir -p ${R_LIBS_USER}
@@ -32,7 +33,7 @@ ENV PATH="${PATH}:/usr/lib/R/bin"
 ENV R_HOME=/usr/lib/R
 ENV QUARTO_R=/usr/lib/R/bin/Rscript
 
-RUN R -e "install.packages(c('textshaping','knitr', 'tidyverse', 'kableExtra'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages(c('textshaping','knitr', 'tidyverse', 'kableExtra', 'rmarkdown'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
 RUN wget https://github.com/quarto-dev/quarto-cli/releases/download/v1.7.31/quarto-1.7.31-linux-amd64.deb
 
