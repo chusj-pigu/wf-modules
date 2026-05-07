@@ -35,6 +35,7 @@ process CLAIR3_CALL {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     def bed_in = params.realtime >= 1 && params.realtime <= 72 ? "--bed_fn=${bed}" : ""
+    def gpu_use = params.clair3_gpu ? "--use_gpu" : ''
     """
     ## Run Clair3
     run_clair3.sh \\
@@ -46,7 +47,7 @@ process CLAIR3_CALL {
         --model_path="/opt/models/${model}" \\
         --bam_fn=${bam} \\
         --ref_fn=${ref} \\
-        --use_gpu \\
+        ${gpu_use} \\
         -o ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
