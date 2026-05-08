@@ -3,7 +3,7 @@ process CLAIR3_CALL {
 
     container "ghcr.io/chusj-pigu/clair3:5c1b224addf317c2cfe5ab5e03f6cdb23da13303"
 
-    label "process_gpu"
+    label "process_gpu_clair3"
     label 'process_high'                    // nf-core labels
     label "process_high_cpu"       // Label for mpgi drac cpu alloc
     label "process_higher_memory"         // Label for mpgi drac memory alloc
