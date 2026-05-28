@@ -126,7 +126,7 @@ process QUARTO_TABLE {
     library(vroom)
     library(knitr)
     library(kableExtra)
-    data <- vroom("${table_data}", col_names = ${col_names_render}, show_col_types = FALSE)
+    data <- vroom("${table_data}", col_names = ${col_names_render}, col_types = cols(.default = "c"), show_col_types = FALSE)
     data |>
     head(1000) |>
     kable()
@@ -189,7 +189,7 @@ process QUARTO_TABLE_COLNAMES {
     library(vroom)
     library(knitr)
     library(kableExtra)
-    data <- vroom("${table_data}", col_names = trimws(strsplit("${col_names}", ",")[[1]]), show_col_types = FALSE)
+    data <- vroom("${table_data}", col_names = trimws(strsplit("${col_names}", ",")[[1]]), col_types = cols(.default = "c"), show_col_types = FALSE)
     data |>
     head(1000) |>
     kable()
