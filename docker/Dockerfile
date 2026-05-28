@@ -14,5 +14,3 @@ RUN micromamba create -n severus_env \
 ENV PATH="/opt/conda/envs/severus_env/bin:${PATH}"
 
 RUN severus -h
-
-ENTRYPOINT ["severus"]
