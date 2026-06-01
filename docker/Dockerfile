@@ -8,13 +8,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /opt/app
 
-RUN micromamba create -n severus_env \
+RUN micromamba create -n wakhan_env \
     -c bioconda -c conda-forge -c defaults \
-    severus libdeflate -y \
+    wakhan libdeflate -y \
     && micromamba clean -afy
 
-ENV PATH="/opt/conda/envs/severus_env/bin:${PATH}"
-
-RUN git clone https://github.com/KolmogorovLab/Severus
-
-RUN severus -h
+ENV PATH="/opt/conda/envs/wakhan_env/bin:${PATH}"
