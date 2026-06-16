@@ -20,6 +20,9 @@ process QUARTO_REPORT {
     tuple val(meta),
         path("*_report_output"),
         emit: report
+    tuple val(meta),
+        path("*_main_report.qmd"),
+        emit: source
     path "versions.yml",
         emit: versions
 
@@ -37,12 +40,15 @@ process QUARTO_REPORT {
         cp -r \${file}/* ${prefix}_report_output/
     done
 
-    cat ${report_template} >> ${prefix}_report_output/${prefix}.qmd
-    echo "${report_section_split}"
+    cat ${report_template} > ${prefix}_report_output/${prefix}.qmd
     for section in ${report_section_split}; do
-        echo "section: \${section}"
-        printf '\n{{< include %s >}}\n' "\${section}" >> ${prefix}_report_output/${prefix}.qmd
+        {
+            printf '\n\n'
+            cat ${prefix}_report_output/\${section}
+        } >> ${prefix}_report_output/${prefix}.qmd
     done
+
+    cp ${prefix}_report_output/${prefix}.qmd ${prefix}_main_report.qmd
 
     cd ${prefix}_report_output
 
@@ -63,7 +69,26 @@ END_VERSIONS
     """
 
     stub:
+    def prefix = task.ext.prefix ?: "${meta.id}"
+    def report_section_split = report_section.collect { it }.join(" ")
     """
+    mkdir ${prefix}_report_output
+
+    for file in ${report_inputs}; do
+        cp -r \${file}/* ${prefix}_report_output/
+    done
+
+    cat ${report_template} > ${prefix}_report_output/${prefix}.qmd
+    for section in ${report_section_split}; do
+        {
+            printf '\n\n'
+            cat ${prefix}_report_output/\${section}
+        } >> ${prefix}_report_output/${prefix}.qmd
+    done
+
+    cp ${prefix}_report_output/${prefix}.qmd ${prefix}_main_report.qmd
+    touch ${prefix}_report_output/${prefix}.html
+
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         quarto: \$( quarto --version )
@@ -103,6 +128,7 @@ process QUARTO_TABLE {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     def chunkClasses = section == 'target_calls' ? "\n    #| classes: target-calls-wide" : ""
+    def safeCaption = caption.toString().replace("'", "''")
     def col_names_render = col_names
     if (col_names instanceof Boolean) {
         col_names_render = col_names ? 'TRUE' : 'FALSE'
@@ -120,7 +146,7 @@ process QUARTO_TABLE {
     cat <<-END_REPORT > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
     \\`\\`\\`{r}
     #| label: ${prefix}-${section}-${process}${chunkClasses}
-    #| tbl-cap: ${caption}
+    #| tbl-cap: '${safeCaption}'
     #| echo: false
     #| tbl-cap-location: bottom
     library(vroom)
@@ -175,6 +201,7 @@ process QUARTO_TABLE_COLNAMES {
     script:
     def prefix = task.ext.prefix ?: "${meta.id}"
     def chunkClasses = section == 'target_calls' ? "\n    #| classes: target-calls-wide" : ""
+    def safeCaption = caption.toString().replace("'", "''")
 
     """
     mkdir ${prefix}_${section}_${process}_inputs
@@ -183,7 +210,7 @@ process QUARTO_TABLE_COLNAMES {
     cat <<-END_REPORT > ${prefix}_${section}_${process}_inputs/${prefix}-${section}-${process}.qmd
     \\`\\`\\`{r}
     #| label: ${prefix}-${section}-${process}${chunkClasses}
-    #| tbl-cap: ${caption}
+    #| tbl-cap: '${safeCaption}'
     #| echo: false
     #| tbl-cap-location: bottom
     library(vroom)
@@ -265,6 +292,7 @@ process QUARTO_SECTION {
     input:
     tuple val(meta),
         val(section),
+        val(section_title),
         path(section_inputs),
         val(section_description)
 
@@ -292,11 +320,8 @@ process QUARTO_SECTION {
         cp -r \${file}/* ${prefix}_${section}_inputs
     done
 
-    # Transform: uppercase and replace underscores with spaces
-    formatted_section=\$(echo "${section}" | tr '_' ' ' | tr '[:lower:]' '[:upper:]')
-
     {
-        printf "# %s\n" "\${formatted_section}"
+        printf "# %s\n\n" "${section_title}"
         printf "%s\n\n" "${section_description}"
     } > ${prefix}_${section}_inputs/${prefix}-${section}.qmd
 
