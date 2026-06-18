@@ -1,60 +1,4 @@
-def CLASSY_CONTAINER = 'ghcr.io/chusj-pigu/classy:sha-d206213'
-
-def normalizeGenome(genome) {
-    switch (genome?.toLowerCase()) {
-        case 'hs1':
-        case 't2t' || 'chm13':
-            return 't2t'
-        case 'hg38' || 'grch38':
-            return 'hg38'
-        case 'hg19' || 'grch37':
-            return 'hg19'
-        default:
-            return genome?.toLowerCase()
-    }
-}
-
-def chainGenomeLabel(genome) {
-    switch (normalizeGenome(genome)) {
-        case 'hg19':
-            return 'Hg19'
-        case 'hg38':
-            return 'Hg38'
-        case 't2t':
-            return 'Hs1'
-        default:
-            return null
-    }
-}
-
-def chainGenomeStem(genome) {
-    switch (normalizeGenome(genome)) {
-        case 'hg19':
-            return 'hg19'
-        case 'hg38':
-            return 'hg38'
-        case 't2t':
-            return 'hs1'
-        default:
-            return null
-    }
-}
-
-def liftoverChainPath(inputGenome, targetGenome) {
-
-    if (inputGenome == targetGenome) {
-        return null
-    }
-
-    def srcStem = chainGenomeStem(inputGenome)
-    def dstLabel = chainGenomeLabel(targetGenome)
-
-    if (!srcStem || !dstLabel) {
-        return null
-    }
-
-    return "/opt/classy/models/liftover_chains/${srcStem}To${dstLabel}.over.chain.gz"
-}
+def CLASSY_CONTAINER = 'ghcr.io/chusj-pigu/classy:sha-23a7cad'
 
 process CLASSY_MARLIN {
     container "${CLASSY_CONTAINER}"
@@ -92,7 +36,7 @@ process CLASSY_MARLIN {
     script:
     def args = task.ext.args ?: ''
     def threads = task.cpus
-    def genome = normalizeGenome(refid)
+    def genome = refid == "hs1" ? 't2t' : refid
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     classy marlin \\
@@ -108,8 +52,7 @@ process CLASSY_MARLIN {
         --pileup-threads ${threads} \\
         --reference ${ref} \\
         --sample ${prefix} \\
-        --features /opt/classy/models/MARLIN/marlin_v1.features.RData \\
-        --probes /opt/classy/models/MARLIN/marlin_v1.probes_${genome}.bed.gz
+        --features /opt/classy/models/MARLIN/marlin_v1.features.RData
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -171,17 +114,7 @@ process CLASSY_TUCAN {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def genome = normalizeGenome(refid)
-    def model_ref = "t2t"
-    // def liftover = genome in ["t2t", "chm13"] ? "" :
-    //     (genome in ["hg38", "grch38"] ?
-    //     "--tucan-input-genome t2t --tucan-target-genome hg38" :
-    //     "--tucan-input-genome t2t --tucan-target-genome hg19")
-    def liftoverChain = task.ext.liftover_chain ?: liftoverChainPath(model_ref, genome)
-    def liftoverArg = liftoverChain ? "--tucan-liftover-chain ${liftoverChain}" : ''
-    if (model_ref != genome && !liftoverChain) {
-        throw new IllegalArgumentException("No default Tucan liftover chain for ${model_ref} -> ${genome}; set task.ext.liftover_chain")
-    }
+    def genome = refid == "hs1" ? 't2t' : refid
     """
     classy tucan \\
         -i ${bam} \\
@@ -190,9 +123,8 @@ process CLASSY_TUCAN {
         --reference ${ref} \\
         --use-pileup \\
         --motif "CpG:CG" \\
-        --tucan-input-genome ${model_ref} \\
+        --tucan-input-genome "t2t" \\
         --tucan-target-genome ${genome} \\
-        ${liftoverArg} \\
         --tucan-model /opt/classy/models/tucan/runtime/model.safetensors \\
         --tucan-num-cpgs 10000 \\
         --tucan-num-samplings 1 \\
@@ -255,17 +187,8 @@ process CLASSY_STURGEON_GENERAL {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def genome = normalizeGenome(refid)
-    def model_ref = "t2t"
-    // def liftover = genome in ["t2t", "chm13"] ? "" :
-    //     (genome in ["hg38", "grch38"] ?
-    //     "--sturgeon-input-genome t2t --sturgeon-target-genome hg38" :
-    //     "--sturgeon-input-genome t2t --sturgeon-target-genome hg19")
-    def liftoverChain = task.ext.liftover_chain ?: liftoverChainPath(model_ref, genome)
-    def liftoverArg = liftoverChain ? "--sturgeon-liftover-chain ${liftoverChain}" : ''
-    if (model_ref != genome && !liftoverChain) {
-        throw new IllegalArgumentException("No default Sturgeon liftover chain for ${model_ref} -> ${genome}; set task.ext.liftover_chain")
-    }
+    def genome = refid == "hs1" ? 't2t' : refid
+    def probes_genome = genome == "hg19" ? 'hg38' : "${genome}"
     """
     classy sturgeon \\
         -i ${bam} \\
@@ -274,9 +197,8 @@ process CLASSY_STURGEON_GENERAL {
         --reference ${ref} \\
         --use-pileup \\
         --motif "CpG:CG" \\
-        --sturgeon-input-genome ${model_ref} \\
-        --sturgeon-target-genome ${genome} \\
-        ${liftoverArg} \\
+        --sturgeon-probes-genome ${probes_genome} \\
+        --sturgeon-alignment-genome ${genome} \\
         --sturgeon-model /opt/classy/models/Sturgeon/general \\
         ${args}
 
@@ -315,6 +237,7 @@ process CLASSY_STURGEON_BRAINSTEM {
     tuple val(meta),
         path(bam),
         path(bai),
+        val(refid),
         path(ref)
 
     output:
@@ -336,17 +259,8 @@ process CLASSY_STURGEON_BRAINSTEM {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def genome = normalizeGenome(refid)
-    def model_ref = "t2t"
-    // def liftover = genome in ["t2t", "chm13"] ? "" :
-    //     (genome in ["hg38", "grch38"] ?
-    //     "--sturgeon-input-genome t2t --sturgeon-target-genome hg38" :
-    //     "--sturgeon-input-genome t2t --sturgeon-target-genome hg19")
-    def liftoverChain = task.ext.liftover_chain ?: liftoverChainPath(model_ref, genome)
-    def liftoverArg = liftoverChain ? "--sturgeon-liftover-chain ${liftoverChain}" : ''
-    if (model_ref != genome && !liftoverChain) {
-        throw new IllegalArgumentException("No default Sturgeon liftover chain for ${model_ref} -> ${genome}; set task.ext.liftover_chain")
-    }
+    def genome = refid == "hs1" ? 't2t' : refid
+    def probes_genome = genome == "hg19" ? 'hg38' : "${genome}"
     """
     classy sturgeon \\
         -i ${bam} \\
@@ -355,9 +269,8 @@ process CLASSY_STURGEON_BRAINSTEM {
         --reference ${ref} \\
         --use-pileup \\
         --motif "CpG:CG" \\
-        --sturgeon-input-genome ${model_ref} \\
-        --sturgeon-target-genome ${genome} \\
-        ${liftoverArg} \\
+        --sturgeon-probes-genome ${probes_genome} \\
+        --sturgeon-alignment-genome ${genome} \\
         --sturgeon-model /opt/classy/models/Sturgeon/brainstem \\
         ${args}
 
@@ -418,18 +331,9 @@ process CLASSY_CROSSNN_CAPER {
     script:
     def args = task.ext.args ?: ''
     def threads = task.cpus
+    def genome = refid == "hs1" ? 't2t' : refid
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def genome = normalizeGenome(refid)
-    def model_ref = "hg19"
-    // def liftover = genome in ["hg19", "grch37"] ? "" :
-    //     (genome in ["hg38", "grch38"] ?
-    //     "--input-genome hg19 --target-genome hg38" :
-    //     "--input-genome hg19 --target-genome t2t")
-    def liftoverChain = task.ext.liftover_chain ?: liftoverChainPath(model_ref, genome)
-    def liftoverArg = liftoverChain ? "--liftover-chain ${liftoverChain}" : ''
-    if (model_ref != genome && !liftoverChain) {
-        throw new IllegalArgumentException("No default CrossNN liftover chain for ${model_ref} -> ${genome}; set task.ext.liftover_chain")
-    }
+
     """
     classy crossnn \\
         -i ${bam} \\
@@ -438,12 +342,10 @@ process CLASSY_CROSSNN_CAPER {
         --use-pileup \\
         --motif "CpG:CG" \\
         --reference ${ref} \\
-        --input-genome ${model_ref} \\
+        --input-genome hg19 \\
         --target-genome ${genome} \\
-        ${liftoverArg} \\
         --crossnn-model /opt/classy/models/crossNN/runtime/Capper_et_al.safetensors \\
         --crossnn-embedding /opt/classy/models/crossNN/runtime/Capper_et_al_embedding.json \\
-        --crossnn-probes /opt/classy/models/crossNN/static/450K_hg19.bed \\
         --crossnn-dictionary /opt/classy/models/crossNN/static/Capper_et_al_dictionary.txt \\
         --crossnn-training-set Capper_et_al \\
         --crossnn-cutoff 0.2 \\
@@ -513,13 +415,7 @@ process CLASSY_CROSSNN_PANCAN {
     def args = task.ext.args ?: ''
     def threads = task.cpus
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def genome = normalizeGenome(refid)
-    def model_ref = "hg19"
-    def liftoverChain = task.ext.liftover_chain ?: liftoverChainPath(model_ref, genome)
-    def liftoverArg = liftoverChain ? "--liftover-chain ${liftoverChain}" : ''
-    if (model_ref != genome && !liftoverChain) {
-        throw new IllegalArgumentException("No default CrossNN liftover chain for ${model_ref} -> ${genome}; set task.ext.liftover_chain")
-    }
+    def genome = refid == "hs1" ? 't2t' : refid
     """
     classy crossnn \\
         -i ${bam} \\
@@ -528,12 +424,10 @@ process CLASSY_CROSSNN_PANCAN {
         --use-pileup \\
         --motif "CpG:CG" \\
         --reference ${ref} \\
-        --input-genome ${model_ref} \\
+        --input-genome hg19 \\
         --target-genome ${genome} \\
-        ${liftoverArg} \
         --crossnn-model /opt/classy/models/crossNN/runtime/pancan_devel_v5i.safetensors \\
         --crossnn-embedding /opt/classy/models/crossNN/runtime/pancan_devel_v5i_embedding.json \\
-        --crossnn-probes /opt/classy/models/crossNN/static/450K_hg19.bed \\
         --crossnn-dictionary /opt/classy/models/crossNN/static/pancan_devel_v5i_dictionary.txt \\
         --crossnn-training-set pancan_devel_v5i \\
         --crossnn-cutoff 0.15 \\
