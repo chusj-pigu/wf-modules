@@ -443,9 +443,9 @@ process QUARTO_TABLE_TABS {
 
     // Build per-tab chunks
     def qmd_blocks = (0..<table_list.size()).collect { i ->
-        def colname_value = colname_list.size() == 1 ? colname_list[0] : colname_list[i]
-        def col_vector    = "c(" + colname_value.split(",").collect { '"' + it.trim() + '"' }.join(", ") + ")"
-        def safe_label    = "${prefix}-${section}-${tab_list[i]}".replaceAll(/\s+/, '-')
+    def colname_value = colname_list.size() == 1 ? colname_list[0] : colname_list[i]
+    def col_vector = colname_value == "" ? "TRUE" : "c(" + colname_value.split(",").collect { '"' + it.trim() + '"' }.join(", ") + ")"
+    def safe_label    = "${prefix}-${section}-${tab_list[i]}".replaceAll(/\s+/, '-')
 
         [
             "# ${tab_list[i]}",
