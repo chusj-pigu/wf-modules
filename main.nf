@@ -270,7 +270,7 @@ process BCFTOOLS_CALL {
     """
 }
 
-process BCFTOOLS_FILTER_SUPPORT {
+process BCFTOOLS_FILTER {
     // TODO SET CONTAINER TO FIXED VERSION
 
     container "ghcr.io/chusj-pigu/bcftools:latest"
@@ -298,12 +298,11 @@ process BCFTOOLS_FILTER_SUPPORT {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
+    def args = task.ext.args ?: "-i 'FORMAT/DV > 4'"
     def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
     """
     bcftools view \\
-        -i 'INFO/SUPPORT > 4' \\
         ${args} \\
         --threads ${threads} \\
         ${sv_vcf} > ${prefix}_filt.vcf
