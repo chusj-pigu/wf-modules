@@ -9,8 +9,7 @@ process FIGENO_SV_FIGURE {
     tuple val(meta),
         path(in_bam),
         path(bam_index),
-        path(vcf),
-        path(vcf_idx),
+        path(sv_filt),
         path(region)
 
     output:
@@ -33,7 +32,7 @@ process FIGENO_SV_FIGURE {
         --type ${type} \\
         ${region} \\
         ${in_bam} \\
-        ${vcf}
+        ${sv_filt}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -52,7 +51,6 @@ process FIGENO_CIRCOS {
     input:
     tuple val(meta),
         path(sv_filt),
-        path(vcfidx),
         path(cnv_file),
         path(ratio_file)
 
