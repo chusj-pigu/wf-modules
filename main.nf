@@ -3,7 +3,7 @@ process TUCAN_CLASSIFY {
 
     tag "$meta.id"
     label "process_medium_low_cpu"              // Label for mpgi drac cpu alloc
-    label "process_medium_low_memory"         // Label for mpgi drac memory alloc
+    label "process_medium_high_memory"         // Label for mpgi drac memory alloc
     label "process_medium_low_time"
 
     input:
