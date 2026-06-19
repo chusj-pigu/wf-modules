@@ -22,15 +22,14 @@ process STURGEON_INPUT_TOBED {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
+    def args = task.ext.args ?: '-s modkit'
     //def prefix = task.ext.prefix ?: "${meta.id}"
     """
     sturgeon \\
         inputtobed \\
-        ${args} \\
         -i ${bedmethyl} \\
         -o sturgeon_bed \\
-        -s modkit_pileup
+        ${args}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
