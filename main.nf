@@ -53,9 +53,9 @@ process DELLY_CNV {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        delly: \$( echo \$(delly -v) | awk 'NR==1 {print \$3}' )
-        Boost: \$( echo \$(delly -v) | awk 'NR==2 {print \$3}' )
-        HTSlib: \$( echo \$(delly -v) | awk 'NR==3 {print \$3}' )
+        Delly: \$( delly -v 2>&1 | grep "Delly version" | awk '{print \$NF}' )
+        Boost: \$( delly -v 2>&1 | grep "Boost" | awk '{print \$NF}' )
+        HTSlib: \$( delly -v 2>&1 | grep "HTSlib" | awk '{print \$NF}' )
     END_VERSIONS
     """
 }
