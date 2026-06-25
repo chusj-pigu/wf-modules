@@ -156,7 +156,7 @@ process CLASSY_STURGEON_GENERAL {
     label "classy"
     label "process_low"                    // nf-core label
     label "process_medium_cpu"                 // Label for mpgi drac cpu alloc
-    label "process_medium_low_memory"        // Label for mpgi drac memory alloc
+    label params.adaptive ? "process_medium_low_memory" : "process_higher_memory"        // Label for mpgi drac memory alloc
     label "process_low_time"          // Label for mpgi drac time alloc
 
     tag "$meta.id"
