@@ -35,7 +35,7 @@ process STELLERATOR {
     def args    = task.ext.args ?: ''
     def prefix  = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
-    def gtf     = refid == "hs1" ? "hs1.ncbiRefSeq.gtf.gz" : "${refid}.refGene.gtf.gz"
+    def gtf     = refid == "hs1" ? "hs1.ncbiRefSeq.gtf" : "${refid}.refGene.gtf"
     """
     stellerator \\
         --bam ${bam}  \\
