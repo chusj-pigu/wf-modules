@@ -1,14 +1,6 @@
-# syntax=docker/dockerfile:1.7
-
-############################
-# Builder stage
-############################
 FROM rust:1.95-slim-trixie AS builder
-
 WORKDIR /app
-
 # Install build dependencies.
-# Add extra libs here if your crate needs them, e.g. libssl-dev, pkg-config, clang.
 RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     pkg-config \
@@ -17,31 +9,28 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     clang \
     make \
     cmake \
-    perl \
     autoconf \
     automake \
     libtool \
     && rm -rf /var/lib/apt/lists/*
-
-
-RUN git clone https://github.com/jwanglab/nasvar
-WORKDIR /app/nasvar
+RUN git clone https://github.com/chusj-pigu/stellerator
+WORKDIR /app/stellerator
 RUN cargo build --release
 
-############################
-# Runtime stage
-############################
-FROM debian:trixie-slim AS runtime
-
-WORKDIR /app
-
+# Final stage - smaller image
+FROM debian:trixie-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
+    wget \
+    procps \
     && rm -rf /var/lib/apt/lists/*
 
-# Change this to your binary name
-ARG BIN_NAME=nasvar
+# Copy the binary from builder
+COPY --from=builder /app/stellerator/target/release/stellerator /usr/local/bin/stellerator
+RUN chmod +x /usr/local/bin/stellerator
 
-COPY --from=builder /app/nasvar/target/release/${BIN_NAME} /usr/local/bin/${BIN_NAME}
-
-ENTRYPOINT ["/usr/local/bin/${BIN_NAME}"]
+# Copy genes gtf into the container
+WORKDIR /opt/data
+RUN wget https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/genes/hg38.refGene.gtf.gz
+RUN wget https://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/genes/hg19.refGene.gtf.gz
+RUN wget https://hgdownload.soe.ucsc.edu/goldenPath/hs1/bigZips/genes/hs1.ncbiRefSeq.gtf.gz
