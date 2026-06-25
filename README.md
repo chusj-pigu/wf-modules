@@ -1,9 +1,9 @@
 # Module
 
-Container to run the [Sniffles](https://github.com/fritzsedlazeck/Sniffles) program.
+Container to run the [Stellerator](https://github.com/chusj-pigu/stellerator) program.
 
 ```
-git submodule add -b sniffles https://github.com/chusj-pigu/wf-modules modules/local/sniffles
+git submodule add -b stellerator https://github.com/chusj-pigu/wf-modules modules/local/stellerator
 ```
 ## CI/CD
 
