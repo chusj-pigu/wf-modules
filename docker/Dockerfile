@@ -32,6 +32,10 @@ RUN chmod +x /usr/local/bin/stellerator
 
 # Copy genes gtf into the container
 WORKDIR /opt/data
-RUN wget https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/genes/hg38.refGene.gtf.gz && gzip -d hg38.refGene.gtf.gz
-RUN wget https://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/genes/hg19.refGene.gtf.gz && gzip -d hg19.refGene.gtf.gz
-RUN wget https://hgdownload.soe.ucsc.edu/goldenPath/hs1/bigZips/genes/hs1.ncbiRefSeq.gtf.gz && gzip -d hs1.ncbiRefSeq.gtf.gz
+RUN wget https://hgdownload.soe.ucsc.edu/goldenPath/hg38/bigZips/genes/hg38.refGene.gtf.gz && \
+    gzip -dc hg38.refGene.gtf.gz | grep -v 'alt' | grep -v 'fix' > hg38.refGene.gtf && \
+    rm hg38.refGene.gtf.gz
+RUN wget https://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/genes/hg19.refGene.gtf.gz && \
+    gzip -d hg19.refGene.gtf.gz
+RUN wget https://hgdownload.soe.ucsc.edu/goldenPath/hs1/bigZips/genes/hs1.ncbiRefSeq.gtf.gz && \
+    gzip -d hs1.ncbiRefSeq.gtf.gz
