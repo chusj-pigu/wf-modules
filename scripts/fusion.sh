@@ -93,7 +93,7 @@ cat > "${output}.conf" <<EOF
 			"link_color": "#9b59b6",
 			"link_lw": "0.6",
 			"only_show_splitreads": true,
-			"min_splitreads_breakpoints": 2,
+			"min_splitreads_breakpoints": 1,
 			"group_by": "none",
 			"color_by": "none"
 		},
