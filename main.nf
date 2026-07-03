@@ -19,7 +19,7 @@ process CLASSY_MARLIN {
 
     output:
     tuple val(meta),
-        path("*class_pie.svg"),
+        path("*pies.svg"),
         emit:svg
     tuple val(meta),
         path("*json"),
@@ -97,7 +97,7 @@ process CLASSY_TUCAN {
 
     output:
     tuple val(meta),
-        path("*class_pie.svg"),
+        path("*pies.svg"),
         emit:svg
     tuple val(meta),
         path("*json"),
@@ -314,7 +314,7 @@ process CLASSY_CROSSNN_CAPER {
 
     output:
     tuple val(meta),
-        path("*class_pie.svg"),
+        path("*pies.svg"),
         emit:svg
     tuple val(meta),
         path("*classification.json"),
@@ -397,7 +397,7 @@ process CLASSY_CROSSNN_PANCAN {
 
     output:
     tuple val(meta),
-        path("*class_pie.svg"),
+        path("*pies.svg"),
         emit:svg
     tuple val(meta),
         path("*classification.json"),
