@@ -8,9 +8,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /opt/app
 
-RUN micromamba create -n cutadapt \
+RUN micromamba create -n fgbio \
     -c bioconda -c conda-forge \
-    cutadapt -y \
+    fgbio-minimal -y \
     && micromamba clean -afy
 
-ENV PATH="/opt/conda/envs/cutadapt/bin:${PATH}"
+ENV PATH="/opt/conda/envs/fgbio/bin:${PATH}"
