@@ -1,16 +1,21 @@
-FROM mambaorg/micromamba:latest
+FROM debian:bullseye
 
-USER root
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    procps wget zip git \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    gcc \
+    g++ \
+    zlib1g-dev \
+    libcurl4-openssl-dev \
+    libssl-dev \
+    libbz2-dev \
+    liblzma-dev \
+    pkg-config \
+    make \
+    procps
 
 WORKDIR /opt/app
 
-RUN micromamba create -n fgbio \
-    -c bioconda -c conda-forge \
-    fgbio-minimal -y \
-    && micromamba clean -afy
+RUN git clone https://github.com/marbl/Winnowmap.git && cd Winnowmap && make -j8
 
-ENV PATH="/opt/conda/envs/fgbio/bin:${PATH}"
+ENV PATH="/opt/app/Winnowmap/bin:${PATH}"
