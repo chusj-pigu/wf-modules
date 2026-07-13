@@ -19,6 +19,9 @@ ENV PATH="/Lamprey/venv/bin:${PATH}"
 RUN pip install --upgrade pip && \
     pip install .
 
+# Download model 
+RUN python -c "from huggingface_hub import snapshot_download; snapshot_download(repo_id='tachterberg/Lamprey')"
+
 # Install modkit
 WORKDIR /opt
 
