@@ -159,7 +159,7 @@ process BEDTOOLS_SUBTRACT {
 
     script:
     def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
+    def prefix = task.ext.prefix ?: "${bed_panel.baseName}"
     def chrom_bed = ref_id in ["hg38", "GRCh38"] ? "/opt/data/hg38_chrom.bed" : "hg19_chrom.bed"
     """
     bedtools subtract \\
