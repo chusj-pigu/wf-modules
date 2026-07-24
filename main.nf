@@ -133,7 +133,7 @@ process BCFTOOLS_INDEX {
     """
 }
 
-process BGZIP_VCF {
+process BCFTOOLS_VIEW {
     // TODO SET CONTAINER TO FIXED VERSION
 
     container "ghcr.io/chusj-pigu/bcftools:latest"
@@ -151,8 +151,8 @@ process BGZIP_VCF {
 
     output:
     tuple val(meta),
-        path("*.vcf.gz"),
-        emit: vcf_gz
+        path("*.{vcf,vcf.gz,bcf,bcf.gz}"),
+        emit: vcf
     path "versions.yml",
         emit: versions
 
@@ -160,15 +160,24 @@ process BGZIP_VCF {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: '-Oz'
+    def args = task.ext.args ?: '-Ov'
     def prefix = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
+    def extension = args.contains("--output-type b") || args.contains("-Ob")
+        ? "bcf.gz"
+        : args.contains("--output-type u") || args.contains("-Ou")
+            ? "bcf"
+            : args.contains("--output-type z") || args.contains("-Oz")
+                ? "vcf.gz"
+                : args.contains("--output-type v") || args.contains("-Ov")
+                    ? "vcf"
+                    : "vcf"
     """
     bcftools view \\
         ${args} \\
         --threads ${threads} \\
         ${vcf} \\
-        -o ${prefix}.vcf.gz
+        -o ${prefix}.${extension}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -380,8 +389,12 @@ process BCFTOOLS_FILTER_REGION {
 
     output:
     tuple val(meta),
-        path("*.vcf"),
+        path("*.vcf.gz"),
         emit: filt_vcf
+    tuple val(meta),
+        path("*.vcf.gz.tbi"),
+        emit: index,
+        optional:true
     path "versions.yml",
         emit: versions
 
@@ -394,10 +407,11 @@ process BCFTOOLS_FILTER_REGION {
     def threads = task.cpus
     """
     bcftools filter \\
+        --output ${prefix}_filt_hm.vcf.gz \\
         -R ${bed} \\
         ${args} \\
         --threads ${threads} \\
-        ${vcf} > ${prefix}_filt_hm.vcf
+        ${vcf}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
