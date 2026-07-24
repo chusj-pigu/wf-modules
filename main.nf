@@ -38,12 +38,16 @@ process STELLERATOR {
     def prefix  = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
     def gtf     = "${refid}.ncbiRefSeq.gtf"
+    def support = params.cfdna
+        ? 2
+        : (params.realtime != null && params.realtime <= 6 ? 0 : 3)
     """
     stellerator \\
         --bam ${bam} \\
         --annotation /opt/data/${gtf} \\
         --loci ${fusion_list} \\
         --output-vcf ${prefix}.vcf \\
+        --min-depth ${support} \\
         --threads ${threads} --verbose
 
     cat <<-END_VERSIONS > versions.yml
