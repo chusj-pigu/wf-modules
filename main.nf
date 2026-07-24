@@ -15,16 +15,18 @@ process STELLERATOR {
         path(bam),
         path(bai),
         val(refid),
-        val(gene),
-        val(partner)
+        path(fusion_list)
 
     output:
     tuple val(meta),
-        path("*.fq.gz"),
-        emit: reads
+        path("*.vcf"),
+        emit: vcf
     tuple val(meta),
         path("*.tsv"),
-        emit: table
+        emit: tsv
+    tuple val(meta),
+        path("*.fasta.gz"),
+        emit: fasta
     path "versions.yml",
         emit: versions
 
@@ -35,15 +37,13 @@ process STELLERATOR {
     def args    = task.ext.args ?: ''
     def prefix  = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
-    def gtf     = refid == "hs1" ? "hs1.ncbiRefSeq.gtf" : "${refid}.refGene.gtf"
+    def gtf     = "${refid}.ncbiRefSeq.gtf"
     """
     stellerator \\
-        --bam ${bam}  \\
+        --bam ${bam} \\
         --annotation /opt/data/${gtf} \\
-        --gene ${gene} \\
-	    --partner-gene ${partner} \\
-        --output-tsv ${prefix}-stellerator-${gene}-${partner}.tsv \\
-        --output-fasta ${prefix}-stellerator-${gene}-${partner}.fq.gz \\
+        --loci ${fusion_list} \\
+        --output-vcf ${prefix}.vcf \\
         --threads ${threads} --verbose
 
     cat <<-END_VERSIONS > versions.yml
