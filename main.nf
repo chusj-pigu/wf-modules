@@ -1,7 +1,7 @@
 process STELLERATOR {
     // TODO SET CONTAINER TO FIXED VERSION
 
-    container "ghcr.io/chusj-pigu/stellerator:latest"
+    container "ghcr.io/chusj-pigu/stellerator:5723fc7c4383bc34f07a9e7c159f9205ce1f8e08"
 
     label 'process_low'                    // nf-core labels
     label "process_low_cpu"                 // Label for mpgi drac cpu alloc
@@ -48,7 +48,7 @@ process STELLERATOR {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        Stellerator : Pre-release
+        Stellerator : \$(stellerator --version | awk '{print \$2}')
     END_VERSIONS
     """
 }
