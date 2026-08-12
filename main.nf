@@ -1,10 +1,7 @@
 nextflow.enable.dsl=2
 
-def DORADO_CONTAINER =
-    'ghcr.io/chusj-pigu/dorado:851b0a37ecbff6b3b952c811b31dad48ca6bf995'
-
 process DORADO_BASECALL {
-    container DORADO_CONTAINER
+    container 'ghcr.io/chusj-pigu/dorado:851b0a37ecbff6b3b952c811b31dad48ca6bf995'
 
     // nf-core resource label
     label "process_high"
@@ -64,7 +61,7 @@ process DORADO_BASECALL {
 }
 
 process DORADO_DEMULTIPLEX {
-    container DORADO_CONTAINER
+    container 'ghcr.io/chusj-pigu/dorado:851b0a37ecbff6b3b952c811b31dad48ca6bf995'
 
     // nf-core resource label
     label "process_high"
@@ -111,7 +108,7 @@ process DORADO_DEMULTIPLEX {
 }
 
 process DORADO_DOWNLOAD_LIST {
-    container DORADO_CONTAINER
+    container 'ghcr.io/chusj-pigu/dorado:851b0a37ecbff6b3b952c811b31dad48ca6bf995'
 
     // nf-core resource label
     label "process_low"
@@ -135,7 +132,8 @@ process DORADO_DOWNLOAD_LIST {
     script:
     def args = task.ext.args ?: ''
     """
-    dorado download --list-structured > model_list.json
+    dorado download ${args} \\
+        --list-structured > model_list.json
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
@@ -146,7 +144,7 @@ process DORADO_DOWNLOAD_LIST {
 }
 
 process DORADO_DOWNLOAD_MODEL {
-    container DORADO_CONTAINER
+    container 'ghcr.io/chusj-pigu/dorado:851b0a37ecbff6b3b952c811b31dad48ca6bf995'
 
     // nf-core resource label
     label "process_low"
@@ -177,9 +175,12 @@ process DORADO_DOWNLOAD_MODEL {
 
     script:
     def args = task.ext.args ?: ''
+    def directory = dir.isDirectory() ? dir.toString() : dir.getParent()
     """
     mkdir -p ${dir}/dorado_models
-    dorado download --model ${model} --models-directory ${dir}/dorado_models
+    dorado download ${args} \\
+        --model ${model} \\
+        --models-directory ${directory}/dorado_models
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
