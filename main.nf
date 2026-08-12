@@ -34,7 +34,8 @@ process CLAIR3_CALL {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def bed_in = params.realtime >= 1 && params.realtime <= 72 ? "--bed_fn=${bed}" : ""
+    def realtime = params.realtime?.toInteger()
+    def bed_in = realtime >= 1 && realtime <= 72 ? "--bed_fn=${bed}" : ""
     def gpu_use = params.clair3_gpu ? "--use_gpu" : ''
     """
     ## Run Clair3
