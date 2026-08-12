@@ -38,9 +38,10 @@ process STELLERATOR {
     def prefix  = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
     def gtf     = "${refid}.ncbiRefSeq.gtf"
+    def realtime = params.realtime?.toInteger()
     def support = params.cfdna
         ? 2
-        : (params.realtime != null && params.realtime <= 6 ? 0 : 3)
+        : (realtime != null && realtime <= 6 ? 0 : 3)
     """
     stellerator \\
         --bam ${bam} \\
