@@ -3,7 +3,7 @@
 // ============================================================================
 
 process CLASSY_MARLIN {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-1efda8e'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"                    // nf-core label
     label "process_medium_cpu"                 // Label for mpgi drac cpu alloc
@@ -83,7 +83,7 @@ process CLASSY_MARLIN {
 }
 
 process CLASSY_MARLIN_PILEUP {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"
     label "process_medium_cpu"
@@ -160,7 +160,7 @@ process CLASSY_MARLIN_PILEUP {
 // ============================================================================
 
 process CLASSY_TUCAN {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"                    // nf-core label
     label "process_medium_cpu"                 // Label for mpgi drac cpu alloc
@@ -233,7 +233,7 @@ process CLASSY_TUCAN {
 }
 
 process CLASSY_TUCAN_PILEUP {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"
     label "process_medium_cpu"
@@ -306,7 +306,7 @@ process CLASSY_TUCAN_PILEUP {
 // ============================================================================
 
 process CLASSY_STURGEON_GENERAL {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"                    // nf-core label
     label "process_medium_cpu"                 // Label for mpgi drac cpu alloc
@@ -378,7 +378,7 @@ process CLASSY_STURGEON_GENERAL {
 }
 
 process CLASSY_STURGEON_GENERAL_PILEUP {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"
     label "process_medium_cpu"
@@ -446,7 +446,7 @@ process CLASSY_STURGEON_GENERAL_PILEUP {
 }
 
 process CLASSY_STURGEON_BRAINSTEM {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"                    // nf-core label
     label "process_medium_cpu"                 // Label for mpgi drac cpu alloc
@@ -518,7 +518,7 @@ process CLASSY_STURGEON_BRAINSTEM {
 }
 
 process CLASSY_STURGEON_BRAINSTEM_PILEUP {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"
     label "process_medium_cpu"
@@ -590,7 +590,7 @@ process CLASSY_STURGEON_BRAINSTEM_PILEUP {
 // ============================================================================
 
 process CLASSY_CROSSNN_CAPER {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"                    // nf-core label
     label "process_medium_cpu"                 // Label for mpgi drac cpu alloc
@@ -671,7 +671,7 @@ process CLASSY_CROSSNN_CAPER {
 }
 
 process CLASSY_CROSSNN_CAPER_PILEUP {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"
     label "process_medium_cpu"
@@ -748,7 +748,7 @@ process CLASSY_CROSSNN_CAPER_PILEUP {
 }
 
 process CLASSY_CROSSNN_PANCAN {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"                    // nf-core label
     label "process_medium_cpu"                 // Label for mpgi drac cpu alloc
@@ -828,7 +828,7 @@ process CLASSY_CROSSNN_PANCAN {
 }
 
 process CLASSY_CROSSNN_PANCAN_PILEUP {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"
     label "process_medium_cpu"
@@ -908,7 +908,7 @@ process CLASSY_CROSSNN_PANCAN_PILEUP {
 // ============================================================================
 
 process CLASSY_ALMA {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"
     label "process_medium_cpu"
@@ -982,7 +982,7 @@ process CLASSY_ALMA {
 }
 
 process CLASSY_ALMA_PILEUP {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"
     label "process_medium_cpu"
@@ -1056,7 +1056,7 @@ process CLASSY_ALMA_PILEUP {
 // ============================================================================
 
 process CLASSY_LAMPREY {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"
     label "process_medium_cpu"
@@ -1130,7 +1130,7 @@ process CLASSY_LAMPREY {
 }
 
 process CLASSY_LAMPREY_PILEUP {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"
     label "process_medium_cpu"
@@ -1204,7 +1204,7 @@ process CLASSY_LAMPREY_PILEUP {
 // ============================================================================
 
 process CLASSY_MPACT {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"
     label "process_medium_cpu"
@@ -1281,7 +1281,7 @@ process CLASSY_MPACT {
 }
 
 process CLASSY_MPACT_PILEUP {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"
     label "process_medium_cpu"
@@ -1358,7 +1358,7 @@ process CLASSY_MPACT_PILEUP {
 // ============================================================================
 
 process CLASSY_COMBINED {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"
     label "process_medium_cpu"
@@ -1376,14 +1376,23 @@ process CLASSY_COMBINED {
 
     output:
     tuple val(meta),
-        path("*.svg"),
-        emit:svg
+        path("*combined_blood.svg"),
+        emit:svg_blood
     tuple val(meta),
-        path("*json"),
-        emit:json
+        path("*combined_brain.svg"),
+        emit:svg_brain
     tuple val(meta),
-        path("*.html"),
-        emit:html
+        path("*combined_solid.svg"),
+        emit:svg_solid
+    tuple val(meta),
+        path("*combined_classification.json"),
+        emit:json_combined
+    tuple val(meta),
+        path("*combined_task_pies.svg"),
+        emit:svg_combined
+    tuple val(meta),
+        path("*nanomix_pie.svg"),
+        emit:svg_nanomix
     path "versions.yml",
         emit: versions
 
@@ -1463,7 +1472,7 @@ process CLASSY_COMBINED {
 }
 
 process CLASSY_COMBINED_PILEUP {
-    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-23a7cad'}"
+    container "${params.classy_container ?: 'ghcr.io/chusj-pigu/classy:sha-6a3f603'}"
     label "classy"
     label "process_low"
     label "process_medium_cpu"
