@@ -57,9 +57,10 @@ RUN R -e "BiocManager::install('Rsamtools', ask=FALSE)"
 RUN R -e "BiocManager::install('BiocParallel', ask=FALSE)"
 RUN R -e "BiocManager::install('GenomeInfoDb', ask=FALSE)"
 
-# Install QDNAseq and hg19 annotation
+# Install QDNAseq, hg19 and mm10 annotations
 RUN R -e "BiocManager::install('QDNAseq', ask=FALSE)"
 RUN R -e "BiocManager::install('QDNAseq.hg19', ask=FALSE)"
+RUN R -e "BiocManager::install('QDNAseq.mm10', ask=FALSE)"
 
 # Install QDNAseq.hg38 from GitHub
 RUN R -e "remotes::install_github('asntech/QDNAseq.hg38')"
