@@ -15,6 +15,6 @@ RUN micromamba create -n severus_env \
 
 ENV PATH="/opt/conda/envs/severus_env/bin:${PATH}"
 
-RUN git clone https://github.com/KolmogorovLab/Severus
+RUN git clone https://github.com/charlenelawdes/Severus
 
 RUN severus -h
