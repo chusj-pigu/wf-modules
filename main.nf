@@ -1,5 +1,5 @@
 process SEVERUS_TUMOR_PHASED {
-    container "ghcr.io/chusj-pigu/severus:latest" // TO DO: SET CONTAINER TO FIXED VERSION
+    container "ghcr.io/chusj-pigu/severus:52fd4b6b91567fefd3af5c5d8caa07eac75f4093" // TO DO: SET CONTAINER TO FIXED VERSION
 
     tag "$meta.id"
     label 'process_medium'                    // nf-core labels
@@ -48,7 +48,7 @@ process SEVERUS_TUMOR_PHASED {
 }
 
 process SEVERUS_TUMOR_UNPHASED {
-    container "ghcr.io/chusj-pigu/severus:latest" // TO DO: SET CONTAINER TO FIXED VERSION
+    container "ghcr.io/chusj-pigu/severus:52fd4b6b91567fefd3af5c5d8caa07eac75f4093" // TO DO: SET CONTAINER TO FIXED VERSION
 
     tag "$meta.id"
     label 'process_medium'                    // nf-core labels
