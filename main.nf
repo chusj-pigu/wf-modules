@@ -8,8 +8,8 @@ process DORADO_BASECALL {
 
     // MPGI DRAC resource labels
     label "process_medium_low_cpu"
-    label "process_higher_memory"
-    label "process_medium_high_time"
+    label params.wgs ? "process_highest_memory" : "process_higher_memory"
+    label params.wgs ? "process_high_time" : "process_medium_high_time"
     label "process_gpu"
 
     tag "$meta.id"
