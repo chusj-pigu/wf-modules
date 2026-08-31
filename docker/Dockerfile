@@ -45,8 +45,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Change this to your binary name
 ARG BIN_NAME=nasvar
 
-RUN mkdir /app/nasvar/files
-
 COPY --from=builder /app/nasvar/target/release/${BIN_NAME} /usr/local/bin/${BIN_NAME}
 COPY --from=builder /app/nasvar/config /app/nasvar/config
 COPY files /app/nasvar/files
