@@ -43,7 +43,7 @@ process SUBCHROM_CALL_WGS {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        SubChrom: \$(echo \$(SubChrom.sh --help 2>&1) | head -4 | tail -1 | awk '{print \$2}' )
+        SubChrom: \$(echo \$(SubChrom.sh --help) | head -4 | tail -1 | awk '{print \$2}' )
     END_VERSIONS
     """
 }
@@ -102,7 +102,7 @@ process SUBCHROM_CALL_PANEL {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        SubChrom: \$(echo \$(SubChrom.sh --help 2>&1) | head -4 | tail -1 | awk '{print \$2}' )
+        SubChrom: \$(echo \$(SubChrom.sh --help) | head -4 | tail -1 | awk '{print \$2}' )
     END_VERSIONS
     """
 }
@@ -145,7 +145,7 @@ process SUBCHROM_PANEL_BIN {
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
-        SubChrom: \$(echo \$(SubChrom.sh --help 2>&1) | head -4 | tail -1 | awk '{print \$2}' )
+        SubChrom: \$(echo \$(SubChrom.sh --help) | head -4 | tail -1 | awk '{print \$2}' )
     END_VERSIONS
     """
 }
