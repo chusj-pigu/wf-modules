@@ -1362,7 +1362,7 @@ process CLASSY_COMBINED {
     label "classy"
     label "process_low"
     label "process_medium_cpu"
-    label "process_medium_low_memory"
+    label "process_medium_mid_memory"
     label "process_low_time"
 
     tag "$meta.id"
