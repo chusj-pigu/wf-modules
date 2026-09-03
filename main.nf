@@ -1,11 +1,11 @@
 process CLAIRS_TO_CALL {
     // TODO SET CONTAINER TO FIXED VERSION
 
-    container "ghcr.io/chusj-pigu/clairsto:6309989ff6aa9f0c69c89238835d094a198ccad1"
+    container "ghcr.io/chusj-pigu/clairsto:e2c2bc3fb56131fcf09237141779d4aed5bd031d"
 
     label 'process_high'                    // nf-core labels
     label "process_medium_high_cpu"       // Label for mpgi drac cpu alloc
-    label "process_higher_memory"         // Label for mpgi drac memory alloc
+    label "process_highest_memory"         // Label for mpgi drac memory alloc
     label "process_medium_low_time"
     label "singleton" // This process is a singleton, so it will not run in parallel
 
@@ -21,10 +21,10 @@ process CLAIRS_TO_CALL {
 
     output:
     tuple val(meta),
-        path("${meta.id}/snv.vcf.gz"),
+        path("${meta.id}/snv*.vcf.gz"),
         emit: snv
     tuple val(meta),
-        path("${meta.id}/indel.vcf.gz"),
+        path("${meta.id}/indel*.vcf.gz"),
         emit: indel
     path "versions.yml",
         emit: versions
