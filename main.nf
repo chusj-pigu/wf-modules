@@ -1,7 +1,7 @@
 process NASVAR_PIPELINE {
     // TODO SET CONTAINER TO FIXED VERSION
 
-    container "ghcr.io/chusj-pigu/nasvar:latest"
+    container "ghcr.io/chusj-pigu/nasvar:a37ea268c92ded8b7ef5d02663fb65092fd656b3"
 
     label 'process_medium'                    // nf-core labels
     label "process_medium_cpu"                 // Label for mpgi drac cpu alloc
@@ -62,7 +62,7 @@ process NASVAR_PIPELINE {
 process NASVAR_COVERAGE {
     // TODO SET CONTAINER TO FIXED VERSION
 
-    container "ghcr.io/chusj-pigu/nasvar:latest"
+    container "ghcr.io/chusj-pigu/nasvar:a37ea268c92ded8b7ef5d02663fb65092fd656b3"
 
     label 'medium'
     label 'process_low'
@@ -112,7 +112,7 @@ process NASVAR_COVERAGE {
 process NASVAR_KARYOTYPE {
     // TODO SET CONTAINER TO FIXED VERSION
 
-    container "ghcr.io/chusj-pigu/nasvar:latest"
+    container "ghcr.io/chusj-pigu/nasvar:a37ea268c92ded8b7ef5d02663fb65092fd656b3"
 
     label 'medium'
     label 'process_low'
@@ -180,7 +180,7 @@ process NASVAR_KARYOTYPE {
 process NASVAR_MAF {
     // TODO SET CONTAINER TO FIXED VERSION
 
-    container "ghcr.io/chusj-pigu/nasvar:latest"
+    container "ghcr.io/chusj-pigu/nasvar:a37ea268c92ded8b7ef5d02663fb65092fd656b3"
 
     label 'medium'
     label 'process_low'
