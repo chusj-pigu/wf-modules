@@ -1,4 +1,4 @@
-FROM hkubal/clairs-to:v0.4.4
+FROM hkubal/clairs-to:v0.5.1
 
 WORKDIR /opt/bin
 # Install dependencies
