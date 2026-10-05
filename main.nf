@@ -69,6 +69,7 @@ process STURGEON_PREDICT {
 
     script:
     def args = task.ext.args ?: ''
+    def model = task.ext.model ?: '/sturgeon/sturgeon/include/models/general.zip'
     //def prefix = task.ext.prefix ?: "${meta.id}"
     """
     sturgeon \\
@@ -76,7 +77,7 @@ process STURGEON_PREDICT {
         ${args} \\
         -i ${calls} \\
         -o sturgeon \\
-        --model-files /sturgeon/sturgeon/include/models/general.zip \\
+        --model-files ${model} \\
         --plot-results
 
     cat <<-END_VERSIONS > versions.yml

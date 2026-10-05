@@ -17,6 +17,7 @@ RUN ./venv/bin/pip install .
 
 # Install the model to call it by name
 RUN wget https://www.dropbox.com/s/yzca4exl40x9ukw/general.zip?dl=0 -O general.zip
+RUN wget https://www.dropbox.com/s/55hypw7i8tidr0a/brainstem.zip?dl=0 -O brainstem.zip
 
 RUN mv *.zip sturgeon/include/models
 
