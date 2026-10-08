@@ -3,9 +3,9 @@ process SEQKIT_STATS {
     container 'ghcr.io/chusj-pigu/seqkit:latest'
 
     tag "$meta.id"
-    label 'process_cpu_low'
-    label 'process_memory_low'
-    label 'process_time_low'
+    label 'process_low_cpu'
+    label 'process_low_memory'
+    label 'process_low_time'
 
     input:
     tuple val(meta),
