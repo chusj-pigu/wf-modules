@@ -1,9 +1,8 @@
-process CLAIR3_CALL {
+process DEEPSOMATIC_TUMORONLY {
     // TODO SET CONTAINER TO FIXED VERSION
 
-    container "ghcr.io/chusj-pigu/clair3:5c1b224addf317c2cfe5ab5e03f6cdb23da13303"
+    container "google/deepsomatic:1.10.0"
 
-    label "process_gpu_clair3"
     label 'process_high'                    // nf-core labels
     label "process_high_cpu"       // Label for mpgi drac cpu alloc
     label "process_higher_memory"         // Label for mpgi drac memory alloc
@@ -16,44 +15,51 @@ process CLAIR3_CALL {
     tuple val(meta),
         path(bam),
         path(bai),
-        path(ref),
-        path(ref_idx),
-        val(model),
         path(bed)
+    tuple val(meta2), path(fasta)
+    tuple val(meta3), path(fai)
 
     output:
-    tuple val(meta),
-        path("${meta.id}/merge_output.vcf.gz"),
-        emit: vcf
-    path "versions.yml",
-        emit: versions
+    tuple val(meta), path("${prefix}.vcf.gz")      ,  emit: vcf
+    tuple val(meta), path("${prefix}.vcf.gz.tbi")  ,  emit: vcf_tbi
+    tuple val(meta), path("${prefix}.g.vcf.gz")    ,  emit: gvcf
+    tuple val(meta), path("${prefix}.g.vcf.gz.tbi"),  emit: gvcf_tbi
+    tuple val("${task.process}"), val("deepsomatic"), val("1.10.0"), emit: versions_deepsomatic, topic: versions
 
     when:
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
-    def prefix = task.ext.prefix ?: "${meta.id}"
-    def realtime = params.realtime?.toInteger()
-    def bed_in = realtime >= 1 && realtime <= 72 ? "--bed_fn=${bed}" : ""
-    def gpu_use = params.clair3_gpu ? "--use_gpu" : ''
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "DEEPSOMATIC module does not support Conda. Please use Docker / Singularity / Podman instead."
+    }
+    def args = task.ext.args ?: '--model_type=ONT_TUMOR_ONLY'
+    prefix = task.ext.prefix ?: "${meta.id}"
+    def regions = bed ? "--regions=${bed}" : ""
     """
-    ## Run Clair3
-    run_clair3.sh \\
+    run_deepsomatic \\
+        --ref=${fasta} \\
+        --reads_tumor=${bam} \\
+        --output_vcf=${prefix}.vcf.gz \\
+        --output_gvcf=${prefix}.g.vcf.gz \\
+        --sample_name_tumor="${prefix}" \\
         ${args} \\
-        --threads=${task.cpus} \\
-        --sample_name=${prefix} \\
-        ${bed_in} \\
-        --platform='ont' \\
-        --model_path="/opt/models/${model}" \\
-        --bam_fn=${bam} \\
-        --ref_fn=${ref} \\
-        ${gpu_use} \\
-        -o ${prefix}
+        ${regions} \\
+        --intermediate_results_dir=tmp \\
+        --num_shards=${task.cpus}
+    """
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        Clair3:  \$(echo \$(run_clair3.sh --version 2>&1) | awk '{print \$NF}' )
-    END_VERSIONS
+    stub:
+    // Exit if running this module with -profile conda / -profile mamba
+    if (workflow.profile.tokenize(',').intersect(['conda', 'mamba']).size() >= 1) {
+        error "DEEPSOMATIC module does not support Conda. Please use Docker / Singularity / Podman instead."
+    }
+    prefix = task.ext.prefix ?: "${meta.id}"
+    """
+    echo "" | gzip > ${prefix}.vcf.gz
+    touch ${prefix}.vcf.gz.tbi
+    echo "" | gzip > ${prefix}.g.vcf.gz
+    touch ${prefix}.g.vcf.gz.tbi
     """
 }
