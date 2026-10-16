@@ -1,6 +1,6 @@
 process MOSDEPTH_GENERAL {
     // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/mosdepth:latest'
+    container 'ghcr.io/chusj-pigu/mosdepth:29efd895f5672b934c20a72ed01cd2a1a7cfb562'
 
     label 'process_low'                      // nf-core labels
     label "process_low_cpu"                 // Label for cpu ressources alloc
@@ -45,7 +45,7 @@ process MOSDEPTH_GENERAL {
 
 process MOSDEPTH_ADAPTIVE {
    // TODO : SET FIXED VERSION WHEN PIPELINE IS STABLE
-    container 'ghcr.io/chusj-pigu/mosdepth:latest'
+    container 'ghcr.io/chusj-pigu/mosdepth:29efd895f5672b934c20a72ed01cd2a1a7cfb562'
 
     label 'process_low'                      // nf-core labels
     label "process_low_cpu"                 // Label for cpu ressources alloc
