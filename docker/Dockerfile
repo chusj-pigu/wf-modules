@@ -24,8 +24,10 @@ ENV PATH=$CONDA_DIR/bin:$PATH
 # Install Mamba in base env
 RUN conda install -y -n base -c conda-forge mamba
 
+ENV MOSDEPTH_VERSION=0.3.14
+
 # Use mamba to install mosdepth in a clean env
-RUN mamba create -y -n mosenv -c bioconda -c conda-forge mosdepth=0.3.10
+RUN mamba create -y -n mosenv -c bioconda -c conda-forge mosdepth=${MOSDEPTH_VERSION}
 
 # Activate env by default
 SHELL ["/bin/bash", "--login", "-c"]
