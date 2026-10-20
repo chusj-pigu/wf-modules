@@ -160,7 +160,11 @@ process BEDTOOLS_SUBTRACT {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${bed_panel.baseName}"
-    def chrom_bed = ref_id in ["hg38", "GRCh38"] ? "/opt/data/hg38_chrom.bed" : "hg19_chrom.bed"
+    def chrom_bed = ref_id.toLowerCase() in ["hg38", "grch38"]
+        ? "hg38"
+        : ref_id.toLowerCase() in ["hs1", "t2t", "chm13"]
+            ? "hs1"
+            : "hg19"
     """
     bedtools subtract \\
         ${args} \\
