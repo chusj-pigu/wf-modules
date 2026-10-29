@@ -36,10 +36,10 @@ FROM debian:trixie-slim AS runtime
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    bedtools \
     ca-certificates \
     gzip \
     procps \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # Change this to your binary name
@@ -49,3 +49,7 @@ COPY --from=builder /app/nasvar/target/release/${BIN_NAME} /usr/local/bin/${BIN_
 COPY --from=builder /app/nasvar/config /app/nasvar/config
 COPY files /app/nasvar/files
 
+## Get gff files
+RUN cd /app/nasvar/files && \
+    wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/009/914/755/GCF_009914755.1_T2T-CHM13v2.0/GCF_009914755.1_T2T-CHM13v2.0_genomic.gff.gz && \
+    wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/405/GCF_000001405.40_GRCh38.p14/GCF_000001405.40_GRCh38.p14_genomic.gff.gz
