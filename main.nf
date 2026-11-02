@@ -15,9 +15,10 @@ process CLAIRS_TO_CALL {
     tuple val(meta),
         path(bam),
         path(bai),
-        path(ref),
-        path(ref_idx),
-        val(model)
+        path(bed)
+    tuple val(meta2), path(ref)
+    tuple val(meta3), path(fai)
+    val(model)
 
     output:
     tuple val(meta),
@@ -36,8 +37,6 @@ process CLAIRS_TO_CALL {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    ## Prevent clairs-to error due to missing files
-    ## Run ClairS-TO
     run_clairs_to \\
         ${args} \\
         --threads ${task.cpus} \\
@@ -45,6 +44,7 @@ process CLAIRS_TO_CALL {
         --tumor_bam_fn ${bam} \\
         --ref_fn ${ref} \\
         --platform ${model} \\
+        --bed_fn ${bed} \\
         -o ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
