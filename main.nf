@@ -1,7 +1,7 @@
 process DEEPSOMATIC_TUMORONLY {
     // TODO SET CONTAINER TO FIXED VERSION
 
-    container "google/deepsomatic:1.10.0"
+    container "docker.io/google/deepsomatic:1.10.0"
 
     label 'process_high'                    // nf-core labels
     label "process_high_cpu"       // Label for mpgi drac cpu alloc
@@ -18,6 +18,7 @@ process DEEPSOMATIC_TUMORONLY {
         path(bed)
     tuple val(meta2), path(fasta)
     tuple val(meta3), path(fai)
+    tuple val(meta4), path(gzi)
 
     output:
     tuple val(meta), path("${prefix}.vcf.gz")      ,  emit: vcf
@@ -25,9 +26,6 @@ process DEEPSOMATIC_TUMORONLY {
     tuple val(meta), path("${prefix}.g.vcf.gz")    ,  emit: gvcf
     tuple val(meta), path("${prefix}.g.vcf.gz.tbi"),  emit: gvcf_tbi
     tuple val("${task.process}"), val("deepsomatic"), val("1.10.0"), emit: versions_deepsomatic, topic: versions
-
-    when:
-    task.ext.when == null || task.ext.when
 
     script:
     // Exit if running this module with -profile conda / -profile mamba
