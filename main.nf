@@ -13,9 +13,9 @@ process STELLERATOR {
     input:
     tuple val(meta),
         path(bam),
-        path(bai),
-        val(refid),
-        path(fusion_list)
+        path(bai)
+    val(genome)
+    path(fusion_list)
 
     output:
     tuple val(meta),
@@ -37,18 +37,13 @@ process STELLERATOR {
     def args    = task.ext.args ?: ''
     def prefix  = task.ext.prefix ?: "${meta.id}"
     def threads = task.cpus
-    def gtf     = "${refid}.ncbiRefSeq.gtf"
-    def realtime = params.realtime?.toInteger()
-    def support = params.cfdna
-        ? 2
-        : (realtime != null && realtime <= 6 ? 0 : 3)
+    def gtf     = "${genome}.ncbiRefSeq.gtf"
     """
     stellerator \\
         --bam ${bam} \\
         --annotation /opt/data/${gtf} \\
         --loci ${fusion_list} \\
         --output-vcf ${prefix}.vcf \\
-        --min-depth ${support} \\
         --threads ${threads} --verbose
 
     cat <<-END_VERSIONS > versions.yml
