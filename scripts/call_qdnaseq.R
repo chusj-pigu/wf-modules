@@ -64,8 +64,11 @@ if (opt$reference == "hg38" || opt$reference == "GRCh38") {
 } else if (opt$reference == "hg19" || opt$reference == "GRCh37") {
   library(QDNAseq.hg19)
   bins <- getBinAnnotations(binSize = opt$binsize, genome = "hg19")
+} else if  (opt$reference == "mm10" || opt$reference == "GRCm38") {
+  library(QDNAseq.mm10)
+  bins <- getBinAnnotations(binSize = opt$binsize, genome = "mm10")
 } else {
-  stop("Unsupported reference genome. Please specify 'hg19' or 'hg38'.")
+  stop("Unsupported reference genome. Please specify 'hg19', 'hg38' or 'mm10'.")
 }
 
 # ---- PRIMARY ANALYSIS ----
