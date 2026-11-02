@@ -9,19 +9,17 @@ process QUARTO_REPORT {
 
     input:
     tuple val(meta),
-        val(section),
-        path(report_inputs),
-        val(report_section),
-        val(report_title),
-        val(report_description),
-        path(report_template)
+          val(section),
+          path(report_inputs),
+          val(report_section),
+          val(report_title),
+          val(report_description),
+          path(report_template)
 
     output:
-    tuple val(meta),
-        path("*_report_output"),
-        emit: report
-    path "versions.yml",
-        emit: versions
+    tuple val(meta), path("*_report_output"), emit: report
+    tuple val(meta), path("${meta.id}.html"), emit: html
+    path "versions.yml",                      emit: versions
 
     when:
     task.ext.when == null || task.ext.when
@@ -41,7 +39,7 @@ process QUARTO_REPORT {
     echo "${report_section_split}"
     for section in ${report_section_split}; do
         echo "section: \${section}"
-        printf '\n{{< include %s >}}\n' "\${section}" >> ${prefix}_report_output/${prefix}.qmd
+        printf '\\n{{< include %s >}}\\n' "\${section}" >> ${prefix}_report_output/${prefix}.qmd
     done
 
     cd ${prefix}_report_output
@@ -49,25 +47,20 @@ process QUARTO_REPORT {
     export QUARTO_CACHE_DIR="\${PWD}/.quarto_cache"
     export XDG_CACHE_HOME="\${PWD}/.cache"
 
-    quarto render ${prefix}.qmd --no-cache ${args} \
-    -P report_title:"${report_title}" \
-    -P report_description:"${report_description}" \
-    --output ${prefix}.html
+    quarto render ${prefix}.qmd --no-cache ${args} \\
+        -P report_title:"${report_title}" \\
+        -P report_description:"${report_description}" \\
+        --output ${prefix}.html
 
     cd ..
 
-    cat <<-END_VERSIONS > versions.yml
-    "${task.process}":
-        quarto: \$( quarto --version )
-END_VERSIONS
-    """
+    # Move the rendered HTML out of the report folder
+    mv ${prefix}_report_output/${prefix}.html .
 
-    stub:
-    """
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
         quarto: \$( quarto --version )
-END_VERSIONS
+    END_VERSIONS
     """
 }
 
