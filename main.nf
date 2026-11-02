@@ -14,8 +14,8 @@ process QDNASEQ_CALL {
     input:
     tuple val(meta),
         path(bam),
-        path(bai),
-        val(ref_id)
+        path(bai)
+    val(ref_id)
 
     output:
     tuple val(meta),
