@@ -16,10 +16,10 @@ process CLAIR3_CALL {
     tuple val(meta),
         path(bam),
         path(bai),
-        path(ref),
-        path(ref_idx),
-        val(model),
         path(bed)
+    tuple val(meta2), path(ref)
+    tuple val(meta3), path(fai)
+    val(model)
 
     output:
     tuple val(meta),
@@ -28,27 +28,20 @@ process CLAIR3_CALL {
     path "versions.yml",
         emit: versions
 
-    when:
-    task.ext.when == null || task.ext.when
-
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def realtime = params.realtime?.toInteger()
-    def bed_in = realtime >= 1 && realtime <= 72 ? "--bed_fn=${bed}" : ""
-    def gpu_use = params.clair3_gpu ? "--use_gpu" : ''
     """
     ## Run Clair3
     run_clair3.sh \\
         ${args} \\
         --threads=${task.cpus} \\
         --sample_name=${prefix} \\
-        ${bed_in} \\
+        --bed_fn=${bed} \\
         --platform='ont' \\
         --model_path="/opt/models/${model}" \\
         --bam_fn=${bam} \\
         --ref_fn=${ref} \\
-        ${gpu_use} \\
         -o ${prefix}
 
     cat <<-END_VERSIONS > versions.yml
