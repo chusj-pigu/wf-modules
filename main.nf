@@ -16,7 +16,7 @@ process CLASSY_MARLIN {
     tuple val(meta),
         path(bam),
         path(bai),
-        val(refid),
+        val(genome),
         path(ref)
 
     output:
@@ -38,7 +38,7 @@ process CLASSY_MARLIN {
     script:
     def args = task.ext.args ?: ''
     def threads = task.cpus
-    def genome = refid == "hs1" ? 't2t' : refid
+    def ref_id = genome.id == "hs1" ? 't2t' : genome.id
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     classy marlin \\
@@ -55,7 +55,7 @@ process CLASSY_MARLIN {
         --reference ${ref} \\
         --sample ${prefix} \\
         --features /opt/classy/models/MARLIN/marlin_v1.features.RData \\
-        --genome ${genome} \\
+        --genome ${ref_id} \\
         ${args}
 
     cat <<-END_VERSIONS > versions.yml
@@ -94,7 +94,7 @@ process CLASSY_MARLIN_PILEUP {
 
     input:
     tuple val(meta),
-        val(refid),
+        val(genome),
         path(pileup)
 
     output:
@@ -115,7 +115,7 @@ process CLASSY_MARLIN_PILEUP {
 
     script:
     def args = task.ext.args ?: ''
-    def genome = refid == "hs1" ? 't2t' : refid
+    def ref_id = genome.id == "hs1" ? 't2t' : genome.id
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     classy marlin \\
@@ -127,7 +127,7 @@ process CLASSY_MARLIN_PILEUP {
         --annotations /opt/classy/models/MARLIN/marlin_v1.class_annotations.xlsx \\
         --resolution per-motif \\
         --motif CpG:CG \\
-        --genome ${genome} \\
+        --genome ${ref_id} \\
         --features /opt/classy/models/MARLIN/marlin_v1.features.RData \\
         ${args}
 
@@ -173,7 +173,7 @@ process CLASSY_CROSSNN_CAPER {
     tuple val(meta),
         path(bam),
         path(bai),
-        val(refid),
+        val(genome),
         path(ref)
 
     output:
@@ -194,7 +194,7 @@ process CLASSY_CROSSNN_CAPER {
 
     script:
     def args = task.ext.args ?: ''
-    def genome = refid == "hs1" ? 't2t' : refid
+    def ref_id = genome.id == "hs1" ? 't2t' : genome.id
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
@@ -206,7 +206,7 @@ process CLASSY_CROSSNN_CAPER {
         --motif "CpG:CG" \\
         --reference ${ref} \\
         --crossnn-probes-genome hg19 \\
-        --crossnn-alignment-genome ${genome} \\
+        --crossnn-alignment-genome ${ref_id} \\
         --crossnn-model /opt/classy/models/crossNN/runtime/Capper_et_al.safetensors \\
         --crossnn-embedding /opt/classy/models/crossNN/runtime/Capper_et_al_embedding.json \\
         --crossnn-dictionary /opt/classy/models/crossNN/static/Capper_et_al_dictionary.txt \\
@@ -252,7 +252,7 @@ process CLASSY_CROSSNN_CAPER_PILEUP {
 
     input:
     tuple val(meta),
-        val(refid),
+        val(genome),
         path(pileup)
 
     output:
@@ -273,7 +273,7 @@ process CLASSY_CROSSNN_CAPER_PILEUP {
 
     script:
     def args = task.ext.args ?: ''
-    def genome = refid == "hs1" ? 't2t' : refid
+    def ref_id = genome.id == "hs1" ? 't2t' : genome.id
     def prefix = task.ext.prefix ?: "${meta.id}"
 
     """
@@ -283,7 +283,7 @@ process CLASSY_CROSSNN_CAPER_PILEUP {
         --sample ${prefix} \\
         --motif "CpG:CG" \\
         --crossnn-probes-genome hg19 \\
-        --crossnn-alignment-genome ${genome} \\
+        --crossnn-alignment-genome ${ref_id} \\
         --crossnn-model /opt/classy/models/crossNN/runtime/Capper_et_al.safetensors \\
         --crossnn-embedding /opt/classy/models/crossNN/runtime/Capper_et_al_embedding.json \\
         --crossnn-dictionary /opt/classy/models/crossNN/static/Capper_et_al_dictionary.txt \\
@@ -331,7 +331,7 @@ process CLASSY_CROSSNN_PANCAN {
     tuple val(meta),
         path(bam),
         path(bai),
-        val(refid),
+        val(genome),
         path(ref)
 
     output:
@@ -353,7 +353,7 @@ process CLASSY_CROSSNN_PANCAN {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def genome = refid == "hs1" ? 't2t' : refid
+    def ref_id = genome.id == "hs1" ? 't2t' : genome.id
     """
     classy crossnn \\
         -i ${bam} \\
@@ -363,7 +363,7 @@ process CLASSY_CROSSNN_PANCAN {
         --motif "CpG:CG" \\
         --reference ${ref} \\
         --crossnn-probes-genome hg19 \\
-        --crossnn-alignment-genome ${genome} \\
+        --crossnn-alignment-genome ${ref_id} \\
         --crossnn-model /opt/classy/models/crossNN/runtime/pancan_devel_v5i.safetensors \\
         --crossnn-embedding /opt/classy/models/crossNN/runtime/pancan_devel_v5i_embedding.json \\
         --crossnn-dictionary /opt/classy/models/crossNN/static/pancan_devel_v5i_dictionary.txt \\
@@ -409,7 +409,7 @@ process CLASSY_CROSSNN_PANCAN_PILEUP {
 
     input:
     tuple val(meta),
-        val(refid),
+        val(genome),
         path(pileup)
 
     output:
@@ -431,7 +431,7 @@ process CLASSY_CROSSNN_PANCAN_PILEUP {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def genome = refid == "hs1" ? 't2t' : refid
+    def ref_id = genome.id == "hs1" ? 't2t' : genome.id
     """
     classy crossnn \\
         --pileup-input ${pileup} \\
@@ -439,7 +439,7 @@ process CLASSY_CROSSNN_PANCAN_PILEUP {
         --sample ${prefix} \\
         --motif "CpG:CG" \\
         --crossnn-probes-genome hg19 \\
-        --crossnn-alignment-genome ${genome} \\
+        --crossnn-alignment-genome ${ref_id} \\
         --crossnn-model /opt/classy/models/crossNN/runtime/pancan_devel_v5i.safetensors \\
         --crossnn-embedding /opt/classy/models/crossNN/runtime/pancan_devel_v5i_embedding.json \\
         --crossnn-dictionary /opt/classy/models/crossNN/static/pancan_devel_v5i_dictionary.txt \\
@@ -491,7 +491,7 @@ process CLASSY_ALMA {
     tuple val(meta),
         path(bam),
         path(bai),
-        val(refid),
+        val(genome),
         path(ref)
 
     output:
@@ -513,7 +513,7 @@ process CLASSY_ALMA {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def genome = refid == "hs1" ? 't2t' : refid
+    def ref_id = genome.id == "hs1" ? 't2t' : genome.id
     """
     classy alma \\
         -i ${bam} \\
@@ -525,7 +525,7 @@ process CLASSY_ALMA {
         --alma-model-root /opt/classy/models/alma \\
         --alma-data-dir /opt/classy/models/alma/probes \\
         --alma-probes-genome hg38 \\
-        --alma-alignment-genome ${genome} \\
+        --alma-alignment-genome ${ref_id} \\
         --emit-alma-probabilities \\
         ${args}
 
@@ -563,7 +563,7 @@ process CLASSY_ALMA_PILEUP {
 
     input:
     tuple val(meta),
-        val(refid),
+        val(genome),
         path(pileup)
 
     output:
@@ -585,7 +585,7 @@ process CLASSY_ALMA_PILEUP {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def genome = refid == "hs1" ? 't2t' : refid
+    def ref_id = genome.id == "hs1" ? 't2t' : genome.id
     """
     classy alma \\
         --pileup-input ${pileup} \\
@@ -595,7 +595,7 @@ process CLASSY_ALMA_PILEUP {
         --alma-model-root /opt/classy/models/alma \\
         --alma-data-dir /opt/classy/models/alma/probes \\
         --alma-probes-genome hg38 \\
-        --alma-alignment-genome ${genome} \\
+        --alma-alignment-genome ${ref_id} \\
         --emit-alma-probabilities \\
         ${args}
 
@@ -639,7 +639,7 @@ process CLASSY_MPACT {
     tuple val(meta),
         path(bam),
         path(bai),
-        val(refid),
+        val(genome),
         path(ref)
 
     output:
@@ -661,7 +661,7 @@ process CLASSY_MPACT {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def genome = refid == "hs1" ? 't2t' : refid
+    def ref_id = genome.id == "hs1" ? 't2t' : genome.id
     """
     classy mpact \\
         -i ${bam} \\
@@ -673,7 +673,7 @@ process CLASSY_MPACT {
         --mpact-model-root /opt/classy/models/MPACT \\
         --mpact-manifest /opt/classy/models/MPACT/runtime/model.json \\
         --mpact-probes-genome hg38 \\
-        --mpact-alignment-genome ${genome} \\
+        --mpact-alignment-genome ${ref_id} \\
         --mpact-method max \\
         --mpact-cutoff 0.7 \\
         --emit-mpact-probabilities \\
@@ -714,7 +714,7 @@ process CLASSY_MPACT_PILEUP {
 
     input:
     tuple val(meta),
-        val(refid),
+        val(genome),
         path(pileup)
 
     output:
@@ -736,7 +736,7 @@ process CLASSY_MPACT_PILEUP {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def genome = refid == "hs1" ? 't2t' : refid
+    def ref_id = genome.id == "hs1" ? 't2t' : genome.id
     """
     classy mpact \\
         --pileup-input ${pileup} \\
@@ -746,7 +746,7 @@ process CLASSY_MPACT_PILEUP {
         --mpact-model-root /opt/classy/models/MPACT \\
         --mpact-manifest /opt/classy/models/MPACT/runtime/model.json \\
         --mpact-probes-genome hg38 \\
-        --mpact-alignment-genome ${genome} \\
+        --mpact-alignment-genome ${ref_id} \\
         --mpact-method max \\
         --mpact-cutoff 0.7 \\
         --emit-mpact-probabilities \\
@@ -793,7 +793,7 @@ process CLASSY_COMBINED {
     tuple val(meta),
         path(bam),
         path(bai),
-        val(refid),
+        val(genome),
         path(ref)
 
     output:
@@ -825,7 +825,7 @@ process CLASSY_COMBINED {
     def args = task.ext.args ?: ''
     def threads = task.cpus
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def genome = refid == "hs1" ? 't2t' : refid
+    def ref_id = genome.id == "hs1" ? 't2t' : genome.id
     """
     classy combined \\
         -i ${bam} \\
@@ -834,7 +834,7 @@ process CLASSY_COMBINED {
         --reference ${ref} \\
         --use-pileup \\
         --motif "CpG:CG" \\
-        --genome ${genome} \\
+        --genome ${ref_id} \\
         --pileup-threads ${threads} \\
         ${args}
 
@@ -875,7 +875,7 @@ process CLASSY_COMBINED_PILEUP {
 
     input:
     tuple val(meta),
-        val(refid),
+        val(genome),
         path(pileup)
 
     output:
@@ -897,14 +897,14 @@ process CLASSY_COMBINED_PILEUP {
     script:
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def genome = refid == "hs1" ? 't2t' : refid
+    def ref_id = genome.id == "hs1" ? 't2t' : genome.id
     """
     classy combined \\
         --pileup-input ${pileup} \\
         -o ${prefix}_combined_classification.json \\
         --sample ${prefix} \\
         --motif "CpG:CG" \\
-        --genome ${genome} \\
+        --genome ${ref_id} \\
         ${args}
 
     cat <<-END_VERSIONS > versions.yml
