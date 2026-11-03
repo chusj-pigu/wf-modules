@@ -74,7 +74,7 @@ process SAMTOOLS_TOFASTQ {
 
     output:
     tuple val(meta),
-        path("*.fq.gz"),
+        path("*.fq"),
         emit: fq
     path "versions.yml"           , emit: versions
 
@@ -89,8 +89,7 @@ process SAMTOOLS_TOFASTQ {
     samtools fastq \\
         ${args} \\
         -@ ${threads} \\
-        ${ubam} | \\
-        pigz -p ${threads} -c > ${prefix}.fq.gz
+        ${ubam} > ${prefix}.fq
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
