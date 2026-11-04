@@ -32,7 +32,9 @@ process CLAIR3_CALL {
     def args = task.ext.args ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
-    ## Run Clair3
+    cp -L ${ref} ref_local.fa
+    cp -L ${fai} ref_local.fa.fai
+
     run_clair3.sh \\
         ${args} \\
         --threads=${task.cpus} \\
@@ -40,9 +42,9 @@ process CLAIR3_CALL {
         --bed_fn=${bed} \\
         --platform='ont' \\
         --model_path="/opt/models/${model}" \\
-        --bam_fn=${bam} \\
-        --ref_fn=${ref} \\
-        -o ${prefix}
+        --bam_fn=\${PWD}/${bam} \\
+        --ref_fn=\${PWD}/ref_local.fa \\
+        -o \${PWD}/${prefix}
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
