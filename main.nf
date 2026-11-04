@@ -22,9 +22,8 @@ process CLAIR3_CALL {
     val(model)
 
     output:
-    tuple val(meta),
-        path("${meta.id}/merge_output.vcf.gz"),
-        emit: vcf
+    tuple val(meta), path("${meta.id}/merge_output.vcf.gz"),     emit: vcf
+    tuple val(meta), path("${meta.id}/merge_output.vcf.gz.tbi"), emit: tbi
     path "versions.yml",
         emit: versions
 
