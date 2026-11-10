@@ -14,8 +14,8 @@ process NASVAR_PIPELINE {
     tuple val(meta),
         path(bam),
         path(bai),
-        path(enriched_bed),
-        path(targets_bed)
+        path(enriched_bed, stageAs: 'bed_enriched/*'),
+        path(targets_bed, stageAs: 'bed_target/*')
     tuple val(meta2), path(fasta)
     tuple val(meta3), path(fai)
 
