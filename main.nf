@@ -1,5 +1,5 @@
 process SEVERUS_TUMOR_SINGLE {
-    container "ghcr.io/chusj-pigu/severus:a294582458464a429891218e2be1c8c0db07b199" // TO DO: SET CONTAINER TO FIXED VERSION
+    container "ghcr.io/chusj-pigu/severus:edb937c986245337116dab9bcb670d273e170cd7" // TO DO: SET CONTAINER TO FIXED VERSION
 
     tag "$meta.id"
     label 'process_medium'                    // nf-core labels
