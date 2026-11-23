@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:24.04
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -35,8 +35,7 @@ ENV PATH="/opt/ichorCNA/R:${PATH}"
 RUN git clone https://github.com/shahcompbio/hmmcopy_utils.git
 
 WORKDIR /opt/hmmcopy_utils
-RUN cmake .
-RUN make
+RUN cmake -DCMAKE_POLICY_VERSION_MINIMUM=3.5 . && make
 
 ENV PATH="/opt/hmmcopy_utils/bin:${PATH}"
 
