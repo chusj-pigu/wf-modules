@@ -21,6 +21,8 @@ RUN R -e 'install.packages("plyr")'
 RUN R -e 'BiocManager::install("HMMcopy")'
 RUN R -e 'BiocManager::install("GenomicRanges")'
 
+RUN R -e 'BiocManager::install("BSgenome.Hsapiens.UCSC.hg38", update=FALSE, ask=FALSE)'
+RUN R -e 'BiocManager::install("BSgenome.Hsapiens.UCSC.hg19", update=FALSE, ask=FALSE)'
 
 COPY ichorCNA /opt/ichorCNA
 RUN R -e 'install.packages("ichorCNA", repos=NULL, type="source")'
