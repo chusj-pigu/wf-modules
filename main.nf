@@ -814,7 +814,7 @@ process CLASSY_COMBINED {
         emit:svg_combined
     tuple val(meta),
         path("*nanomix_pie.svg"),
-        emit:svg_nanomix
+        emit:svg_nanomix, optional:true
     path "versions.yml",
         emit: versions
 
