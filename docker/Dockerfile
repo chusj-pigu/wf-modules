@@ -1,39 +1,26 @@
-FROM python:3.11-slim-bookworm
+# Adapted from the bonefish Dockerfile by Dylan Costo
+#   Upstream: https://github.com/DylanCosto/bonefish/blob/v0.5.0/Dockerfile
+#   Commit:   421cfca03ac82ddc2310d493eec626c64c4d9f6d (tag v0.5.0)
+#   License:  MIT, see ./LICENSE (copied unchanged from upstream)
+# Change: source is cloned at a pinned tag instead of `COPY . .`,
+#         so the image builds outside the bonefish repo.
+FROM rust:1.98-bookworm AS build
+ARG BONEFISH_VERSION=v0.5.0
+WORKDIR /src
+RUN git clone --depth 1 --branch ${BONEFISH_VERSION} https://github.com/DylanCosto/bonefish.git . \
+ && cargo build --release --locked --features jemalloc \
+ && strip target/release/bonefish \
+ && target/release/bonefish --version
 
-# Runtime + build deps.
-# - samtools (bookworm ships 1.16, Severus needs >=1.14)
-# - graphviz + libgraphviz-dev + build-essential: pygraphviz has no wheels and must compile
-# - procps: needed by Nextflow for task metrics
-RUN apt-get update && apt-get install -y --no-install-recommends \
-        procps \
-        git \
-        samtools \
-        graphviz \
-        libgraphviz-dev \
-        build-essential \
-        pkg-config \
-    && pip install --no-cache-dir \
-        "networkx>=2.6" \
-        pygraphviz \
-        pydot \
-        matplotlib \
-        biopython \
-        numpy \
-        pysam \
-        plotly \
-    && apt-get purge -y --auto-remove build-essential pkg-config libgraphviz-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install the Severus via personnal fork (resolved the negative length SV)
-ARG SEVERUS_REF=main
-RUN git clone https://github.com/charlenelawdes/Severus /opt/Severus \
-    && cd /opt/Severus \
-    && git checkout "${SEVERUS_REF}" \
-    && pip install --no-cache-dir . \
-    && rm -rf /opt/Severus
-
-# Ensure compatibility with apptainer for non-root use
-RUN chmod -R a+rX /usr/local
-ENV MPLCONFIGDIR=/tmp/matplotlib \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+FROM debian:bookworm-slim
+RUN apt-get update \
+ && apt-get install -y --no-install-recommends procps \
+ && rm -rf /var/lib/apt/lists/*
+COPY --from=build /src/target/release/bonefish /usr/local/bin/bonefish
+COPY --from=build /src/LICENSE /src/README.md /usr/share/doc/bonefish/
+LABEL org.opencontainers.image.title="bonefish" \
+      org.opencontainers.image.version="0.5.0" \
+      org.opencontainers.image.authors="Dylan Costo (upstream bonefish)" \
+      org.opencontainers.image.source="https://github.com/DylanCosto/bonefish" \
+      org.opencontainers.image.licenses="MIT"
+CMD ["bonefish", "--help"]
