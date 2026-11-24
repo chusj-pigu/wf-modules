@@ -1,5 +1,5 @@
 process BONEFISH_ALIGN {
-    container "ghcr.io/chusj-pigu/bonefish:edb937c986245337116dab9bcb670d273e170cd7" // TO DO: SET CONTAINER TO FIXED VERSION
+    container "ghcr.io/chusj-pigu/bonefish:5c009686cb0926f1a53c2dc9b68aa679de780412" // TO DO: SET CONTAINER TO FIXED VERSION
 
     tag "$meta.id"
     label 'process_medium'                    // nf-core labels
@@ -9,7 +9,7 @@ process BONEFISH_ALIGN {
 
     input:
     tuple val(meta),
-        path(ubam),
+        path(ubam)
     tuple val(meta2),
         path(ref)
 
