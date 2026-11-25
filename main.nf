@@ -29,6 +29,7 @@ process CLAIR3_CALL {
 
     script:
     def args = task.ext.args ?: ''
+    def args2 = task.ext.args2 ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
     """
     cp -L ${ref} ref_local.fa
@@ -36,6 +37,7 @@ process CLAIR3_CALL {
 
     run_clair3.sh \\
         ${args} \\
+        ${args2} \\
         --threads=${task.cpus} \\
         --sample_name=${prefix} \\
         --bed_fn=${bed} \\
