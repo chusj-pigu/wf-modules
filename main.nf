@@ -1,7 +1,7 @@
 process DEEPSOMATIC_TUMORONLY {
     // TODO SET CONTAINER TO FIXED VERSION
 
-    container "docker://google/deepsomatic:1.10.0-gpu"
+    container "google/deepsomatic:1.10.0-gpu"
 
     label "process_gpu_snp"
     label 'process_high'                    // nf-core labels
