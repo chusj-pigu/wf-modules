@@ -1,8 +1,9 @@
 process DEEPSOMATIC_TUMORONLY {
     // TODO SET CONTAINER TO FIXED VERSION
 
-    container "docker.io/google/deepsomatic:1.10.0"
+    container "docker://google/deepsomatic:1.10.0-gpu"
 
+    label "process_gpu_snp"
     label 'process_high'                    // nf-core labels
     label "process_high_cpu"       // Label for mpgi drac cpu alloc
     label "process_higher_memory"         // Label for mpgi drac memory alloc
@@ -23,8 +24,6 @@ process DEEPSOMATIC_TUMORONLY {
     output:
     tuple val(meta), path("${prefix}.vcf.gz")      ,  emit: vcf
     tuple val(meta), path("${prefix}.vcf.gz.tbi")  ,  emit: vcf_tbi
-    tuple val(meta), path("${prefix}.g.vcf.gz")    ,  emit: gvcf
-    tuple val(meta), path("${prefix}.g.vcf.gz.tbi"),  emit: gvcf_tbi
     tuple val("${task.process}"), val("deepsomatic"), val("1.10.0"), emit: versions_deepsomatic, topic: versions
 
     script:
@@ -40,7 +39,6 @@ process DEEPSOMATIC_TUMORONLY {
         --ref=${fasta} \\
         --reads_tumor=${bam} \\
         --output_vcf=${prefix}.vcf.gz \\
-        --output_gvcf=${prefix}.g.vcf.gz \\
         --sample_name_tumor="${prefix}" \\
         ${args} \\
         ${regions} \\
