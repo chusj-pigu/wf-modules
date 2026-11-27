@@ -1,7 +1,7 @@
 process NASVAR_PIPELINE {
     // TODO SET CONTAINER TO FIXED VERSION
 
-    container "ghcr.io/chusj-pigu/nasvar:4f4033bdf40a5503fd555caee4c5d0d340cc1400"
+    container "ghcr.io/chusj-pigu/nasvar:4078bab45f52a1417c75180ce70918cdd695af99"
 
     label 'process_medium'                    // nf-core labels
     label "process_medium_cpu"                 // Label for mpgi drac cpu alloc
