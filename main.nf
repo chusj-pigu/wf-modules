@@ -52,7 +52,7 @@ process NASVAR_PIPELINE {
             config   : "peds_leukemia_config.GRCh38.json",
         ],
         hs1: [
-            maf      : "maf_sites_all_t2t.tsv",
+            maf      : "maf_sites_all_hs1.tsv",
             repeats  : "repeats_hs1.bed",
             gff      : "GCF_009914755.1_T2T-CHM13v2.0_genomic.gff",
             reference: "T2T-CHM13v2.0_reference.json",
