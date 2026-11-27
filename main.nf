@@ -39,32 +39,48 @@ process NASVAR_PIPELINE {
     task.ext.when == null || task.ext.when
 
     script:
-    def args = task.ext.args ?: ''
+    def args   = task.ext.args   ?: ''
     def prefix = task.ext.prefix ?: "${meta.id}"
-    def gff = meta2.id == "hg38" ? "GCF_000001405.40_GRCh38.p14_genomic.gff" :
-        "GCF_009914755.1_T2T-CHM13v2.0_genomic.gff"
-    def reference_json = meta2.id == "hg38" ? "/app/nasvar/config/GRCh38_reference.json" :
-        "/app/nasvar/config/T2T-CHM13v2.0_reference.json"
-    def pipeline_config = meta2.id == "hg38" ? "/app/nasvar/config/peds_leukemia_config.GRCh38.json" :
-        "/app/nasvar/config/peds_leukemia_config.json"
+
+    // Everything genome-specific lives here
+    def genomes = [
+        hg38: [
+            maf      : "maf_sites_all_hg38.tsv",
+            repeats  : "hg38_repeats_cen_sat_dups.allN_PAR1_noisyMAF.bed",
+            gff      : "GCF_000001405.40_GRCh38.p14_genomic.gff",
+            reference: "GRCh38_reference.json",
+            config   : "peds_leukemia_config.GRCh38.json",
+        ],
+        hs1: [
+            maf      : "maf_sites_all_t2t.tsv",
+            repeats  : "repeats_hs1.bed",
+            gff      : "GCF_009914755.1_T2T-CHM13v2.0_genomic.gff",
+            reference: "T2T-CHM13v2.0_reference.json",
+            config   : "peds_leukemia_config.json",
+        ],
+    ]
+    def g = genomes[meta2.id]
+
+    def files_dir  = "/app/nasvar/files"
+    def config_dir = "/app/nasvar/config"
+    def to_unzip   = [g.maf, g.repeats, g.gff]
     """
-    gunzip -c /app/nasvar/files/maf_sites_all_${meta2.id}.tsv.gz > maf_sites_all_${meta2.id}.tsv
-    gunzip -c /app/nasvar/files/repeats_${meta2.id}.bed.gz       > repeats_${meta2.id}.bed
-    gunzip -c /app/nasvar/files/${gff}.gz                        > ${gff}
+    for f in ${to_unzip.join(' ')}; do
+        gunzip -c ${files_dir}/\${f}.gz > \${f}
+    done
 
     nasvar pipeline \\
         ${bam} \\
-        repeats_${meta2.id}.bed \\
+        ${g.repeats} \\
         ${enriched_bed} \\
-        maf_sites_all_${meta2.id}.tsv \\
+        ${g.maf} \\
         ${targets_bed} \\
         ${fasta} \\
-        ${gff} \\
+        ${g.gff} \\
         ${prefix} \\
-        --config ${pipeline_config} \\
-        --reference ${reference_json} \\
+        --config ${config_dir}/${g.config} \\
+        --reference ${config_dir}/${g.reference} \\
         ${args}
-
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":
